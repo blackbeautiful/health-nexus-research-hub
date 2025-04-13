@@ -1,3 +1,4 @@
+
 import React from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import PageTitle from '@/components/common/PageTitle';
@@ -6,7 +7,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { Plus, Download, RefreshCw } from 'lucide-react';
 import StatCard from '@/components/dashboard/StatCard';
 import RecentPatients from '@/components/dashboard/RecentPatients';
-import StudiesOverview from '@/components/dashboard/StudiesOverview';
+import StudiesOverview from '@/components/dashboard/StudiesOverviewFixed';
 import CancerDistributionChart from '@/components/dashboard/CancerDistributionChart';
 import ResearchMetricsChart from '@/components/dashboard/ResearchMetricsChart';
 import DataCompliance from '@/components/dashboard/DataCompliance';
