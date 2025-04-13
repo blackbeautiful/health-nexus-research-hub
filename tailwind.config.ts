@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,29 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Health management specific colors
+				health: {
+					primary: '#0EA5E9', // Main brand color
+					secondary: '#06B6D4', // Secondary brand color
+					accent: '#7dd3fc', // Accent color
+					muted: '#BAE6FD', // Muted variant
+					highlight: '#0284C7', // Highlight color
+					warning: '#FBBF24', // Warning indicators
+					critical: '#DC2626', // Critical alerts
+					success: '#10B981', // Success indicators
+					info: '#3B82F6', // Informational elements
+					background: '#F0F9FF' // Light background for health sections
+				},
+				cancer: {
+					breast: '#F472B6', // Breast cancer
+					lung: '#93C5FD', // Lung cancer
+					prostate: '#818CF8', // Prostate cancer
+					colorectal: '#FCA5A5', // Colorectal cancer
+					melanoma: '#C084FC', // Melanoma
+					leukemia: '#FDBA74', // Leukemia
+					lymphoma: '#86EFAC', // Lymphoma
+					other: '#D8B4FE' // Other cancer types
 				}
 			},
 			borderRadius: {
@@ -84,11 +108,25 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'pulse-subtle': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.8' }
+				},
+				'fade-in': {
+					from: { opacity: '0', transform: 'translateY(8px)' },
+					to: { opacity: '1', transform: 'translateY(0)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'pulse-subtle': 'pulse-subtle 3s infinite ease-in-out',
+				'fade-in': 'fade-in 0.3s ease-out'
+			},
+			fontFamily: {
+				sans: ['Inter', 'sans-serif'],
+				display: ['Inter', 'sans-serif']
 			}
 		}
 	},
