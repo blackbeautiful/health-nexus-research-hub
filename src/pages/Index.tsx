@@ -1,4 +1,3 @@
-
 import React from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import PageTitle from '@/components/common/PageTitle';
@@ -11,7 +10,7 @@ import StudiesOverview from '@/components/dashboard/StudiesOverview';
 import CancerDistributionChart from '@/components/dashboard/CancerDistributionChart';
 import ResearchMetricsChart from '@/components/dashboard/ResearchMetricsChart';
 import DataCompliance from '@/components/dashboard/DataCompliance';
-import { Users, FileText, Flask, Shield } from 'lucide-react';
+import { Users, FileText, TestTube, Shield } from 'lucide-react';
 
 const Index = () => {
   const { toast } = useToast();
@@ -63,7 +62,7 @@ const Index = () => {
         <StatCard 
           title="Lab Specimens" 
           value="3,742" 
-          icon={<Flask className="h-5 w-5" />}
+          icon={<TestTube className="h-5 w-5" />}
           trend={{ value: 12.3, isPositive: true }}
         />
         <StatCard 

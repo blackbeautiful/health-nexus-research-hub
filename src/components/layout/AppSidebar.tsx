@@ -20,7 +20,7 @@ import {
   BarChart2, 
   Settings, 
   ShieldAlert,
-  Flask,
+  TestTube,
   Stethoscope,
   FileSearch,
   UserCog,
@@ -40,7 +40,7 @@ const AppSidebar = () => {
     { title: "Patients", icon: Users, url: "/patients" },
     { title: "Research Studies", icon: FileSearch, url: "/studies" },
     { title: "Clinical Data", icon: Stethoscope, url: "/clinical-data" },
-    { title: "Lab Results", icon: Flask, url: "/lab-results" },
+    { title: "Lab Results", icon: TestTube, url: "/lab-results" },
     { title: "Analytics", icon: BarChart2, url: "/analytics" },
     { title: "Data Management", icon: Database, url: "/data" }
   ];
