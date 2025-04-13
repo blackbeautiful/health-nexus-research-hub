@@ -8,6 +8,14 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import PatientsPage from "./pages/patients/index";
 import PatientDetailsPage from "./pages/patients/[patientId]";
+import StudiesPage from "./pages/studies/index";
+import LoginPage from "./pages/auth/login";
+import PasswordResetPage from "./pages/auth/password-reset";
+import UserManagementPage from "./pages/admin/users";
+import AuditLogPage from "./pages/admin/audit-logs";
+import PatientRegistrationPage from "./pages/patients/register";
+import StudyProtocolSetupPage from "./pages/studies/protocol-setup";
+import ClinicalDataPage from "./pages/clinical-data/index";
 
 const queryClient = new QueryClient();
 
@@ -18,10 +26,28 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
+          {/* Authentication Pages */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/password-reset" element={<PasswordResetPage />} />
+          
+          {/* Main App Pages */}
           <Route path="/" element={<Index />} />
           <Route path="/patients" element={<PatientsPage />} />
+          <Route path="/patients/register" element={<PatientRegistrationPage />} />
           <Route path="/patients/:patientId" element={<PatientDetailsPage />} />
-          {/* Add more routes as we develop them */}
+          
+          {/* Research Study Pages */}
+          <Route path="/studies" element={<StudiesPage />} />
+          <Route path="/studies/protocol-setup" element={<StudyProtocolSetupPage />} />
+          
+          {/* Clinical Data Pages */}
+          <Route path="/clinical-data" element={<ClinicalDataPage />} />
+          
+          {/* Admin Pages */}
+          <Route path="/users" element={<UserManagementPage />} />
+          <Route path="/audit-logs" element={<AuditLogPage />} />
+          
+          {/* 404 Page */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

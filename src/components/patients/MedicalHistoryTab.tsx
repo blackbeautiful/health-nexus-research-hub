@@ -1,294 +1,337 @@
 
 import React from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { Plus, Edit, AlertCircle, Heart, Lungs, Droplets, Shield, Brain, Dna } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Heart, Shield, Activity, Pill, TestTube } from 'lucide-react';
 
-interface MedicalHistoryTabProps {
-  patientId: string;
-}
-
-const MedicalHistoryTab: React.FC<MedicalHistoryTabProps> = ({ patientId }) => {
-  const { toast } = useToast();
-  
-  const handleAction = (action: string) => {
-    toast({
-      title: "Action triggered",
-      description: `${action} functionality will be implemented soon.`,
-    });
-  };
-
+const MedicalHistoryTab = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-      <div className="md:col-span-2 space-y-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle>Medical Conditions</CardTitle>
-              <CardDescription>Current and past diagnosed conditions</CardDescription>
-            </div>
-            <Button variant="outline" size="icon" onClick={() => handleAction('Add condition')}>
-              <Plus className="h-4 w-4" />
-            </Button>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h4 className="font-medium">Colorectal Adenocarcinoma</h4>
-                    <Badge className="cancer-colorectal">Primary</Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground">Diagnosed: Jan 15, 2025</p>
-                </div>
-                <Badge variant="outline">Active</Badge>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b">
-                <div>
-                  <h4 className="font-medium">Type 2 Diabetes Mellitus</h4>
-                  <p className="text-sm text-muted-foreground">Diagnosed: Mar 2018</p>
-                </div>
-                <Badge variant="outline">Active</Badge>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b">
-                <div>
-                  <h4 className="font-medium">Hypertension</h4>
-                  <p className="text-sm text-muted-foreground">Diagnosed: Nov 2015</p>
-                </div>
-                <Badge variant="outline">Active</Badge>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div>
-                  <h4 className="font-medium">Gallstones</h4>
-                  <p className="text-sm text-muted-foreground">Diagnosed: Jul 2019</p>
-                </div>
-                <Badge variant="outline">Resolved</Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle>Surgical History</CardTitle>
-              <CardDescription>Previous surgical procedures</CardDescription>
-            </div>
-            <Button variant="outline" size="icon" onClick={() => handleAction('Add surgery')}>
-              <Plus className="h-4 w-4" />
-            </Button>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b">
-                <div>
-                  <h4 className="font-medium">Right Hemicolectomy</h4>
-                  <p className="text-sm text-muted-foreground">Feb 10, 2025 - Memorial Hospital</p>
-                </div>
-                <Button variant="ghost" size="sm" onClick={() => handleAction('View surgical notes')}>
-                  View Notes
-                </Button>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b">
-                <div>
-                  <h4 className="font-medium">Cholecystectomy</h4>
-                  <p className="text-sm text-muted-foreground">Aug 5, 2019 - St. Mary's Hospital</p>
-                </div>
-                <Button variant="ghost" size="sm" onClick={() => handleAction('View surgical notes')}>
-                  View Notes
-                </Button>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div>
-                  <h4 className="font-medium">Appendectomy</h4>
-                  <p className="text-sm text-muted-foreground">May 22, 2002 - County General Hospital</p>
-                </div>
-                <Button variant="ghost" size="sm" onClick={() => handleAction('View surgical notes')}>
-                  View Notes
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle>Current Medications</CardTitle>
-              <CardDescription>Prescribed and OTC medications</CardDescription>
-            </div>
-            <Button variant="outline" size="icon" onClick={() => handleAction('Add medication')}>
-              <Plus className="h-4 w-4" />
-            </Button>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h4 className="font-medium">FOLFOX Chemotherapy Protocol</h4>
-                    <Badge className="bg-blue-100 text-blue-800">Oncology</Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground">5-FU, Leucovorin, Oxaliplatin - Every 2 weeks</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline">Cycle 3/6</Badge>
-                  <Button variant="ghost" size="sm" className="p-0 h-8 w-8">
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b">
-                <div>
-                  <h4 className="font-medium">Metformin</h4>
-                  <p className="text-sm text-muted-foreground">1000mg - Twice daily with meals</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline">Active</Badge>
-                  <Button variant="ghost" size="sm" className="p-0 h-8 w-8">
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b">
-                <div>
-                  <h4 className="font-medium">Lisinopril</h4>
-                  <p className="text-sm text-muted-foreground">10mg - Once daily</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline">Active</Badge>
-                  <Button variant="ghost" size="sm" className="p-0 h-8 w-8">
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h4 className="font-medium">Ondansetron (Zofran)</h4>
-                    <Badge className="bg-purple-100 text-purple-800">Antiemetic</Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground">8mg - As needed for nausea</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline">Active</Badge>
-                  <Button variant="ghost" size="sm" className="p-0 h-8 w-8">
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground w-full">
-              <AlertCircle className="h-4 w-4 text-amber-500" />
-              <p>Potential interaction between Oxaliplatin and Lisinopril. Monitor blood pressure.</p>
-            </div>
-          </CardFooter>
-        </Card>
-      </div>
-      
-      <div className="space-y-6">
+    <Tabs defaultValue="conditions">
+      <TabsList className="grid grid-cols-5 mb-4">
+        <TabsTrigger value="conditions">Conditions</TabsTrigger>
+        <TabsTrigger value="medications">Medications</TabsTrigger>
+        <TabsTrigger value="allergies">Allergies</TabsTrigger>
+        <TabsTrigger value="procedures">Procedures</TabsTrigger>
+        <TabsTrigger value="family">Family History</TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="conditions">
         <Card>
           <CardHeader>
-            <CardTitle>Allergies & Sensitivities</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Heart className="h-5 w-5 text-health-primary" />
+              Medical Conditions
+            </CardTitle>
+            <CardDescription>Patient's diagnosed conditions and status</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <Badge variant="destructive">Penicillin</Badge>
-                <span className="text-sm text-muted-foreground">Severe rash</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Badge variant="destructive">Sulfa Drugs</Badge>
-                <span className="text-sm text-muted-foreground">Hives</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Badge variant="outline">Latex</Badge>
-                <span className="text-sm text-muted-foreground">Mild sensitivity</span>
-              </div>
-            </div>
+            <ScrollArea className="h-[400px] pr-4">
+              {conditions.map((condition, idx) => (
+                <React.Fragment key={idx}>
+                  <div className="mb-4">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h4 className="font-medium">{condition.name}</h4>
+                        <p className="text-sm text-gray-500">Diagnosed: {condition.diagnosedDate}</p>
+                      </div>
+                      <Badge variant={condition.status === 'Active' ? 'default' : 'outline'}>
+                        {condition.status}
+                      </Badge>
+                    </div>
+                    <p className="text-sm mt-2">{condition.notes}</p>
+                  </div>
+                  {idx < conditions.length - 1 && <Separator className="my-2" />}
+                </React.Fragment>
+              ))}
+            </ScrollArea>
           </CardContent>
-          <CardFooter>
-            <Button variant="ghost" size="sm" className="w-full" onClick={() => handleAction('Add allergy')}>
-              <Plus className="h-4 w-4 mr-2" /> Add Allergy
-            </Button>
-          </CardFooter>
         </Card>
-        
+      </TabsContent>
+
+      <TabsContent value="medications">
         <Card>
           <CardHeader>
-            <CardTitle>Family Cancer History</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Pill className="h-5 w-5 text-health-primary" />
+              Medications
+            </CardTitle>
+            <CardDescription>Current and past medications</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              <div>
-                <p className="font-medium">Father</p>
-                <div className="flex items-center gap-2">
-                  <Badge className="cancer-colorectal">Colorectal Cancer</Badge>
-                  <span className="text-sm text-muted-foreground">Age 68</span>
-                </div>
-              </div>
-              <div>
-                <p className="font-medium">Paternal Grandmother</p>
-                <div className="flex items-center gap-2">
-                  <Badge className="cancer-breast">Breast Cancer</Badge>
-                  <span className="text-sm text-muted-foreground">Age 71</span>
-                </div>
-              </div>
-            </div>
+            <ScrollArea className="h-[400px] pr-4">
+              {medications.map((medication, idx) => (
+                <React.Fragment key={idx}>
+                  <div className="mb-4">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h4 className="font-medium">{medication.name}</h4>
+                        <p className="text-sm">
+                          {medication.dosage} - {medication.frequency}
+                        </p>
+                      </div>
+                      <Badge variant={medication.status === 'Current' ? 'default' : 'outline'}>
+                        {medication.status}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-500 mt-1">
+                      Prescribed: {medication.prescribed} | Ends: {medication.ends}
+                    </p>
+                  </div>
+                  {idx < medications.length - 1 && <Separator className="my-2" />}
+                </React.Fragment>
+              ))}
+            </ScrollArea>
           </CardContent>
-          <CardFooter>
-            <Button variant="ghost" size="sm" className="w-full" onClick={() => handleAction('Update family history')}>
-              <Plus className="h-4 w-4 mr-2" /> Update Family History
-            </Button>
-          </CardFooter>
         </Card>
-        
+      </TabsContent>
+
+      <TabsContent value="allergies">
         <Card>
           <CardHeader>
-            <CardTitle>Risk Factors</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-health-primary" />
+              Allergies
+            </CardTitle>
+            <CardDescription>Known allergies and reactions</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-start gap-3">
-                <Heart className="h-5 w-5 text-red-500 mt-0.5" />
-                <div>
-                  <p className="font-medium">Cardiovascular</p>
-                  <p className="text-sm text-muted-foreground">Hypertension, Hyperlipidemia</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Droplets className="h-5 w-5 text-blue-500 mt-0.5" />
-                <div>
-                  <p className="font-medium">Metabolic</p>
-                  <p className="text-sm text-muted-foreground">Type 2 Diabetes</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Dna className="h-5 w-5 text-purple-500 mt-0.5" />
-                <div>
-                  <p className="font-medium">Genetic</p>
-                  <p className="text-sm text-muted-foreground">Family history of colorectal cancer</p>
-                </div>
-              </div>
-            </div>
+            <ScrollArea className="h-[400px] pr-4">
+              {allergies.map((allergy, idx) => (
+                <React.Fragment key={idx}>
+                  <div className="mb-4">
+                    <div className="flex justify-between items-center">
+                      <h4 className="font-medium">{allergy.allergen}</h4>
+                      <Badge variant={allergy.severity === 'Severe' ? 'destructive' : allergy.severity === 'Moderate' ? 'default' : 'outline'}>
+                        {allergy.severity}
+                      </Badge>
+                    </div>
+                    <p className="text-sm mt-2">Reaction: {allergy.reaction}</p>
+                  </div>
+                  {idx < allergies.length - 1 && <Separator className="my-2" />}
+                </React.Fragment>
+              ))}
+            </ScrollArea>
           </CardContent>
         </Card>
-      </div>
-    </div>
+      </TabsContent>
+
+      <TabsContent value="procedures">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Activity className="h-5 w-5 text-health-primary" />
+              Procedures
+            </CardTitle>
+            <CardDescription>Surgical and diagnostic procedures</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea className="h-[400px] pr-4">
+              {procedures.map((procedure, idx) => (
+                <React.Fragment key={idx}>
+                  <div className="mb-4">
+                    <div className="flex justify-between items-center">
+                      <h4 className="font-medium">{procedure.name}</h4>
+                      <span className="text-sm text-gray-500">{procedure.date}</span>
+                    </div>
+                    <p className="text-sm text-gray-500 mt-1">Provider: {procedure.provider}</p>
+                    <p className="text-sm mt-2">{procedure.notes}</p>
+                  </div>
+                  {idx < procedures.length - 1 && <Separator className="my-2" />}
+                </React.Fragment>
+              ))}
+            </ScrollArea>
+          </CardContent>
+        </Card>
+      </TabsContent>
+
+      <TabsContent value="family">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TestTube className="h-5 w-5 text-health-primary" />
+              Family Cancer History
+            </CardTitle>
+            <CardDescription>Cancer history among first-degree relatives</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea className="h-[400px] pr-4">
+              {familyHistory.map((family, idx) => (
+                <React.Fragment key={idx}>
+                  <div className="mb-4">
+                    <div className="flex justify-between items-center">
+                      <h4 className="font-medium">{family.relation}</h4>
+                      <Badge>{family.status}</Badge>
+                    </div>
+                    <p className="text-sm mt-1">
+                      Cancer Type: <span className="font-medium">{family.cancerType}</span>
+                    </p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      Age at Diagnosis: {family.ageAtDiagnosis}
+                    </p>
+                    {family.geneticTesting && (
+                      <p className="text-sm mt-2">
+                        Genetic Testing: <Badge variant="outline">{family.geneticTesting}</Badge>
+                      </p>
+                    )}
+                  </div>
+                  {idx < familyHistory.length - 1 && <Separator className="my-2" />}
+                </React.Fragment>
+              ))}
+            </ScrollArea>
+          </CardContent>
+        </Card>
+      </TabsContent>
+    </Tabs>
   );
 };
+
+const conditions = [
+  {
+    name: 'Breast Cancer (invasive ductal carcinoma)',
+    diagnosedDate: 'Feb 10, 2025',
+    status: 'Active',
+    notes: 'Right breast, 2.3cm tumor, ER+/PR+, HER2-',
+  },
+  {
+    name: 'Hypertension',
+    diagnosedDate: 'Aug 15, 2022',
+    status: 'Active',
+    notes: 'Well-controlled with medication',
+  },
+  {
+    name: 'Type 2 Diabetes',
+    diagnosedDate: 'Sep 3, 2023',
+    status: 'Active',
+    notes: 'Currently managed with oral medication and diet',
+  },
+  {
+    name: 'Osteoarthritis',
+    diagnosedDate: 'Mar 22, 2021',
+    status: 'Chronic',
+    notes: 'Affecting both knees, worse in right knee',
+  },
+];
+
+const medications = [
+  {
+    name: 'Letrozole',
+    dosage: '2.5mg',
+    frequency: 'Once daily',
+    prescribed: 'Feb 28, 2025',
+    ends: 'N/A (long-term)',
+    status: 'Current',
+  },
+  {
+    name: 'Metoprolol',
+    dosage: '50mg',
+    frequency: 'Twice daily',
+    prescribed: 'Aug 20, 2022',
+    ends: 'N/A (long-term)',
+    status: 'Current',
+  },
+  {
+    name: 'Metformin',
+    dosage: '1000mg',
+    frequency: 'Twice daily',
+    prescribed: 'Sep 10, 2023',
+    ends: 'N/A (long-term)',
+    status: 'Current',
+  },
+  {
+    name: 'Doxorubicin',
+    dosage: '60mg/m²',
+    frequency: 'Once every 3 weeks',
+    prescribed: 'Mar 1, 2025',
+    ends: 'May 24, 2025',
+    status: 'Current',
+  },
+  {
+    name: 'Cyclophosphamide',
+    dosage: '600mg/m²',
+    frequency: 'Once every 3 weeks',
+    prescribed: 'Mar 1, 2025',
+    ends: 'May 24, 2025',
+    status: 'Current',
+  },
+];
+
+const allergies = [
+  {
+    allergen: 'Penicillin',
+    severity: 'Moderate',
+    reaction: 'Hives and itching',
+  },
+  {
+    allergen: 'Sulfa Drugs',
+    severity: 'Severe',
+    reaction: 'Anaphylaxis, difficulty breathing',
+  },
+  {
+    allergen: 'Latex',
+    severity: 'Mild',
+    reaction: 'Contact dermatitis',
+  },
+];
+
+const procedures = [
+  {
+    name: 'Core Needle Biopsy',
+    date: 'Feb 5, 2025',
+    provider: 'Dr. Rebecca Martinez',
+    notes: 'Right breast, confirmed invasive ductal carcinoma',
+  },
+  {
+    name: 'Sentinel Lymph Node Biopsy',
+    date: 'Feb 15, 2025',
+    provider: 'Dr. James Wilson',
+    notes: '2 out of 3 nodes positive for metastatic disease',
+  },
+  {
+    name: 'Port-a-cath Placement',
+    date: 'Feb 28, 2025',
+    provider: 'Dr. Sarah Jackson',
+    notes: 'Placed for chemotherapy administration, no complications',
+  },
+  {
+    name: 'ECHO Cardiogram',
+    date: 'Feb 25, 2025',
+    provider: 'Dr. Michael Brown',
+    notes: 'Baseline prior to chemotherapy, EF 60%, normal function',
+  },
+];
+
+const familyHistory = [
+  {
+    relation: 'Mother',
+    status: 'Deceased',
+    cancerType: 'Breast Cancer',
+    ageAtDiagnosis: 48,
+    geneticTesting: 'BRCA1 Positive',
+  },
+  {
+    relation: 'Maternal Aunt',
+    status: 'Deceased',
+    cancerType: 'Ovarian Cancer',
+    ageAtDiagnosis: 52,
+    geneticTesting: null,
+  },
+  {
+    relation: 'Sister',
+    status: 'Living',
+    cancerType: 'Breast Cancer',
+    ageAtDiagnosis: 51,
+    geneticTesting: 'BRCA1 Positive',
+  },
+  {
+    relation: 'Father',
+    status: 'Deceased',
+    cancerType: 'Prostate Cancer',
+    ageAtDiagnosis: 67,
+    geneticTesting: null,
+  },
+];
 
 export default MedicalHistoryTab;

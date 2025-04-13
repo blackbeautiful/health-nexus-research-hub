@@ -6,8 +6,16 @@ import { Input } from '@/components/ui/input';
 import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet';
+import { useNavigate } from 'react-router-dom';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  title?: string;
+}
+
+const Header: React.FC<HeaderProps> = ({ title }) => {
+  const navigate = useNavigate();
+
   return (
     <header className="border-b border-border bg-white py-3 px-4 flex items-center justify-between">
       <div className="flex items-center">
@@ -32,7 +40,14 @@ const Header: React.FC = () => {
             </svg>
           </Button>
         </SidebarTrigger>
-        <div className="md:w-72 hidden md:block">
+        
+        {title && (
+          <div className="hidden md:block">
+            <h1 className="text-xl font-semibold">{title}</h1>
+          </div>
+        )}
+        
+        <div className="md:w-72 hidden md:block ml-4">
           <div className="relative">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
@@ -44,7 +59,24 @@ const Header: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3 md:gap-4">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="relative md:hidden">
+              <Search className="h-5 w-5" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="top" className="h-32">
+            <div className="pt-8 px-4">
+              <Input
+                type="search"
+                placeholder="Search patients, studies..."
+                className="w-full"
+              />
+            </div>
+          </SheetContent>
+        </Sheet>
+      
         <Button variant="ghost" size="icon" className="relative">
           <Bell className="h-5 w-5" />
           <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-health-primary">
@@ -56,7 +88,7 @@ const Header: React.FC = () => {
           <HelpCircle className="h-5 w-5" />
         </Button>
         
-        <Avatar className="h-8 w-8 border">
+        <Avatar className="h-8 w-8 border cursor-pointer" onClick={() => navigate('/profile')}>
           <div className="flex h-full w-full items-center justify-center bg-health-primary text-white text-xs">
             DR
           </div>
