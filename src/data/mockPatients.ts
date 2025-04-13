@@ -1,0 +1,135 @@
+
+export const mockPatients = [
+  {
+    id: "PT-10092",
+    name: "Sarah Johnson",
+    age: 62,
+    gender: "Female",
+    cancerType: "Breast",
+    stage: "Stage II",
+    status: "active",
+    physician: "Rebecca Martinez",
+    diagnosisDate: "Feb 10, 2025",
+    nextAppointment: "Apr 18, 2025"
+  },
+  {
+    id: "PT-10093",
+    name: "Michael Smith",
+    age: 58,
+    gender: "Male",
+    cancerType: "Colorectal",
+    stage: "Stage III",
+    status: "active",
+    physician: "David Wilson",
+    diagnosisDate: "Jan 15, 2025",
+    nextAppointment: "Apr 21, 2025"
+  },
+  {
+    id: "PT-10094",
+    name: "Robert Chen",
+    age: 71,
+    gender: "Male",
+    cancerType: "Prostate",
+    stage: "Stage II",
+    status: "remission",
+    physician: "Sarah Jackson",
+    diagnosisDate: "Sep 5, 2024",
+    nextAppointment: "May 2, 2025"
+  },
+  {
+    id: "PT-10095",
+    name: "Jennifer Lee",
+    age: 45,
+    gender: "Female",
+    cancerType: "Breast",
+    stage: "Stage I",
+    status: "remission",
+    physician: "Rebecca Martinez",
+    diagnosisDate: "Aug 22, 2024",
+    nextAppointment: "Apr 30, 2025"
+  },
+  {
+    id: "PT-10096",
+    name: "James Williams",
+    age: 67,
+    gender: "Male",
+    cancerType: "Lung",
+    stage: "Stage IV",
+    status: "critical",
+    physician: "Michael Brown",
+    diagnosisDate: "Mar 1, 2025",
+    nextAppointment: "Apr 15, 2025"
+  },
+  {
+    id: "PT-10097",
+    name: "Emily Taylor",
+    age: 39,
+    gender: "Female",
+    cancerType: "Lymphoma",
+    stage: "Stage II",
+    status: "active",
+    physician: "Jennifer Adams",
+    diagnosisDate: "Feb 15, 2025",
+    nextAppointment: "Apr 22, 2025"
+  },
+  {
+    id: "PT-10098",
+    name: "David Rodriguez",
+    age: 53,
+    gender: "Male",
+    cancerType: "Melanoma",
+    stage: "Stage III",
+    status: "active",
+    physician: "James Wilson",
+    diagnosisDate: "Jan 10, 2025",
+    nextAppointment: "Apr 17, 2025"
+  },
+  {
+    id: "PT-10099",
+    name: "Angela Thompson",
+    age: 61,
+    gender: "Female",
+    cancerType: "Ovarian",
+    stage: "Stage II",
+    status: "remission",
+    physician: "Sarah Jackson",
+    diagnosisDate: "Jul 8, 2024",
+    nextAppointment: "May 5, 2025"
+  },
+  {
+    id: "PT-10100",
+    name: "Thomas Garcia",
+    age: 74,
+    gender: "Male",
+    cancerType: "Colorectal",
+    stage: "Stage III",
+    status: "critical",
+    physician: "David Wilson",
+    diagnosisDate: "Feb 28, 2025",
+    nextAppointment: "Apr 16, 2025"
+  },
+  {
+    id: "PT-10101",
+    name: "Lisa Martin",
+    age: 48,
+    gender: "Female",
+    cancerType: "Breast",
+    stage: "Stage I",
+    status: "active",
+    physician: "Rebecca Martinez",
+    diagnosisDate: "Mar 5, 2025",
+    nextAppointment: "Apr 19, 2025"
+  },
+  {
+    id: "PT-10102",
+    name: "Kevin Anderson",
+    age: 65,
+    gender: "Male",
+    cancerType: "Prostate",
+    stage: "Stage II",
+    status: "remission",
+    physician: "Michael Brown",
+    diagnosisDate: "Oct 15, 2024",
+    nextAppointment: "Apr 29, 2025"
+  }
+];
