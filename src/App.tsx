@@ -16,6 +16,8 @@ import AuditLogPage from "./pages/admin/audit-logs";
 import PatientRegistrationPage from "./pages/patients/register";
 import StudyProtocolSetupPage from "./pages/studies/protocol-setup";
 import ClinicalDataPage from "./pages/clinical-data/index";
+import PatientPortalDashboard from "./pages/patient-portal/dashboard";
+import ClinicalNotesPage from "./pages/clinical-workflows/notes";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +34,8 @@ const App = () => (
           
           {/* Main App Pages */}
           <Route path="/" element={<Index />} />
+          
+          {/* Patient Management */}
           <Route path="/patients" element={<PatientsPage />} />
           <Route path="/patients/register" element={<PatientRegistrationPage />} />
           <Route path="/patients/:patientId" element={<PatientDetailsPage />} />
@@ -40,8 +44,12 @@ const App = () => (
           <Route path="/studies" element={<StudiesPage />} />
           <Route path="/studies/protocol-setup" element={<StudyProtocolSetupPage />} />
           
-          {/* Clinical Data Pages */}
+          {/* Clinical Data & Workflows */}
           <Route path="/clinical-data" element={<ClinicalDataPage />} />
+          <Route path="/clinical-workflows/notes" element={<ClinicalNotesPage />} />
+          
+          {/* Patient Portal */}
+          <Route path="/patient-portal/dashboard" element={<PatientPortalDashboard />} />
           
           {/* Admin Pages */}
           <Route path="/users" element={<UserManagementPage />} />
