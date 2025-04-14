@@ -17,13 +17,19 @@ import PatientRegistrationPage from "./pages/patients/register";
 import StudyProtocolSetupPage from "./pages/studies/protocol-setup";
 import ClinicalDataPage from "./pages/clinical-data/index";
 import PatientPortalDashboard from "./pages/patient-portal/dashboard";
-import ClinicalNotesPage from "./pages/clinical-workflows/notes";
+import ClinicalNotesPage from "./pages/clinical-workflows/notes/index";
+import NewNotePage from "./pages/clinical-workflows/notes/new";
 import MessagingPage from "./pages/messages/index";
 import AppointmentsPage from "./pages/appointments/index";
 import LabResultsPage from "./pages/lab-results/index";
 import AnalyticsPage from "./pages/analytics/index";
 import SettingsPage from "./pages/settings/index";
 import CompliancePage from "./pages/compliance/index";
+import StudyDetailsPage from "./pages/studies/[studyId]";
+import InformedConsentPage from "./pages/studies/consent-tracking";
+import StudyFinancePage from "./pages/studies/finance";
+import ProtocolDeviationsPage from "./pages/studies/protocol-deviations";
+import SiteVisitsPage from "./pages/studies/site-visits";
 
 const queryClient = new QueryClient();
 
@@ -49,10 +55,16 @@ const App = () => (
           {/* Research Study Pages */}
           <Route path="/studies" element={<StudiesPage />} />
           <Route path="/studies/protocol-setup" element={<StudyProtocolSetupPage />} />
+          <Route path="/studies/:studyId" element={<StudyDetailsPage />} />
+          <Route path="/studies/consent-tracking" element={<InformedConsentPage />} />
+          <Route path="/studies/finance" element={<StudyFinancePage />} />
+          <Route path="/studies/protocol-deviations" element={<ProtocolDeviationsPage />} />
+          <Route path="/studies/site-visits" element={<SiteVisitsPage />} />
           
           {/* Clinical Data & Workflows */}
           <Route path="/clinical-data" element={<ClinicalDataPage />} />
           <Route path="/clinical-workflows/notes" element={<ClinicalNotesPage />} />
+          <Route path="/clinical-workflows/notes/new" element={<NewNotePage />} />
           <Route path="/lab-results" element={<LabResultsPage />} />
           
           {/* Patient Interaction Pages */}

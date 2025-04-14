@@ -72,7 +72,7 @@ const MessagingPage = () => {
       name: 'Dr. James Wilson',
       avatar: 'JW',
       role: 'Surgeon',
-      lastMessage: 'I've reviewed your latest lab results...',
+      lastMessage: "I've reviewed your latest lab results...",
       lastMessageTime: new Date('2025-03-08T09:30:00'),
       unreadCount: 0,
       status: 'away'
@@ -93,7 +93,7 @@ const MessagingPage = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: 'Good morning Sarah, I wanted to check in on how you're feeling after your last treatment cycle.',
+      content: "Good morning Sarah, I wanted to check in on how you're feeling after your last treatment cycle.",
       sender: 'Dr. Rebecca Martinez',
       senderAvatar: 'RM',
       timestamp: new Date('2025-03-10T09:15:00'),
@@ -102,7 +102,7 @@ const MessagingPage = () => {
     },
     {
       id: '2',
-      content: 'I've been experiencing more fatigue than usual, but the nausea is better with the new medication.',
+      content: "I've been experiencing more fatigue than usual, but the nausea is better with the new medication.",
       sender: 'You',
       senderAvatar: 'SP',
       timestamp: new Date('2025-03-10T09:20:00'),
@@ -111,7 +111,7 @@ const MessagingPage = () => {
     },
     {
       id: '3',
-      content: 'That's good to hear about the nausea. For the fatigue, try to space your activities throughout the day and get adequate rest.',
+      content: "That's good to hear about the nausea. For the fatigue, try to space your activities throughout the day and get adequate rest.",
       sender: 'Dr. Rebecca Martinez',
       senderAvatar: 'RM',
       timestamp: new Date('2025-03-10T09:25:00'),
@@ -120,7 +120,7 @@ const MessagingPage = () => {
     },
     {
       id: '4',
-      content: 'Your next appointment is scheduled for March 12th at 9:00 AM. Please arrive 15 minutes early for blood work.',
+      content: "Your next appointment is scheduled for March 12th at 9:00 AM. Please arrive 15 minutes early for blood work.",
       sender: 'Dr. Rebecca Martinez',
       senderAvatar: 'RM',
       timestamp: new Date('2025-03-10T10:23:00'),
@@ -166,7 +166,7 @@ const MessagingPage = () => {
     setTimeout(() => {
       const responseMsg: Message = {
         id: (Date.now() + 1).toString(),
-        content: 'Thanks for your message. I'll review this and get back to you as soon as possible.',
+        content: "Thanks for your message. I'll review this and get back to you as soon as possible.",
         sender: activeContact.name,
         senderAvatar: activeContact.avatar,
         timestamp: new Date(),
@@ -178,7 +178,7 @@ const MessagingPage = () => {
       
       toast({
         title: 'New message',
-        description: `${activeContact.name}: Thanks for your message. I'll review this and get back to you as soon as possible.`,
+        description: `${activeContact.name}: Thanks for your message. I'll review this and get back to you as soon as possible.`
       });
     }, 5000);
   };

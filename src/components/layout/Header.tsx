@@ -1,98 +1,74 @@
 
 import React from 'react';
-import { Bell, Search, HelpCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Bell, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Avatar } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet';
-import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import NotificationCenter from '@/components/notifications/NotificationCenter';
 
 interface HeaderProps {
   title?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ title }) => {
-  const navigate = useNavigate();
+const demoNotifications = [
+  {
+    id: '1',
+    title: 'New Message',
+    message: 'Dr. Rebecca Martinez sent you a message about your treatment plan.',
+    timestamp: new Date(Date.now() - 15 * 60000), // 15 minutes ago
+    isRead: false,
+    type: 'message' as const,
+    link: '/messages'
+  },
+  {
+    id: '2',
+    title: 'Appointment Reminder',
+    message: 'You have an appointment scheduled for tomorrow at 10:00 AM.',
+    timestamp: new Date(Date.now() - 2 * 3600000), // 2 hours ago
+    isRead: false,
+    type: 'appointment' as const,
+    link: '/appointments'
+  },
+  {
+    id: '3',
+    title: 'Lab Results Available',
+    message: 'Your recent blood work results are now available for review.',
+    timestamp: new Date(Date.now() - 5 * 3600000), // 5 hours ago
+    isRead: true,
+    type: 'result' as const,
+    link: '/lab-results'
+  },
+  {
+    id: '4',
+    title: 'Study Protocol Updated',
+    message: 'The BEACON-CRC Phase II Trial protocol has been updated to version 2.1.',
+    timestamp: new Date(Date.now() - 24 * 3600000), // 24 hours ago
+    isRead: true,
+    type: 'protocol' as const,
+    link: '/studies/protocol-setup'
+  }
+];
 
+const Header = ({ title }: HeaderProps) => {
   return (
-    <header className="border-b border-border bg-white py-3 px-4 flex items-center justify-between">
-      <div className="flex items-center">
-        <SidebarTrigger className="mr-4 md:hidden">
-          <Button variant="ghost" size="icon">
-            <span className="sr-only">Toggle sidebar</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-6 w-6"
-            >
-              <line x1="3" x2="21" y1="6" y2="6" />
-              <line x1="3" x2="21" y1="12" y2="12" />
-              <line x1="3" x2="21" y1="18" y2="18" />
-            </svg>
-          </Button>
-        </SidebarTrigger>
-        
-        {title && (
-          <div className="hidden md:block">
-            <h1 className="text-xl font-semibold">{title}</h1>
-          </div>
-        )}
-        
-        <div className="md:w-72 hidden md:block ml-4">
-          <div className="relative">
+    <header className="w-full border-b bg-background">
+      <div className="container mx-auto px-4 py-3 md:px-6 flex items-center justify-between">
+        <div className="flex-1">
+          <h1 className="text-lg font-medium md:text-xl">{title}</h1>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="relative hidden md:flex items-center">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search patients, studies..."
-              className="pl-8 bg-background border-muted"
+              placeholder="Search..."
+              className="pl-8 w-[200px] lg:w-[300px]"
             />
           </div>
+          <NotificationCenter initialNotifications={demoNotifications} />
+          <Button variant="ghost" size="icon" className="md:hidden">
+            <Search className="h-5 w-5" />
+          </Button>
         </div>
-      </div>
-
-      <div className="flex items-center gap-3 md:gap-4">
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="relative md:hidden">
-              <Search className="h-5 w-5" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="top" className="h-32">
-            <div className="pt-8 px-4">
-              <Input
-                type="search"
-                placeholder="Search patients, studies..."
-                className="w-full"
-              />
-            </div>
-          </SheetContent>
-        </Sheet>
-      
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="h-5 w-5" />
-          <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-health-primary">
-            3
-          </Badge>
-        </Button>
-        
-        <Button variant="ghost" size="icon">
-          <HelpCircle className="h-5 w-5" />
-        </Button>
-        
-        <Avatar className="h-8 w-8 border cursor-pointer" onClick={() => navigate('/profile')}>
-          <div className="flex h-full w-full items-center justify-center bg-health-primary text-white text-xs">
-            DR
-          </div>
-        </Avatar>
       </div>
     </header>
   );
