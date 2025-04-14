@@ -21,6 +21,9 @@ import ClinicalNotesPage from "./pages/clinical-workflows/notes";
 import MessagingPage from "./pages/messages/index";
 import AppointmentsPage from "./pages/appointments/index";
 import LabResultsPage from "./pages/lab-results/index";
+import AnalyticsPage from "./pages/analytics/index";
+import SettingsPage from "./pages/settings/index";
+import CompliancePage from "./pages/compliance/index";
 
 const queryClient = new QueryClient();
 
@@ -57,9 +60,12 @@ const App = () => (
           <Route path="/messages" element={<MessagingPage />} />
           <Route path="/appointments" element={<AppointmentsPage />} />
           
-          {/* Admin Pages */}
+          {/* Admin & Analytics Pages */}
           <Route path="/users" element={<UserManagementPage />} />
           <Route path="/audit-logs" element={<AuditLogPage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/compliance" element={<CompliancePage />} />
           
           {/* 404 Page */}
           <Route path="*" element={<NotFound />} />
