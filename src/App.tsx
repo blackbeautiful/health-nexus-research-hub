@@ -33,6 +33,7 @@ import SiteVisitsPage from "./pages/studies/site-visits";
 import PatientDashboard from "./pages/dashboards/patient-dashboard";
 import ResearcherDashboard from "./pages/dashboards/researcher-dashboard";
 import AdminDashboard from "./pages/dashboards/admin-dashboard";
+import StudySitesPage from "./pages/studies/sites/index";
 
 const queryClient = new QueryClient();
 
@@ -68,6 +69,7 @@ const App = () => (
           <Route path="/studies/finance" element={<StudyFinancePage />} />
           <Route path="/studies/protocol-deviations" element={<ProtocolDeviationsPage />} />
           <Route path="/studies/site-visits" element={<SiteVisitsPage />} />
+          <Route path="/studies/sites" element={<StudySitesPage />} />
           
           {/* Clinical Data & Workflows */}
           <Route path="/clinical-data" element={<ClinicalDataPage />} />

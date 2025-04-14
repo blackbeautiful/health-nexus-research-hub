@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Sidebar, 
   SidebarContent, 
@@ -10,7 +9,12 @@ import {
   SidebarMenuItem, 
   SidebarMenuButton,
   SidebarHeader,
-  SidebarFooter
+  SidebarFooter,
+  SidebarTrigger,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
+  useSidebar
 } from "@/components/ui/sidebar";
 import { 
   Home, 
@@ -32,12 +36,18 @@ import {
   User,
   Pill,
   BookOpen,
-  LucideIcon
+  LucideIcon,
+  ChevronRight,
+  Building2,
+  Clipboard,
+  FileText2
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import Logo from '@/components/common/Logo';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 interface MenuItem {
   title: string;
@@ -49,9 +59,19 @@ interface MenuItem {
 const AppSidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { state } = useSidebar();
+  const [openGroups, setOpenGroups] = useState<string[]>([]);
   
   const isActive = (url: string) => {
     return location.pathname === url || (url !== '/' && location.pathname.startsWith(url));
+  };
+
+  const toggleGroup = (title: string) => {
+    setOpenGroups(prev => 
+      prev.includes(title) 
+        ? prev.filter(group => group !== title) 
+        : [...prev, title]
+    );
   };
 
   const mainMenuItems: MenuItem[] = [
@@ -71,7 +91,12 @@ const AppSidebar = () => {
       url: "/studies",
       items: [
         { title: "Studies Overview", icon: BookOpen, url: "/studies" },
-        { title: "Protocol Setup", icon: FileSearch, url: "/studies/protocol-setup" }
+        { title: "Protocol Setup", icon: FileSearch, url: "/studies/protocol-setup" },
+        { title: "Study Sites", icon: Building2, url: "/studies/sites" },
+        { title: "Consent Tracking", icon: Clipboard, url: "/studies/consent-tracking" },
+        { title: "Protocol Deviations", icon: AlertTriangle, url: "/studies/protocol-deviations" },
+        { title: "Site Visits", icon: Building2, url: "/studies/site-visits" },
+        { title: "Finance", icon: FileText2, url: "/studies/finance" }
       ]
     },
     { 
@@ -80,7 +105,8 @@ const AppSidebar = () => {
       url: "/clinical-workflows",
       items: [
         { title: "Clinical Notes", icon: FileText, url: "/clinical-workflows/notes" },
-        { title: "Orders", icon: Pill, url: "/clinical-workflows/orders" }
+        { title: "Orders", icon: Pill, url: "/clinical-workflows/orders" },
+        { title: "Prescriptions", icon: Pill, url: "/clinical-workflows/prescriptions" }
       ]
     },
     { title: "Clinical Data", icon: Database, url: "/clinical-data" },
@@ -102,45 +128,73 @@ const AppSidebar = () => {
   ];
 
   const renderMenuItems = (items: MenuItem[]) => {
-    return items.map((item) => (
-      <SidebarMenuItem key={item.title}>
-        <SidebarMenuButton 
-          asChild 
-          onClick={() => navigate(item.url)}
-          isActive={isActive(item.url)}
-          tooltip={item.title}
-        >
-          <div className="flex items-center">
-            <item.icon className="mr-2 h-4 w-4" />
-            <span>{item.title}</span>
-          </div>
-        </SidebarMenuButton>
+    return items.map((item) => {
+      // If the item has subitems, render a collapsible menu
+      if (item.items && item.items.length > 0) {
+        const isOpen = openGroups.includes(item.title);
+        const isCurrentActive = isActive(item.url) || 
+                              (item.items && item.items.some(subItem => isActive(subItem.url)));
         
-        {item.items && (
-          <SidebarMenu>
-            {item.items.map((subItem) => (
-              <SidebarMenuItem key={subItem.title}>
+        return (
+          <SidebarMenuItem key={item.title}>
+            <Collapsible
+              open={isOpen || isCurrentActive}
+              onOpenChange={() => toggleGroup(item.title)}
+            >
+              <CollapsibleTrigger asChild>
                 <SidebarMenuButton 
-                  asChild 
-                  onClick={() => navigate(subItem.url)} 
-                  isActive={isActive(subItem.url)}
-                  tooltip={subItem.title}
+                  isActive={isCurrentActive}
+                  tooltip={state === "collapsed" ? item.title : undefined}
+                  className="flex w-full justify-between"
                 >
                   <div className="flex items-center">
-                    <subItem.icon className="mr-2 h-4 w-4" />
-                    <span>{subItem.title}</span>
+                    <item.icon className="mr-2 h-4 w-4" />
+                    <span>{item.title}</span>
                   </div>
+                  <ChevronRight className={`h-4 w-4 transition-transform ${isOpen || isCurrentActive ? 'rotate-90' : ''}`} />
                 </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        )}
-      </SidebarMenuItem>
-    ));
+              </CollapsibleTrigger>
+              
+              <CollapsibleContent>
+                <SidebarMenuSub>
+                  {item.items.map((subItem) => (
+                    <SidebarMenuSubItem key={subItem.title}>
+                      <SidebarMenuSubButton 
+                        onClick={() => navigate(subItem.url)} 
+                        isActive={isActive(subItem.url)}
+                      >
+                        <subItem.icon className="mr-2 h-4 w-4" />
+                        <span>{subItem.title}</span>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  ))}
+                </SidebarMenuSub>
+              </CollapsibleContent>
+            </Collapsible>
+          </SidebarMenuItem>
+        );
+      }
+      
+      // Otherwise render a simple menu item
+      return (
+        <SidebarMenuItem key={item.title}>
+          <SidebarMenuButton 
+            onClick={() => navigate(item.url)}
+            isActive={isActive(item.url)}
+            tooltip={state === "collapsed" ? item.title : undefined}
+          >
+            <div className="flex items-center">
+              <item.icon className="mr-2 h-4 w-4" />
+              <span>{item.title}</span>
+            </div>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      );
+    });
   };
 
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon">
       <SidebarHeader className="flex justify-center items-center p-4 border-b">
         <Logo />
       </SidebarHeader>
