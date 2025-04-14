@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, MessageSquare, FileText, PieChart, Bell, Pill, Clock, CheckCircle2, BookOpen } from 'lucide-react';
@@ -44,13 +43,13 @@ const PatientDashboard = () => {
       id: 'q3',
       question: 'When should you contact your care team about nausea?',
       options: [
-        'Only if you can't keep any food down for 24 hours',
-        'If you feel nauseated at all',
-        'If anti-nausea medications don't help or you vomit more than twice in 24 hours',
-        'Only if you become dehydrated'
+        "Only if you can't keep any food down for 24 hours",
+        "If you feel nauseated at all",
+        "If anti-nausea medications don't help or you vomit more than twice in 24 hours",
+        "Only if you become dehydrated"
       ],
       correctAnswer: 2,
-      explanation: 'You should contact your care team if your prescribed anti-nausea medications aren't controlling your symptoms or if you vomit multiple times in a day. Early intervention can prevent dehydration and improve your comfort.'
+      explanation: "You should contact your care team if your prescribed anti-nausea medications aren't controlling your symptoms or if you vomit multiple times in a day. Early intervention can prevent dehydration and improve your comfort."
     }
   ];
   
