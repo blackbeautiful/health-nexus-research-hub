@@ -30,6 +30,9 @@ import InformedConsentPage from "./pages/studies/consent-tracking";
 import StudyFinancePage from "./pages/studies/finance";
 import ProtocolDeviationsPage from "./pages/studies/protocol-deviations";
 import SiteVisitsPage from "./pages/studies/site-visits";
+import PatientDashboard from "./pages/dashboards/patient-dashboard";
+import ResearcherDashboard from "./pages/dashboards/researcher-dashboard";
+import AdminDashboard from "./pages/dashboards/admin-dashboard";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +49,11 @@ const App = () => (
           
           {/* Main App Pages */}
           <Route path="/" element={<Index />} />
+          
+          {/* User Dashboards */}
+          <Route path="/dashboard/patient" element={<PatientDashboard />} />
+          <Route path="/dashboard/researcher" element={<ResearcherDashboard />} />
+          <Route path="/dashboard/admin" element={<AdminDashboard />} />
           
           {/* Patient Management */}
           <Route path="/patients" element={<PatientsPage />} />
