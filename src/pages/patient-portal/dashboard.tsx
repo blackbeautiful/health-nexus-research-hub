@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Calendar, MessageSquare, FileText, PieChart, Bell, Pills, Clock } from 'lucide-react';
+import { Calendar, MessageSquare, FileText, PieChart, Bell, Pill, Clock } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 import PageHeader from '@/components/common/PageHeader';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -68,7 +67,7 @@ const PatientPortalDashboard = () => {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center text-base">
-              <Pills className="h-4 w-4 mr-2 text-muted-foreground" />
+              <Pill className="h-4 w-4 mr-2 text-muted-foreground" />
               Medications
             </CardTitle>
           </CardHeader>
@@ -92,7 +91,7 @@ const PatientPortalDashboard = () => {
           </CardContent>
           <CardFooter className="pt-0">
             <Button variant="outline" size="sm" className="w-full">
-              <Pills className="h-4 w-4 mr-2" />
+              <Pill className="h-4 w-4 mr-2" />
               Medication Schedule
             </Button>
           </CardFooter>
