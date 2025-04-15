@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Building2, MapPin, Phone, Mail, User, Users, Plus, FileText, Edit, Trash2, Search } from 'lucide-react';
@@ -12,7 +11,20 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-const mockStudySites = [
+interface StudySite {
+  id: string;
+  name: string;
+  address: string;
+  status: 'active' | 'pending' | 'inactive';
+  pi: string;
+  coordinator: string;
+  phone: string;
+  email: string;
+  patientCount: number;
+  studyCount: number;
+}
+
+const mockStudySites: StudySite[] = [
   {
     id: 'site-001',
     name: 'Memorial Research Center',
@@ -63,34 +75,18 @@ const mockStudySites = [
   }
 ];
 
-interface StudySite {
-  id: string;
-  name: string;
-  address: string;
-  status: 'active' | 'pending' | 'inactive';
-  pi: string;
-  coordinator: string;
-  phone: string;
-  email: string;
-  patientCount: number;
-  studyCount: number;
-}
-
 const StudySitesPage = () => {
   const [sites, setSites] = useState<StudySite[]>(mockStudySites);
   const [searchQuery, setSearchQuery] = useState('');
   const [isAddingSite, setIsAddingSite] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
 
-  // Filter sites based on search query and active tab
   const filteredSites = sites.filter(site => {
-    // Filter by search query (site name, PI, or coordinator)
     const matchesSearch = 
       site.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       site.pi.toLowerCase().includes(searchQuery.toLowerCase()) ||
       site.coordinator.toLowerCase().includes(searchQuery.toLowerCase());
     
-    // Filter by tab
     const matchesTab = 
       activeTab === 'all' || 
       (activeTab === 'active' && site.status === 'active') ||
@@ -102,10 +98,10 @@ const StudySitesPage = () => {
 
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
-      case 'active': return 'default';
-      case 'pending': return 'warning';
-      case 'inactive': return 'secondary';
-      default: return 'outline';
+      case "active": return "default";
+      case "pending": return "secondary";
+      case "inactive": return "outline";
+      default: return "outline";
     }
   };
 
@@ -115,7 +111,7 @@ const StudySitesPage = () => {
         title="Study Sites" 
         description="Manage research locations and facilities"
         breadcrumbs={[
-          { label: 'Studies', href: '/studies' },
+          { label: 'Studies', link: '/studies' },
           { label: 'Study Sites' }
         ]}
       />

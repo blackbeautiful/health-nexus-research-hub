@@ -34,6 +34,13 @@ import PatientDashboard from "./pages/dashboards/patient-dashboard";
 import ResearcherDashboard from "./pages/dashboards/researcher-dashboard";
 import AdminDashboard from "./pages/dashboards/admin-dashboard";
 import StudySitesPage from "./pages/studies/sites/index";
+import ProtocolDocumentsPage from "./pages/studies/protocol-documents";
+import PatientRandomizationPage from "./pages/studies/patient-randomization";
+import InsuranceInformationPage from "./pages/patients/insurance-information";
+import ClinicalInformationPage from "./pages/patients/clinical-information";
+import ConsentFormPage from "./pages/patients/consent-form";
+import PrescriptionsPage from "./pages/clinical-workflows/prescriptions/index";
+import NewPrescriptionPage from "./pages/clinical-workflows/prescriptions/new";
 
 const queryClient = new QueryClient();
 
@@ -60,6 +67,9 @@ const App = () => (
           <Route path="/patients" element={<PatientsPage />} />
           <Route path="/patients/register" element={<PatientRegistrationPage />} />
           <Route path="/patients/:patientId" element={<PatientDetailsPage />} />
+          <Route path="/patients/insurance-information" element={<InsuranceInformationPage />} />
+          <Route path="/patients/clinical-information" element={<ClinicalInformationPage />} />
+          <Route path="/patients/consent-form" element={<ConsentFormPage />} />
           
           {/* Research Study Pages */}
           <Route path="/studies" element={<StudiesPage />} />
@@ -70,11 +80,15 @@ const App = () => (
           <Route path="/studies/protocol-deviations" element={<ProtocolDeviationsPage />} />
           <Route path="/studies/site-visits" element={<SiteVisitsPage />} />
           <Route path="/studies/sites" element={<StudySitesPage />} />
+          <Route path="/studies/protocol-documents" element={<ProtocolDocumentsPage />} />
+          <Route path="/studies/patient-randomization" element={<PatientRandomizationPage />} />
           
           {/* Clinical Data & Workflows */}
           <Route path="/clinical-data" element={<ClinicalDataPage />} />
           <Route path="/clinical-workflows/notes" element={<ClinicalNotesPage />} />
           <Route path="/clinical-workflows/notes/new" element={<NewNotePage />} />
+          <Route path="/clinical-workflows/prescriptions" element={<PrescriptionsPage />} />
+          <Route path="/clinical-workflows/prescriptions/new" element={<NewPrescriptionPage />} />
           <Route path="/lab-results" element={<LabResultsPage />} />
           
           {/* Patient Interaction Pages */}

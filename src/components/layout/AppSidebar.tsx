@@ -40,7 +40,8 @@ import {
   ChevronRight,
   Building2,
   Clipboard,
-  FileText2
+  AlertTriangle,
+  FileText as FileText2
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Avatar } from '@/components/ui/avatar';
@@ -129,7 +130,6 @@ const AppSidebar = () => {
 
   const renderMenuItems = (items: MenuItem[]) => {
     return items.map((item) => {
-      // If the item has subitems, render a collapsible menu
       if (item.items && item.items.length > 0) {
         const isOpen = openGroups.includes(item.title);
         const isCurrentActive = isActive(item.url) || 
@@ -175,7 +175,6 @@ const AppSidebar = () => {
         );
       }
       
-      // Otherwise render a simple menu item
       return (
         <SidebarMenuItem key={item.title}>
           <SidebarMenuButton 

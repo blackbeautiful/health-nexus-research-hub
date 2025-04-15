@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -7,9 +6,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar } from "@/components/ui/calendar";
 import MainLayout from '@/components/layout/MainLayout';
 import PageHeader from '@/components/common/PageHeader';
-import { AnalyticsFilters } from '@/components/analytics/AnalyticsFilters';
-import { EnrollmentMetrics } from '@/components/analytics/EnrollmentMetrics';
-import { OutcomesChart } from '@/components/analytics/OutcomesChart';
+import AnalyticsFilters from '@/components/analytics/AnalyticsFilters';
+import EnrollmentMetrics from '@/components/analytics/EnrollmentMetrics';
+import OutcomesChart from '@/components/analytics/OutcomesChart';
 
 const mockEnrollmentData = {
   overview: {
