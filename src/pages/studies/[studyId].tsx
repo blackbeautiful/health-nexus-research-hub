@@ -18,7 +18,8 @@ import {
   Download,
   Search as SearchIcon,
   Edit,
-  Share
+  Share,
+  Plus
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
@@ -41,8 +42,7 @@ const StudyDetailsPage = () => {
   const { studyId } = useParams();
   const [activeTab, setActiveTab] = useState('overview');
   
-  // In a real application, you would fetch the study data based on studyId
-  const study = mockStudy; // Using mock data for now
+  const study = mockStudy;
   
   if (!study) {
     return (
@@ -58,7 +58,6 @@ const StudyDetailsPage = () => {
     );
   }
   
-  // Calculate completion percentage
   const enrollmentPercentage = Math.round((study.enrolledPatients / study.totalPatients) * 100);
 
   return (
@@ -89,7 +88,6 @@ const StudyDetailsPage = () => {
         </div>
       </div>
       
-      {/* Study summary cards */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         <Card className="lg:col-span-2">
           <CardHeader>
@@ -205,7 +203,6 @@ const StudyDetailsPage = () => {
         </Card>
       </div>
       
-      {/* Study data tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="overflow-x-auto">
           <TabsList className="w-full md:w-auto">
@@ -214,6 +211,7 @@ const StudyDetailsPage = () => {
             <TabsTrigger value="timeline">Timeline</TabsTrigger>
             <TabsTrigger value="documents">Documents</TabsTrigger>
             <TabsTrigger value="visits">Site Visits</TabsTrigger>
+            <TabsTrigger value="quizzes">Quizzes</TabsTrigger>
             <TabsTrigger value="deviations">Protocol Deviations</TabsTrigger>
             <TabsTrigger value="budget">Budget</TabsTrigger>
             <TabsTrigger value="reports">Reports</TabsTrigger>
@@ -383,7 +381,6 @@ const StudyDetailsPage = () => {
           </Card>
         </TabsContent>
         
-        {/* Other tab contents would go here */}
         <TabsContent value="timeline" className="mt-6">
           <Card>
             <CardHeader>
@@ -393,6 +390,28 @@ const StudyDetailsPage = () => {
             <CardContent className="text-center py-8">
               <p className="text-muted-foreground mb-4">Timeline view will be implemented in the next update.</p>
               <Button>View Implementation Plan</Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="quizzes" className="mt-6">
+          <Card>
+            <CardHeader>
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <CardTitle>Study Quizzes</CardTitle>
+                  <CardDescription>Manage patient questionnaires and assessments</CardDescription>
+                </div>
+                <Button asChild>
+                  <Link to="/studies/quiz-management/create">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Create Quiz
+                  </Link>
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <QuizList />
             </CardContent>
           </Card>
         </TabsContent>

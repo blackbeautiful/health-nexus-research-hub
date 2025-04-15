@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -41,6 +40,10 @@ import ClinicalInformationPage from "./pages/patients/clinical-information";
 import ConsentFormPage from "./pages/patients/consent-form";
 import PrescriptionsPage from "./pages/clinical-workflows/prescriptions/index";
 import NewPrescriptionPage from "./pages/clinical-workflows/prescriptions/new";
+import QuizManagementPage from "./pages/studies/quiz-management";
+import CreateQuizPage from "./pages/studies/quiz-management/create";
+import QuizDetailsPage from "./pages/studies/quiz-management/[quizId]";
+import EditQuizPage from "./pages/studies/quiz-management/[quizId]/edit";
 
 const queryClient = new QueryClient();
 
@@ -82,6 +85,12 @@ const App = () => (
           <Route path="/studies/sites" element={<StudySitesPage />} />
           <Route path="/studies/protocol-documents" element={<ProtocolDocumentsPage />} />
           <Route path="/studies/patient-randomization" element={<PatientRandomizationPage />} />
+          
+          {/* Quiz Management Routes */}
+          <Route path="/studies/quiz-management" element={<QuizManagementPage />} />
+          <Route path="/studies/quiz-management/create" element={<CreateQuizPage />} />
+          <Route path="/studies/quiz-management/:quizId" element={<QuizDetailsPage />} />
+          <Route path="/studies/quiz-management/:quizId/edit" element={<EditQuizPage />} />
           
           {/* Clinical Data & Workflows */}
           <Route path="/clinical-data" element={<ClinicalDataPage />} />
