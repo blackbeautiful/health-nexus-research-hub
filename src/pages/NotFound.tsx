@@ -3,7 +3,7 @@ import React from "react";
 import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { FileSearch, ArrowLeft, Home, Users } from "lucide-react";
+import { FileSearch, ArrowLeft, Home, Users, AlertTriangle } from "lucide-react";
 
 const NotFound = () => {
   const location = useLocation();
@@ -22,7 +22,7 @@ const NotFound = () => {
           <div className="relative">
             <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-blue-300 to-blue-600 opacity-75 blur-sm animate-pulse"></div>
             <div className="rounded-full bg-blue-50 p-6 relative">
-              <FileSearch className="h-16 w-16 text-health-primary animate-fade-in" />
+              <FileSearch className="h-16 w-16 text-blue-600 animate-fade-in" />
             </div>
           </div>
         </div>
@@ -46,12 +46,25 @@ const NotFound = () => {
           </Button>
         </div>
         <div className="mt-12 animate-fade-in" style={{ animationDelay: "800ms" }}>
-          <Button variant="ghost" asChild size="sm" className="text-sm text-muted-foreground">
-            <Link to="javascript:history.back()" className="flex items-center">
+          <Button 
+            variant="ghost" 
+            asChild 
+            size="sm" 
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            onClick={() => window.history.back()}
+          >
+            <Link to="#" className="flex items-center">
               <ArrowLeft className="mr-1 h-3 w-3" />
               Go Back
             </Link>
           </Button>
+        </div>
+        
+        <div className="mt-8 animate-fade-in border-t pt-8 border-gray-200" style={{ animationDelay: "900ms" }}>
+          <p className="text-sm text-muted-foreground flex items-center justify-center">
+            <AlertTriangle className="h-3 w-3 mr-1" />
+            If you believe this is an error, please contact support
+          </p>
         </div>
       </div>
     </div>

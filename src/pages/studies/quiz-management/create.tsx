@@ -105,9 +105,9 @@ const CreateQuizPage = () => {
   };
 
   const addQuestion = () => {
-    const newQuestion: QuizQuestion = {
+    const newQuestion = {
       id: `q${quiz.questions.length + 1}`,
-      type: "single_choice",
+      type: "single_choice" as QuestionType,
       question: "",
       options: ["Option 1"],
       required: false
@@ -135,9 +135,9 @@ const CreateQuizPage = () => {
     if (type === 'multiple_choice' || type === 'single_choice') {
       updatedQuestion.options = updatedQuestion.options || ["Option 1"];
     } else if (type === 'true_false') {
-      delete updatedQuestion.options;
+      updatedQuestion.options = undefined;
     } else if (type === 'text' || type === 'scale') {
-      delete updatedQuestion.options;
+      updatedQuestion.options = undefined;
     }
     
     newQuestions[index] = updatedQuestion;
@@ -568,3 +568,4 @@ const CreateQuizPage = () => {
 };
 
 export default CreateQuizPage;
+
