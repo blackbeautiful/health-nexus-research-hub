@@ -1,9 +1,9 @@
 
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { FileSearch } from "lucide-react";
+import { FileSearch, ArrowLeft, Home, Users } from "lucide-react";
 
 const NotFound = () => {
   const location = useLocation();
@@ -18,21 +18,39 @@ const NotFound = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="text-center max-w-md px-4">
-        <div className="mb-6 flex justify-center">
-          <div className="rounded-full bg-blue-50 p-4">
-            <FileSearch className="h-12 w-12 text-health-primary" />
+        <div className="mb-8 flex justify-center">
+          <div className="relative">
+            <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-blue-300 to-blue-600 opacity-75 blur-sm animate-pulse"></div>
+            <div className="rounded-full bg-blue-50 p-6 relative">
+              <FileSearch className="h-16 w-16 text-health-primary animate-fade-in" />
+            </div>
           </div>
         </div>
-        <h1 className="text-4xl font-bold mb-4 text-gray-900">Page Not Found</h1>
-        <p className="text-lg text-gray-600 mb-8">
+        <h1 className="text-5xl font-bold mb-4 text-gray-900 animate-fade-in">404</h1>
+        <h2 className="text-2xl font-semibold mb-2 text-gray-900 animate-fade-in" style={{ animationDelay: "200ms" }}>Page Not Found</h2>
+        <p className="text-lg text-gray-600 mb-8 animate-fade-in" style={{ animationDelay: "400ms" }}>
           The page you are looking for doesn't exist or has been moved.
         </p>
-        <div className="flex justify-center space-x-4">
-          <Button asChild>
-            <a href="/">Return to Dashboard</a>
+        <div className="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4 animate-fade-in" style={{ animationDelay: "600ms" }}>
+          <Button asChild className="hover-scale">
+            <Link to="/" className="flex items-center">
+              <Home className="mr-2 h-4 w-4" />
+              Return to Dashboard
+            </Link>
           </Button>
-          <Button variant="outline" asChild>
-            <a href="/patients">View Patients</a>
+          <Button variant="outline" asChild className="hover-scale">
+            <Link to="/patients" className="flex items-center">
+              <Users className="mr-2 h-4 w-4" />
+              View Patients
+            </Link>
+          </Button>
+        </div>
+        <div className="mt-12 animate-fade-in" style={{ animationDelay: "800ms" }}>
+          <Button variant="ghost" asChild size="sm" className="text-sm text-muted-foreground">
+            <Link to="javascript:history.back()" className="flex items-center">
+              <ArrowLeft className="mr-1 h-3 w-3" />
+              Go Back
+            </Link>
           </Button>
         </div>
       </div>
