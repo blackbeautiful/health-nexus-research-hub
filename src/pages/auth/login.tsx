@@ -1,119 +1,216 @@
 
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { useNavigate, Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Link } from 'react-router-dom';
-import Logo from '@/components/common/Logo';
-import { Eye, EyeOff, Shield } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
+import { Eye, EyeOff, Lock, Mail, AlertCircle } from 'lucide-react';
+import Logo from '@/components/common/Logo';
 
-const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const LoginPage = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    rememberMe: false
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const [errors, setErrors] = useState<{email?: string; password?: string}>({});
+  
+  const handleChange = (field: string, value: any) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+    
+    // Clear errors on change
+    if (errors[field as keyof typeof errors]) {
+      setErrors(prev => ({
+        ...prev,
+        [field]: undefined
+      }));
+    }
+  };
+  
+  const validateForm = () => {
+    const newErrors: {email?: string; password?: string} = {};
+    
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email is invalid';
+    }
+    
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !password) {
-      toast({
-        title: "Error",
-        description: "Please fill in all fields",
-        variant: "destructive"
-      });
+    if (!validateForm()) {
       return;
     }
     
     setIsLoading(true);
-    // Simulate API call
+    
+    // Simulated login
     setTimeout(() => {
       setIsLoading(false);
+      
+      // Simulate role-based redirect
+      const roleMappings: { [key: string]: string } = {
+        'patient@example.com': '/dashboard/patient',
+        'researcher@example.com': '/dashboard/researcher',
+        'admin@example.com': '/dashboard/admin',
+        'default': '/'
+      };
+      
+      const redirectPath = roleMappings[formData.email] || roleMappings.default;
+      
       toast({
-        title: "Success",
-        description: "You have successfully logged in",
+        title: "Login Successful",
+        description: `Welcome back ${formData.email}!`,
       });
-      // Redirect would happen here
+      
+      navigate(redirectPath);
     }, 1500);
   };
-
+  
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+    <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <div className="w-full max-w-md">
-        <div className="mb-8 flex justify-center">
+        <div className="mb-8 text-center">
           <Logo />
+          <h1 className="mt-6 text-2xl font-semibold">HealthNexus Research Hub</h1>
+          <p className="text-sm text-muted-foreground mt-1">Advancing Clinical Research</p>
         </div>
         
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl text-center">Welcome Back</CardTitle>
-            <CardDescription className="text-center">
-              Sign in to HealthNexus Research Hub
+            <CardTitle>Login to your account</CardTitle>
+            <CardDescription>
+              Enter your credentials to access the research portal
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit}>
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input 
-                    id="email" 
-                    type="email" 
-                    placeholder="jane.roberts@healthnexus.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    autoComplete="username"
+          <form onSubmit={handleSubmit}>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="email"
+                    placeholder="name@example.com"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => handleChange('email', e.target.value)}
+                    className={`pl-10 ${errors.email ? 'border-destructive' : ''}`}
+                    disabled={isLoading}
                   />
                 </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <Label htmlFor="password">Password</Label>
-                    <Link 
-                      to="/password-reset" 
-                      className="text-xs text-primary hover:underline"
-                    >
-                      Forgot password?
-                    </Link>
-                  </div>
-                  <div className="relative">
-                    <Input 
-                      id="password" 
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Enter your password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="pr-10"
-                      autoComplete="current-password"
-                    />
-                    <button
-                      type="button"
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                    </button>
-                  </div>
-                </div>
-                <Button 
-                  type="submit" 
-                  className="w-full" 
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Signing in..." : "Sign In"}
-                </Button>
+                {errors.email && (
+                  <p className="text-sm text-destructive flex items-center mt-1">
+                    <AlertCircle className="h-4 w-4 mr-1" />
+                    {errors.email}
+                  </p>
+                )}
+                <p className="text-xs text-muted-foreground">
+                  Try: patient@example.com, researcher@example.com, or admin@example.com
+                </p>
               </div>
-            </form>
-          </CardContent>
-          <CardFooter className="flex-col space-y-4">
-            <div className="flex items-center justify-center w-full gap-2 text-sm text-muted-foreground">
-              <Shield size={16} />
-              <span>Protected by HIPAA & GDPR compliant security</span>
-            </div>
-          </CardFooter>
+              
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <Label htmlFor="password">Password</Label>
+                  <Link 
+                    to="/password-reset" 
+                    className="text-xs text-primary hover:underline"
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    value={formData.password}
+                    onChange={(e) => handleChange('password', e.target.value)}
+                    className={`pl-10 ${errors.password ? 'border-destructive' : ''}`}
+                    disabled={isLoading}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-full px-3"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </Button>
+                </div>
+                {errors.password && (
+                  <p className="text-sm text-destructive flex items-center mt-1">
+                    <AlertCircle className="h-4 w-4 mr-1" />
+                    {errors.password}
+                  </p>
+                )}
+                <p className="text-xs text-muted-foreground">
+                  Use "password123" for demo login
+                </p>
+              </div>
+              
+              <div className="flex items-center space-x-2 pt-2">
+                <Checkbox 
+                  id="remember-me" 
+                  checked={formData.rememberMe} 
+                  onCheckedChange={(checked) => handleChange('rememberMe', checked)}
+                  disabled={isLoading}
+                />
+                <Label htmlFor="remember-me" className="text-sm">Remember me for 30 days</Label>
+              </div>
+            </CardContent>
+            
+            <CardFooter className="flex flex-col space-y-4">
+              <Button 
+                type="submit" 
+                className="w-full" 
+                disabled={isLoading}
+              >
+                {isLoading ? 'Signing in...' : 'Sign In'}
+              </Button>
+              
+              <p className="text-center text-sm text-muted-foreground">
+                Don't have an account?{" "}
+                <span className="text-primary hover:underline">
+                  Contact your administrator
+                </span>
+              </p>
+            </CardFooter>
+          </form>
         </Card>
+        
+        <p className="mt-4 text-center text-xs text-muted-foreground">
+          &copy; 2025 HealthNexus Research Hub. All rights reserved.<br />
+          HIPAA & GDPR Compliant
+        </p>
       </div>
     </div>
   );
