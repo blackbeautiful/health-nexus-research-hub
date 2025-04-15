@@ -4,15 +4,33 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-interface EnrollmentData {
+export interface EnrollmentData {
   month: string;
-  patients: number;
-  enrolled: number;
-  completed: number;
+  count?: number;
+  patients?: number;
+  enrolled?: number;
+  completed?: number;
 }
 
-interface EnrollmentMetricsProps {
-  data: EnrollmentData[];
+export interface EnrollmentMetricsProps {
+  data: {
+    overview?: {
+      totalPatients: number;
+      activePatientsCount: number;
+      completedPatientsCount: number;
+      withdrawnPatientsCount: number;
+      screeningFailureCount: number;
+    };
+    byStudy?: {
+      name: string;
+      total: number;
+      active: number;
+      completed: number;
+      withdrawn: number;
+      screeningFailure: number;
+    }[];
+    enrollmentTrend: EnrollmentData[];
+  };
   timeRange?: string;
   onTimeRangeChange?: (range: string) => void;
 }
@@ -47,7 +65,7 @@ const EnrollmentMetrics: React.FC<EnrollmentMetricsProps> = ({
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
-            data={data}
+            data={data.enrollmentTrend}
             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" />

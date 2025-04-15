@@ -13,33 +13,61 @@ import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Shuffle, ListChecks, UserPlus, FileInput, History, RotateCw, Download, Filter } from 'lucide-react';
 
+// Define proper interfaces for better type safety
+interface StudyArm {
+  name: string;
+}
+
+interface Study {
+  id: string;
+  name: string;
+  arms: string[];
+}
+
+interface RandomizationRecord {
+  id: string;
+  patientId: string;
+  studyId: string;
+  assignment: string;
+  date: string;
+  by: string;
+}
+
+interface ArmDistribution {
+  [key: string]: number;
+}
+
+interface StudyDistribution {
+  [key: string]: ArmDistribution;
+}
+
 // Mock data
-const mockStudies = [
+const mockStudies: Study[] = [
   { id: 'ONCO-2025-001', name: 'Neoadjuvant Immunotherapy in Resectable NSCLC', arms: ['Treatment', 'Placebo'] },
   { id: 'ONCO-2025-002', name: 'CDK4/6 Inhibition in HR+ Metastatic Breast Cancer', arms: ['Standard of Care', 'Experimental Arm A', 'Experimental Arm B'] },
   { id: 'ONCO-2025-003', name: 'Novel ctDNA Collection Protocol for Early Cancer Detection', arms: ['Collection Method A', 'Collection Method B'] },
 ];
 
-const mockRandomizations = [
+const mockRandomizations: RandomizationRecord[] = [
   { id: 'R-001', patientId: 'PT-12345', studyId: 'ONCO-2025-001', assignment: 'Treatment', date: '2025-03-15', by: 'Dr. Rebecca Martinez' },
   { id: 'R-002', patientId: 'PT-12378', studyId: 'ONCO-2025-001', assignment: 'Placebo', date: '2025-03-16', by: 'Dr. James Wilson' },
   { id: 'R-003', patientId: 'PT-12403', studyId: 'ONCO-2025-002', assignment: 'Experimental Arm A', date: '2025-03-20', by: 'Dr. Rebecca Martinez' },
 ];
 
 // Randomization distributions
-const mockDistribution = {
+const mockDistribution: StudyDistribution = {
   'ONCO-2025-001': { 'Treatment': 12, 'Placebo': 10 },
   'ONCO-2025-002': { 'Standard of Care': 8, 'Experimental Arm A': 7, 'Experimental Arm B': 6 },
 };
 
 const PatientRandomizationPage = () => {
   const { toast } = useToast();
-  const [selectedStudy, setSelectedStudy] = useState('');
-  const [patientId, setPatientId] = useState('');
+  const [selectedStudy, setSelectedStudy] = useState<string>('');
+  const [patientId, setPatientId] = useState<string>('');
   const [randomizationResult, setRandomizationResult] = useState<{ arm: string; probability: number } | null>(null);
-  const [isRandomizing, setIsRandomizing] = useState(false);
-  const [recentRandomizations, setRecentRandomizations] = useState(mockRandomizations);
-  const [activeTab, setActiveTab] = useState('randomize');
+  const [isRandomizing, setIsRandomizing] = useState<boolean>(false);
+  const [recentRandomizations, setRecentRandomizations] = useState<RandomizationRecord[]>(mockRandomizations);
+  const [activeTab, setActiveTab] = useState<string>('randomize');
   
   // Get study details based on selection
   const selectedStudyDetails = mockStudies.find(study => study.id === selectedStudy);
@@ -72,7 +100,7 @@ const PatientRandomizationPage = () => {
         });
         
         // Add to recent randomizations
-        const newRandomization = {
+        const newRandomization: RandomizationRecord = {
           id: `R-00${recentRandomizations.length + 1}`,
           patientId: patientId,
           studyId: selectedStudy,
@@ -94,8 +122,8 @@ const PatientRandomizationPage = () => {
   };
   
   // Generate study distribution chart data
-  const getStudyDistribution = (studyId: string) => {
-    return mockDistribution[studyId as keyof typeof mockDistribution] || {};
+  const getStudyDistribution = (studyId: string): ArmDistribution => {
+    return mockDistribution[studyId] || {};
   };
   
   return (
