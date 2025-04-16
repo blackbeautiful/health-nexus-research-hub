@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import { Button } from '@/components/ui/button';
@@ -13,17 +12,46 @@ import { Label } from '@/components/ui/label';
 import { QuizFrequency, QuestionType, QuizQuestion } from '@/types/quiz';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
+import { Tabs, TabsContent } from '@/components/ui/tabs';
+import { Checkbox } from '@/components/ui/checkbox';
+
+// Mock studies data - in a real app, this would come from an API or store
+const mockStudies = [
+  {
+    id: "ONCO-2025-001",
+    name: "Neoadjuvant Immunotherapy in Resectable NSCLC"
+  },
+  {
+    id: "ONCO-2025-002",
+    name: "CDK4/6 Inhibition in HR+ Metastatic Breast Cancer"
+  },
+  {
+    id: "ONCO-2025-003",
+    name: "Novel ctDNA Collection Protocol for Early Cancer Detection"
+  },
+  {
+    id: "ONCO-2024-005",
+    name: "PARP Inhibition in BRCA-mutated Ovarian Cancer"
+  },
+  {
+    id: "ONCO-2024-001",
+    name: "CAR-T Cell Therapy in R/R Multiple Myeloma"
+  }
+];
 
 const CreateQuizPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showOtherOption, setShowOtherOption] = useState<{ [key: string]: boolean }>({});
+  const [activeTab, setActiveTab] = useState('basic');
   
   const [quiz, setQuiz] = useState({
     title: "",
     description: "",
     studyId: "",
     siteId: "",
+    type: "assessment" as "assessment" | "satisfaction" | "symptoms" | "adherence" | "quality_of_life" | "custom",
     frequency: "weekly" as QuizFrequency,
     customFrequencyDays: 7,
     questions: [
@@ -32,7 +60,8 @@ const CreateQuizPage = () => {
         type: "single_choice" as QuestionType,
         question: "",
         options: ["Option 1"],
-        required: false
+        required: false,
+        allowOther: false
       }
     ],
     startDate: new Date(),
@@ -110,7 +139,8 @@ const CreateQuizPage = () => {
       type: "single_choice" as QuestionType,
       question: "",
       options: ["Option 1"],
-      required: false
+      required: false,
+      allowOther: false
     };
     setQuiz(prev => ({
       ...prev,
@@ -134,10 +164,13 @@ const CreateQuizPage = () => {
     
     if (type === 'multiple_choice' || type === 'single_choice') {
       updatedQuestion.options = updatedQuestion.options || ["Option 1"];
+      updatedQuestion.allowOther = updatedQuestion.allowOther || false;
     } else if (type === 'true_false') {
       updatedQuestion.options = undefined;
-    } else if (type === 'text' || type === 'scale') {
+      updatedQuestion.allowOther = false;
+    } else if (type === 'text' || type === 'scale' || type === 'date' || type === 'time' || type === 'datetime' || type === 'rating' || type === 'matrix' || type === 'ranking') {
       updatedQuestion.options = undefined;
+      updatedQuestion.allowOther = false;
     }
     
     newQuestions[index] = updatedQuestion;
@@ -271,13 +304,22 @@ const CreateQuizPage = () => {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="studyId">Study ID<span className="text-destructive">*</span></Label>
-                    <Input 
-                      id="studyId" 
+                    <Label htmlFor="studyId">Study<span className="text-destructive">*</span></Label>
+                    <Select 
                       value={quiz.studyId} 
-                      onChange={e => updateQuizField('studyId', e.target.value)}
-                      placeholder="Enter study ID"
-                    />
+                      onValueChange={value => updateQuizField('studyId', value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select study" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {mockStudies.map(study => (
+                          <SelectItem key={study.id} value={study.id}>
+                            {study.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div>
                     <Label htmlFor="siteId">Site ID (Optional)</Label>
@@ -288,6 +330,25 @@ const CreateQuizPage = () => {
                       placeholder="Leave empty for all sites"
                     />
                   </div>
+                </div>
+                <div>
+                  <Label htmlFor="type">Quiz Type<span className="text-destructive">*</span></Label>
+                  <Select 
+                    value={quiz.type} 
+                    onValueChange={value => updateQuizField('type', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select quiz type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="assessment">Patient Assessment</SelectItem>
+                      <SelectItem value="satisfaction">Patient Satisfaction</SelectItem>
+                      <SelectItem value="symptoms">Symptom Tracking</SelectItem>
+                      <SelectItem value="adherence">Medication Adherence</SelectItem>
+                      <SelectItem value="quality_of_life">Quality of Life</SelectItem>
+                      <SelectItem value="custom">Custom Quiz</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -390,6 +451,12 @@ const CreateQuizPage = () => {
                                 <SelectItem value="true_false">True/False</SelectItem>
                                 <SelectItem value="text">Free Text</SelectItem>
                                 <SelectItem value="scale">Scale (0-10)</SelectItem>
+                                <SelectItem value="date">Date</SelectItem>
+                                <SelectItem value="time">Time</SelectItem>
+                                <SelectItem value="datetime">Date & Time</SelectItem>
+                                <SelectItem value="rating">Star Rating</SelectItem>
+                                <SelectItem value="matrix">Matrix</SelectItem>
+                                <SelectItem value="ranking">Ranking</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
@@ -417,14 +484,32 @@ const CreateQuizPage = () => {
                           <div>
                             <div className="flex items-center justify-between mb-2">
                               <Label>Answer Options</Label>
-                              <Button 
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                onClick={() => addOption(index)}
-                              >
-                                <Plus className="h-3 w-3 mr-1" /> Add Option
-                              </Button>
+                              <div className="space-x-2">
+                                <Button 
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => addOption(index)}
+                                >
+                                  <Plus className="h-3 w-3 mr-1" /> Add Option
+                                </Button>
+                                <Switch
+                                  id={`allow-other-${index}`}
+                                  checked={question.allowOther}
+                                  onCheckedChange={(checked) => {
+                                    const newQuestions = [...quiz.questions];
+                                    newQuestions[index] = {
+                                      ...newQuestions[index],
+                                      allowOther: checked
+                                    };
+                                    setQuiz(prev => ({
+                                      ...prev,
+                                      questions: newQuestions
+                                    }));
+                                  }}
+                                />
+                                <Label htmlFor={`allow-other-${index}`}>Allow "Other"</Label>
+                              </div>
                             </div>
                             <div className="space-y-2">
                               {question.options?.map((option, optionIndex) => (
@@ -445,6 +530,87 @@ const CreateQuizPage = () => {
                                   </Button>
                                 </div>
                               ))}
+                              {question.allowOther && (
+                                <div className="flex items-center gap-2">
+                                  <Input 
+                                    value="Other (please specify)"
+                                    disabled
+                                    className="bg-muted"
+                                  />
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {question.type === 'matrix' && (
+                          <div className="space-y-4">
+                            <div>
+                              <Label>Matrix Rows (Options)</Label>
+                              <div className="space-y-2">
+                                {question.options?.map((option, optionIndex) => (
+                                  <div key={optionIndex} className="flex items-center gap-2">
+                                    <Input 
+                                      value={option} 
+                                      onChange={(e) => updateQuestionOption(index, optionIndex, e.target.value)}
+                                      placeholder={`Row ${optionIndex + 1}`}
+                                    />
+                                    <Button 
+                                      type="button"
+                                      variant="ghost"
+                                      size="icon"
+                                      onClick={() => removeOption(index, optionIndex)}
+                                      disabled={(question.options?.length || 0) <= 1}
+                                    >
+                                      Remove
+                                    </Button>
+                                  </div>
+                                ))}
+                                <Button 
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => addOption(index)}
+                                >
+                                  <Plus className="h-3 w-3 mr-1" /> Add Row
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {question.type === 'ranking' && (
+                          <div className="space-y-4">
+                            <div>
+                              <Label>Items to Rank</Label>
+                              <div className="space-y-2">
+                                {question.options?.map((option, optionIndex) => (
+                                  <div key={optionIndex} className="flex items-center gap-2">
+                                    <Input 
+                                      value={option} 
+                                      onChange={(e) => updateQuestionOption(index, optionIndex, e.target.value)}
+                                      placeholder={`Item ${optionIndex + 1}`}
+                                    />
+                                    <Button 
+                                      type="button"
+                                      variant="ghost"
+                                      size="icon"
+                                      onClick={() => removeOption(index, optionIndex)}
+                                      disabled={(question.options?.length || 0) <= 1}
+                                    >
+                                      Remove
+                                    </Button>
+                                  </div>
+                                ))}
+                                <Button 
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => addOption(index)}
+                                >
+                                  <Plus className="h-3 w-3 mr-1" /> Add Item
+                                </Button>
+                              </div>
                             </div>
                           </div>
                         )}

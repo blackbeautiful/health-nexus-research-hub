@@ -1,4 +1,3 @@
-
 export type QuizFrequency = 
   | 'hourly'
   | 'daily'
@@ -13,7 +12,13 @@ export type QuestionType =
   | 'single_choice'
   | 'true_false'
   | 'text'
-  | 'scale';
+  | 'scale'
+  | 'date'
+  | 'time'
+  | 'datetime'
+  | 'rating'
+  | 'matrix'
+  | 'ranking';
 
 export interface QuizQuestion {
   id: string;
@@ -23,6 +28,7 @@ export interface QuizQuestion {
   correctAnswer?: string | string[];
   explanation?: string;
   required: boolean;
+  allowOther?: boolean;
 }
 
 export interface StudyQuiz {
