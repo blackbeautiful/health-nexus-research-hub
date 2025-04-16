@@ -3,7 +3,7 @@ import Layout from '@/components/layout/Layout';
 import PageHeader from '@/components/common/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ChevronLeft, Save } from 'lucide-react';
+import { ChevronLeft, Save, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
@@ -446,59 +446,458 @@ const PatientRegistrationPage = () => {
           
           <TabsContent value="insurance">
             <Card>
-              <CardContent className="p-6">
-                <div className="text-center py-12">
-                  <h3 className="text-lg font-medium">Insurance Information</h3>
-                  <p className="text-gray-500 mt-2">
-                    Complete the previous sections first to continue
-                  </p>
-                  <Button 
-                    className="mt-4" 
-                    onClick={() => setActiveTab('clinical')}
-                  >
-                    Continue to Clinical Information
-                  </Button>
+              <CardContent className="p-6 space-y-6">
+                <div className="space-y-6">
+                  <h3 className="text-lg font-medium">Primary Insurance</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="insurance-provider">Insurance Provider *</Label>
+                      <Input 
+                        id="insurance-provider" 
+                        placeholder="Enter insurance provider"
+                        required 
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="insurance-plan">Plan Type</Label>
+                      <Select>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select plan type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="hmo">HMO</SelectItem>
+                          <SelectItem value="ppo">PPO</SelectItem>
+                          <SelectItem value="epo">EPO</SelectItem>
+                          <SelectItem value="pos">POS</SelectItem>
+                          <SelectItem value="hdhp">HDHP</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="policy-number">Policy Number *</Label>
+                      <Input 
+                        id="policy-number" 
+                        placeholder="Enter policy number"
+                        required 
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="group-number">Group Number</Label>
+                      <Input 
+                        id="group-number" 
+                        placeholder="Enter group number"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="effective-date">Effective Date *</Label>
+                    <Input 
+                      id="effective-date" 
+                      type="date"
+                      required 
+                    />
+                  </div>
+
+                  <div className="border-t pt-4">
+                    <h4 className="font-medium mb-4">Policyholder Information</h4>
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-2 mb-4">
+                        <Checkbox id="same-as-patient" />
+                        <label
+                          htmlFor="same-as-patient"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          Same as patient
+                        </label>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <Label htmlFor="policyholder-name">Policyholder Name *</Label>
+                          <Input 
+                            id="policyholder-name" 
+                            placeholder="Enter policyholder name"
+                            required 
+                          />
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor="relationship">Relationship to Patient</Label>
+                          <Select>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select relationship" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="self">Self</SelectItem>
+                              <SelectItem value="spouse">Spouse</SelectItem>
+                              <SelectItem value="parent">Parent</SelectItem>
+                              <SelectItem value="guardian">Legal Guardian</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <Label htmlFor="policyholder-dob">Date of Birth *</Label>
+                          <Input 
+                            id="policyholder-dob" 
+                            type="date"
+                            required 
+                          />
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor="policyholder-ssn">SSN (last 4 digits)</Label>
+                          <Input 
+                            id="policyholder-ssn" 
+                            placeholder="XXXX"
+                            maxLength={4} 
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="border-t pt-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-medium">Secondary Insurance</h3>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox id="has-secondary" />
+                        <label
+                          htmlFor="has-secondary"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          I have secondary insurance
+                        </label>
+                      </div>
+                    </div>
+                    
+                    {/* Secondary insurance fields will be shown/hidden based on checkbox */}
+                    <div className="space-y-6 opacity-50">
+                      {/* Same fields as primary insurance but with different IDs */}
+                      {/* This section would be conditionally rendered based on checkbox state */}
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
+            
+            <div className="flex justify-between mt-6">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => setActiveTab('contact')}
+              >
+                Previous: Contact Information
+              </Button>
+              <Button 
+                type="button" 
+                onClick={() => setActiveTab('clinical')}
+              >
+                Next: Clinical Information
+              </Button>
+            </div>
           </TabsContent>
           
           <TabsContent value="clinical">
             <Card>
-              <CardContent className="p-6">
-                <div className="text-center py-12">
-                  <h3 className="text-lg font-medium">Clinical Information</h3>
-                  <p className="text-gray-500 mt-2">
-                    Complete the previous sections first to continue
-                  </p>
-                  <Button 
-                    className="mt-4" 
-                    onClick={() => setActiveTab('consent')}
-                  >
-                    Continue to Consent
-                  </Button>
+              <CardContent className="p-6 space-y-6">
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-medium mb-4">Medical History</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <Label>Current Medical Conditions</Label>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-2">
+                          {[
+                            'Diabetes',
+                            'Hypertension',
+                            'Heart Disease',
+                            'Asthma',
+                            'Cancer',
+                            'Arthritis',
+                            'Depression',
+                            'Anxiety',
+                            'Other'
+                          ].map((condition) => (
+                            <div key={condition} className="flex items-center space-x-2">
+                              <Checkbox id={`condition-${condition.toLowerCase()}`} />
+                              <Label htmlFor={`condition-${condition.toLowerCase()}`}>{condition}</Label>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="other-conditions">Other Medical Conditions</Label>
+                        <Textarea 
+                          id="other-conditions" 
+                          placeholder="Please specify any other medical conditions"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="border-t pt-4">
+                    <h3 className="text-lg font-medium mb-4">Current Medications</h3>
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-2 mb-4">
+                        <Checkbox id="no-medications" />
+                        <Label htmlFor="no-medications">No current medications</Label>
+                      </div>
+
+                      <div className="space-y-4">
+                        {[1, 2, 3].map((index) => (
+                          <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor={`medication-${index}`}>Medication Name</Label>
+                              <Input 
+                                id={`medication-${index}`} 
+                                placeholder="Enter medication name"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor={`dosage-${index}`}>Dosage</Label>
+                              <Input 
+                                id={`dosage-${index}`} 
+                                placeholder="Enter dosage"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor={`frequency-${index}`}>Frequency</Label>
+                              <Select>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select frequency" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="daily">Daily</SelectItem>
+                                  <SelectItem value="twice-daily">Twice Daily</SelectItem>
+                                  <SelectItem value="three-times">Three Times Daily</SelectItem>
+                                  <SelectItem value="four-times">Four Times Daily</SelectItem>
+                                  <SelectItem value="as-needed">As Needed</SelectItem>
+                                  <SelectItem value="other">Other</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <Button type="button" variant="outline" className="w-full">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Another Medication
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="border-t pt-4">
+                    <h3 className="text-lg font-medium mb-4">Allergies</h3>
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-2 mb-4">
+                        <Checkbox id="no-allergies" />
+                        <Label htmlFor="no-allergies">No known allergies</Label>
+                      </div>
+
+                      <div className="space-y-4">
+                        {[1, 2].map((index) => (
+                          <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor={`allergy-${index}`}>Allergy</Label>
+                              <Input 
+                                id={`allergy-${index}`} 
+                                placeholder="Enter allergy"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor={`reaction-${index}`}>Reaction</Label>
+                              <Input 
+                                id={`reaction-${index}`} 
+                                placeholder="Enter reaction"
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <Button type="button" variant="outline" className="w-full">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Another Allergy
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="border-t pt-4">
+                    <h3 className="text-lg font-medium mb-4">Primary Care Provider</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label htmlFor="provider-name">Provider Name</Label>
+                        <Input 
+                          id="provider-name" 
+                          placeholder="Enter provider's name"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="provider-phone">Provider Phone</Label>
+                        <Input 
+                          id="provider-phone" 
+                          placeholder="(xxx) xxx-xxxx"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="provider-practice">Practice Name</Label>
+                        <Input 
+                          id="provider-practice" 
+                          placeholder="Enter practice name"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="last-visit">Last Visit Date</Label>
+                        <Input 
+                          id="last-visit" 
+                          type="date"
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
+            
+            <div className="flex justify-between mt-6">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => setActiveTab('insurance')}
+              >
+                Previous: Insurance
+              </Button>
+              <Button 
+                type="button" 
+                onClick={() => setActiveTab('consent')}
+              >
+                Next: Consent Forms
+              </Button>
+            </div>
           </TabsContent>
           
           <TabsContent value="consent">
             <Card>
-              <CardContent className="p-6">
-                <div className="text-center py-12">
-                  <h3 className="text-lg font-medium">Consent Forms</h3>
-                  <p className="text-gray-500 mt-2">
-                    Complete the previous sections first to continue
-                  </p>
-                  <Button 
-                    className="mt-4" 
-                    type="submit"
-                  >
-                    Complete Registration
-                  </Button>
+              <CardContent className="p-6 space-y-6">
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-medium mb-4">Consent Forms</h3>
+                    <p className="text-muted-foreground mb-6">
+                      Please review and acknowledge the following consent forms. These are required to complete your registration.
+                    </p>
+
+                    <div className="space-y-6">
+                      <div className="space-y-4">
+                        <div className="border rounded-lg p-4">
+                          <h4 className="font-medium mb-2">General Consent for Treatment</h4>
+                          <p className="text-sm text-muted-foreground mb-4">
+                            I hereby consent to medical treatment, diagnostic tests, and procedures which the healthcare providers at Health Nexus Research Hub may consider or recommend.
+                          </p>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox id="consent-treatment" required />
+                            <Label htmlFor="consent-treatment" className="text-sm">
+                              I acknowledge and agree to the General Consent for Treatment
+                            </Label>
+                          </div>
+                        </div>
+
+                        <div className="border rounded-lg p-4">
+                          <h4 className="font-medium mb-2">Privacy Practices Acknowledgment</h4>
+                          <p className="text-sm text-muted-foreground mb-4">
+                            I acknowledge that I have received the Notice of Privacy Practices, which describes how health information about me may be used and disclosed.
+                          </p>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox id="consent-privacy" required />
+                            <Label htmlFor="consent-privacy" className="text-sm">
+                              I acknowledge receipt of the Notice of Privacy Practices
+                            </Label>
+                          </div>
+                        </div>
+
+                        <div className="border rounded-lg p-4">
+                          <h4 className="font-medium mb-2">Financial Agreement</h4>
+                          <p className="text-sm text-muted-foreground mb-4">
+                            I understand that I am financially responsible for any charges not covered by my insurance and agree to pay any applicable co-pays, deductibles, or non-covered services.
+                          </p>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox id="consent-financial" required />
+                            <Label htmlFor="consent-financial" className="text-sm">
+                              I agree to the Financial Agreement terms
+                            </Label>
+                          </div>
+                        </div>
+
+                        <div className="border rounded-lg p-4">
+                          <h4 className="font-medium mb-2">Research Participation (Optional)</h4>
+                          <p className="text-sm text-muted-foreground mb-4">
+                            I agree to be contacted about potential participation in future research studies conducted at Health Nexus Research Hub.
+                          </p>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox id="consent-research" />
+                            <Label htmlFor="consent-research" className="text-sm">
+                              I agree to be contacted about research opportunities
+                            </Label>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <Label htmlFor="signature">Electronic Signature *</Label>
+                        <Input 
+                          id="signature" 
+                          placeholder="Type your full legal name"
+                          required 
+                        />
+                        <p className="text-sm text-muted-foreground">
+                          By typing my name above, I understand that this constitutes a legal signature confirming that I acknowledge and agree to all the terms described in the consent forms.
+                        </p>
+                      </div>
+
+                      <div className="space-y-4">
+                        <Label htmlFor="signature-date">Date *</Label>
+                        <Input 
+                          id="signature-date" 
+                          type="date"
+                          required 
+                          value={new Date().toISOString().split('T')[0]}
+                          readOnly
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
+            
+            <div className="flex justify-between mt-6">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => setActiveTab('clinical')}
+              >
+                Previous: Clinical Information
+              </Button>
+              <Button 
+                type="submit"
+                className="bg-health-primary hover:bg-health-primary/90"
+              >
+                Complete Registration
+              </Button>
+            </div>
           </TabsContent>
         </Tabs>
       </form>
