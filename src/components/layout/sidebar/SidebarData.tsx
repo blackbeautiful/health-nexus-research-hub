@@ -25,7 +25,15 @@ import {
   Briefcase,
   FlaskRound,
   ChartBar,
-  Folder
+  Folder,
+  Map,
+  Clock,
+  CheckCircle,
+  FileSpreadsheet,
+  ScrollText,
+  HeartPulse,
+  BarChart,
+  Microscope
 } from 'lucide-react';
 import { MenuItemType } from './SidebarMenuItem';
 
@@ -57,12 +65,37 @@ export const clinicalPracticeItems: MenuItemType[] = [
       { title: "Clinical Notes", icon: FileText, url: "/clinical-workflows/notes" },
       { title: "New Note", icon: FileText2, url: "/clinical-workflows/notes/new" },
       { title: "Prescriptions", icon: Pill, url: "/clinical-workflows/prescriptions" },
-      { title: "New Prescription", icon: Pill, url: "/clinical-workflows/prescriptions/new" }
+      { title: "New Prescription", icon: Pill, url: "/clinical-workflows/prescriptions/new" },
+      { title: "Treatment Plans", icon: Clipboard, url: "/clinical-workflows/treatment-plans" },
+      { title: "Medical Orders", icon: ScrollText, url: "/clinical-workflows/medical-orders" },
+      { title: "Patient Education", icon: BookOpen, url: "/clinical-workflows/patient-education" }
     ]
   },
   { title: "Lab Results", icon: TestTube, url: "/lab-results" },
   { title: "Clinical Data", icon: Database, url: "/clinical-data" },
-  { title: "Patient Portal", icon: LayoutIcon, url: "/patient-portal/dashboard" }
+  { title: "Patient Portal", icon: LayoutIcon, url: "/patient-portal/dashboard" },
+  { 
+    title: "Clinical Reports", 
+    icon: BarChart, 
+    url: "/clinical-reports",
+    items: [
+      { title: "Treatment Outcomes", icon: ChartBar, url: "/clinical-reports/outcomes" },
+      { title: "Patient Analytics", icon: BarChart2, url: "/clinical-reports/patient-analytics" },
+      { title: "Provider Metrics", icon: FileSpreadsheet, url: "/clinical-reports/provider-metrics" },
+      { title: "Medication Reports", icon: Pill, url: "/clinical-reports/medications" }
+    ]
+  },
+  { 
+    title: "Medical Records", 
+    icon: FileText, 
+    url: "/medical-records",
+    items: [
+      { title: "Patient History", icon: Clock, url: "/medical-records/history" },
+      { title: "Diagnoses", icon: HeartPulse, url: "/medical-records/diagnoses" },
+      { title: "Imaging Results", icon: FileSpreadsheet, url: "/medical-records/imaging" },
+      { title: "External Records", icon: Folder, url: "/medical-records/external" }
+    ]
+  }
 ];
 
 // Research study specific items
@@ -84,13 +117,53 @@ export const researchStudyItems: MenuItemType[] = [
       { title: "Quiz Management", icon: Clipboard, url: "/studies/quiz-management" }
     ]
   },
-  { title: "Analytics", icon: ChartBar, url: "/analytics" }
+  { 
+    title: "Analytics", 
+    icon: ChartBar, 
+    url: "/analytics",
+    items: [
+      { title: "Enrollment Analytics", icon: Users, url: "/analytics/enrollment" },
+      { title: "Study Outcomes", icon: CheckCircle, url: "/analytics/outcomes" },
+      { title: "Site Performance", icon: BarChart2, url: "/analytics/site-performance" },
+      { title: "Data Quality", icon: Database, url: "/analytics/data-quality" },
+      { title: "Geographical Distribution", icon: Map, url: "/analytics/geographic" }
+    ]
+  },
+  { 
+    title: "Research Data", 
+    icon: Database, 
+    url: "/research-data",
+    items: [
+      { title: "Data Collection", icon: Clipboard, url: "/research-data/collection" },
+      { title: "Data Exports", icon: FileSpreadsheet, url: "/research-data/exports" },
+      { title: "Laboratory Results", icon: TestTube, url: "/research-data/lab-results" },
+      { title: "Biospecimen Tracking", icon: Microscope, url: "/research-data/biospecimen" },
+    ]
+  }
 ];
 
 // Admin items - common for both modes
 export const adminMenuItems: MenuItemType[] = [
-  { title: "User Management", icon: UserCog, url: "/users" },
-  { title: "Settings", icon: Settings, url: "/settings" },
+  { 
+    title: "User Management", 
+    icon: UserCog, 
+    url: "/users",
+    items: [
+      { title: "Users List", icon: Users, url: "/users" },
+      { title: "Roles & Permissions", icon: ShieldAlert, url: "/users/roles" },
+      { title: "Access Requests", icon: User, url: "/users/access-requests" }
+    ]
+  },
+  { 
+    title: "Settings", 
+    icon: Settings, 
+    url: "/settings",
+    items: [
+      { title: "General Settings", icon: Settings, url: "/settings" },
+      { title: "Notifications", icon: Bell, url: "/settings/notifications" },
+      { title: "System Configuration", icon: DatabaseSettings, url: "/settings/system" }
+    ]
+  },
   { title: "Compliance", icon: ShieldAlert, url: "/compliance" },
   { title: "Audit Logs", icon: FileLock, url: "/audit-logs" }
 ];
