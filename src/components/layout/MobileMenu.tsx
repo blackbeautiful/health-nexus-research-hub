@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Menu, LucideIcon } from 'lucide-react';
@@ -7,27 +7,18 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Logo from '@/components/common/Logo';
 import { Avatar } from '@/components/ui/avatar';
 import { 
-  Home, 
-  Users, 
-  FileText, 
-  Database, 
-  BarChart2, 
-  Settings, 
-  ShieldAlert,
-  TestTube,
-  Stethoscope,
-  FileSearch,
-  UserCog,
-  FileLock,
   LogOut,
-  MessageSquare,
-  CalendarClock,
-  Layout as LayoutIcon,
-  User,
-  Pill,
-  BookOpen
+  Briefcase,
+  FlaskRound
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  sharedMenuItems,
+  clinicalPracticeItems,
+  researchStudyItems,
+  adminMenuItems 
+} from './sidebar/SidebarData';
 
 interface MenuItem {
   title: string;
@@ -36,65 +27,35 @@ interface MenuItem {
   items?: MenuItem[];
 }
 
+type AppMode = 'clinical' | 'research';
+
 const MobileMenu = () => {
   const [open, setOpen] = useState(false);
+  const [appMode, setAppMode] = useState<AppMode>('clinical');
   const navigate = useNavigate();
   const location = useLocation();
+  
+  // Get appMode from localStorage or set default to clinical
+  useEffect(() => {
+    const savedMode = localStorage.getItem('appMode') as AppMode;
+    if (savedMode) {
+      setAppMode(savedMode);
+    }
+  }, []);
   
   const isActive = (url: string) => {
     return location.pathname === url || (url !== '/' && location.pathname.startsWith(url));
   };
 
-  const mainMenuItems: MenuItem[] = [
-    { title: "Dashboard", icon: Home, url: "/" },
-    { 
-      title: "Patients", 
-      icon: Users, 
-      url: "/patients",
-      items: [
-        { title: "Patient List", icon: Users, url: "/patients" },
-        { title: "Register Patient", icon: User, url: "/patients/register" }
-      ]
-    },
-    { 
-      title: "Research Studies", 
-      icon: FileSearch, 
-      url: "/studies",
-      items: [
-        { title: "Studies Overview", icon: BookOpen, url: "/studies" },
-        { title: "Protocol Setup", icon: FileSearch, url: "/studies/protocol-setup" }
-      ]
-    },
-    { 
-      title: "Clinical Workflows", 
-      icon: Stethoscope, 
-      url: "/clinical-workflows",
-      items: [
-        { title: "Clinical Notes", icon: FileText, url: "/clinical-workflows/notes" },
-        { title: "Orders", icon: Pill, url: "/clinical-workflows/orders" }
-      ]
-    },
-    { title: "Clinical Data", icon: Database, url: "/clinical-data" },
-    { title: "Lab Results", icon: TestTube, url: "/lab-results" },
-    { title: "Analytics", icon: BarChart2, url: "/analytics" }
-  ];
-
-  const adminMenuItems: MenuItem[] = [
-    { title: "User Management", icon: UserCog, url: "/users" },
-    { title: "Settings", icon: Settings, url: "/settings" },
-    { title: "Compliance", icon: ShieldAlert, url: "/compliance" },
-    { title: "Audit Logs", icon: FileLock, url: "/audit-logs" }
-  ];
-  
-  const portalMenuItems: MenuItem[] = [
-    { title: "Patient Portal", icon: LayoutIcon, url: "/patient-portal/dashboard" },
-    { title: "Messages", icon: MessageSquare, url: "/messages" },
-    { title: "Appointments", icon: CalendarClock, url: "/appointments" }
-  ];
-
   const handleNavigation = (url: string) => {
     navigate(url);
     setOpen(false);
+  };
+
+  const handleModeChange = (value: string) => {
+    const newMode = value as AppMode;
+    setAppMode(newMode);
+    localStorage.setItem('appMode', newMode);
   };
 
   const renderMenuItems = (items: MenuItem[]) => {
@@ -140,23 +101,52 @@ const MobileMenu = () => {
         </SheetTrigger>
         <SheetContent side="left" className="w-[85%] p-0">
           <div className="flex flex-col h-full">
-            <div className="p-4 border-b">
+            <div className="p-4 border-b flex flex-col space-y-4">
               <Logo />
+              
+              <Tabs 
+                defaultValue={appMode} 
+                className="w-full" 
+                onValueChange={handleModeChange}
+              >
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="clinical" className="flex items-center gap-1">
+                    <Briefcase className="h-4 w-4" />
+                    <span>Clinical</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="research" className="flex items-center gap-1">
+                    <FlaskRound className="h-4 w-4" />
+                    <span>Research</span>
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
             </div>
             
             <div className="flex-1 overflow-y-auto p-4 space-y-6">
-              <div className="space-y-1">
-                {renderMenuItems(mainMenuItems)}
+              <div>
+                <h3 className="text-xs font-medium text-gray-500 mb-2 px-3">Main Navigation</h3>
+                <div className="space-y-1">
+                  {renderMenuItems(sharedMenuItems)}
+                </div>
               </div>
               
               <Separator />
               
-              <div>
-                <h3 className="text-xs font-medium text-gray-500 mb-2 px-3">Patient Interaction</h3>
-                <div className="space-y-1">
-                  {renderMenuItems(portalMenuItems)}
+              {appMode === 'clinical' ? (
+                <div>
+                  <h3 className="text-xs font-medium text-gray-500 mb-2 px-3">Clinical Practice</h3>
+                  <div className="space-y-1">
+                    {renderMenuItems(clinicalPracticeItems)}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div>
+                  <h3 className="text-xs font-medium text-gray-500 mb-2 px-3">Research Studies</h3>
+                  <div className="space-y-1">
+                    {renderMenuItems(researchStudyItems)}
+                  </div>
+                </div>
+              )}
               
               <Separator />
               
