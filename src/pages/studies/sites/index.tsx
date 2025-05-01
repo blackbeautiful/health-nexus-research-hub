@@ -119,7 +119,7 @@ const StudySitesPage = () => {
         title="Study Sites" 
         description="Manage and monitor all clinical trial sites"
         breadcrumbs={[
-          { label: 'Studies', href: '/studies' },
+          { label: 'Studies', link: '/studies' }, // Fixed: Changed href to link
           { label: 'Sites' }
         ]}
         action={{

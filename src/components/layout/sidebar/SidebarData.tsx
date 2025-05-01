@@ -33,7 +33,9 @@ import {
   ScrollText,
   HeartPulse,
   BarChart,
-  Microscope
+  Microscope,
+  BellRing, // Fixed: Added BellRing instead of Bell
+  DatabaseZap // Fixed: Added DatabaseZap instead of DatabaseSettings
 } from 'lucide-react';
 import { MenuItemType } from './SidebarMenuItem';
 
@@ -160,8 +162,8 @@ export const adminMenuItems: MenuItemType[] = [
     url: "/settings",
     items: [
       { title: "General Settings", icon: Settings, url: "/settings" },
-      { title: "Notifications", icon: Bell, url: "/settings/notifications" },
-      { title: "System Configuration", icon: DatabaseSettings, url: "/settings/system" }
+      { title: "Notifications", icon: BellRing, url: "/settings/notifications" },
+      { title: "System Configuration", icon: DatabaseZap, url: "/settings/system" }
     ]
   },
   { title: "Compliance", icon: ShieldAlert, url: "/compliance" },
