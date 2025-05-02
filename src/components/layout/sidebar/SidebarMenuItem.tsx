@@ -11,6 +11,7 @@ export interface MenuItemType {
   icon: LucideIcon;
   url: string;
   items?: MenuItemType[];
+  onClick?: () => void; // Add onClick handler prop
 }
 
 interface SidebarMenuItemProps {
@@ -26,6 +27,14 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({ item, openGroups, tog
   
   const isActive = (url: string) => {
     return location.pathname === url || (url !== '/' && location.pathname.startsWith(url));
+  };
+
+  const handleClick = () => {
+    if (item.onClick) {
+      item.onClick();
+    } else {
+      navigate(item.url);
+    }
   };
 
   if (item.items && item.items.length > 0) {
@@ -58,7 +67,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({ item, openGroups, tog
               {item.items.map((subItem) => (
                 <SidebarMenuSubItem key={subItem.title}>
                   <SidebarMenuSubButton 
-                    onClick={() => navigate(subItem.url)} 
+                    onClick={() => subItem.onClick ? subItem.onClick() : navigate(subItem.url)} 
                     isActive={isActive(subItem.url)}
                   >
                     <subItem.icon className="mr-2 h-4 w-4" />
@@ -76,7 +85,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({ item, openGroups, tog
   return (
     <MenuItem key={item.title}>
       <SidebarMenuButton 
-        onClick={() => navigate(item.url)}
+        onClick={handleClick}
         isActive={isActive(item.url)}
         tooltip={sidebarState === "collapsed" ? item.title : undefined}
       >

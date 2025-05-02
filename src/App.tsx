@@ -88,6 +88,12 @@ import FacilitySetupPage from "./pages/onboarding/facility-setup";
 // Study creation and form builder
 import StudyCreationPage from "./pages/studies/create";
 
+// Facilities management
+import FacilitiesPage from "./pages/facilities/index";
+
+// Dashboard for clinical users
+import ClinicalDashboard from "./pages/dashboards/clinical-dashboard";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -105,6 +111,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           
           {/* User Dashboards */}
+          <Route path="/dashboard/clinical" element={<ClinicalDashboard />} />
           <Route path="/dashboard/patient" element={<PatientDashboard />} />
           <Route path="/dashboard/researcher" element={<ResearcherDashboard />} />
           <Route path="/dashboard/admin" element={<AdminDashboard />} />
@@ -189,6 +196,9 @@ const App = () => (
           <Route path="/research-data/exports" element={<DataExportsPage />} />
           <Route path="/research-data/lab-results" element={<ResearchLabResultsPage />} />
           <Route path="/research-data/biospecimen" element={<BiospecimenTrackingPage />} />
+          
+          {/* Facility Management */}
+          <Route path="/facilities" element={<FacilitiesPage />} />
           
           {/* Onboarding */}
           <Route path="/onboarding/facility-setup" element={<FacilitySetupPage />} />
