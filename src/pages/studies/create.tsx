@@ -12,12 +12,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DatePicker } from '@/components/ui/calendar';
+import { Calendar } from '@/components/ui/calendar';
 import { FormField, FormItem, FormLabel, FormMessage, Form, FormDescription, FormControl } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { ArrowLeft, ArrowRight, Check, Upload, Calendar, User, FileText, Users, Microscope, Building2, FlaskRound, FileSearch } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Upload, Calendar as CalendarIcon, User, FileText, Users, Microscope, Building2, FlaskRound, FileSearch } from 'lucide-react';
 import FormBuilder, { FormField as CustomFormField } from '@/components/form-builder/FormBuilder';
 
 const studySchema = z.object({
@@ -894,11 +894,11 @@ const StudyCreationPage = () => {
 
 export default StudyCreationPage;
 
-// Add custom DatePicker component to support the StudyCreationPage
+// Replace the DatePicker component with a custom implementation that uses the Calendar component
 export function DatePicker({ selected, onSelect, disabled }: any) {
   return (
     <div className="flex items-center border rounded-md p-2">
-      <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
+      <CalendarIcon className="h-4 w-4 mr-2 text-muted-foreground" />
       <input 
         type="date" 
         className="border-0 focus:outline-none w-full"

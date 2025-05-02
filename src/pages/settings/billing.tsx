@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import PageHeader from '@/components/common/PageHeader';
@@ -493,21 +492,3 @@ const BillingPage = () => {
 };
 
 export default BillingPage;
-
-// Add missing RadioGroup components
-export function RadioGroup(props: any) {
-  return <div className="grid gap-2" {...props} />;
-}
-
-export function RadioGroupItem({ id, ...props }: any) {
-  return (
-    <span className="flex items-center">
-      <input
-        type="radio"
-        id={id}
-        className="h-4 w-4 rounded-full border border-primary text-primary focus:ring-primary"
-        {...props}
-      />
-    </span>
-  );
-}
