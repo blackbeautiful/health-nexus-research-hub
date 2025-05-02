@@ -79,6 +79,14 @@ import RolesPermissionsPage from "./pages/users/roles";
 import AccessRequestsPage from "./pages/users/access-requests";
 import NotificationsSettingsPage from "./pages/settings/notifications";
 import SystemSettingsPage from "./pages/settings/system";
+import BillingPage from "./pages/settings/billing";
+import AdminDashboardPage from "./pages/admin/dashboard";
+
+// Onboarding and facility setup
+import FacilitySetupPage from "./pages/onboarding/facility-setup";
+
+// Study creation and form builder
+import StudyCreationPage from "./pages/studies/create";
 
 const queryClient = new QueryClient();
 
@@ -111,6 +119,7 @@ const App = () => (
           
           {/* Research Study Pages */}
           <Route path="/studies" element={<StudiesPage />} />
+          <Route path="/studies/create" element={<StudyCreationPage />} />
           <Route path="/studies/protocol-setup" element={<StudyProtocolSetupPage />} />
           <Route path="/studies/:studyId" element={<StudyDetailsPage />} />
           <Route path="/studies/consent-tracking" element={<InformedConsentPage />} />
@@ -158,6 +167,7 @@ const App = () => (
           <Route path="/appointments" element={<AppointmentsPage />} />
           
           {/* Admin & Analytics Pages */}
+          <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
           <Route path="/users" element={<UserManagementPage />} />
           <Route path="/users/roles" element={<RolesPermissionsPage />} />
           <Route path="/users/access-requests" element={<AccessRequestsPage />} />
@@ -171,6 +181,7 @@ const App = () => (
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/settings/notifications" element={<NotificationsSettingsPage />} />
           <Route path="/settings/system" element={<SystemSettingsPage />} />
+          <Route path="/settings/billing" element={<BillingPage />} />
           <Route path="/compliance" element={<CompliancePage />} />
           
           {/* Research Data Pages */}
@@ -178,6 +189,9 @@ const App = () => (
           <Route path="/research-data/exports" element={<DataExportsPage />} />
           <Route path="/research-data/lab-results" element={<ResearchLabResultsPage />} />
           <Route path="/research-data/biospecimen" element={<BiospecimenTrackingPage />} />
+          
+          {/* Onboarding */}
+          <Route path="/onboarding/facility-setup" element={<FacilitySetupPage />} />
           
           {/* 404 Page */}
           <Route path="*" element={<NotFound />} />

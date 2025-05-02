@@ -1,648 +1,569 @@
 
-import React from 'react';
-import MainLayout from '@/components/layout/MainLayout';
+import React, { useState } from 'react';
+import Layout from '@/components/layout/Layout';
 import PageHeader from '@/components/common/PageHeader';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { DatabaseZap, Shield, Server, Globe, Check, Save, Trash2, RefreshCcw } from 'lucide-react';
-import { Switch } from '@/components/ui/switch';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
+import { ArrowRight, Check, Clock, Database, FileSpreadsheet, Mail, Shield, User, X, File, Settings, Calendar, Bell, FileText } from 'lucide-react';
 
-const SystemSettingsPage: React.FC = () => {
-  const integrations = [
-    {
-      id: 'int-1',
-      name: 'Electronic Health Record (EHR)',
-      status: 'connected',
-      lastSync: '2025-04-30 14:28',
-      type: 'Bidirectional'
-    },
-    {
-      id: 'int-2',
-      name: 'Laboratory Information System (LIS)',
-      status: 'connected',
-      lastSync: '2025-04-30 12:15',
-      type: 'Inbound'
-    },
-    {
-      id: 'int-3',
-      name: 'Clinical Trial Management System',
-      status: 'connected',
-      lastSync: '2025-04-29 16:42',
-      type: 'Bidirectional'
-    },
-    {
-      id: 'int-4',
-      name: 'Drug Inventory Management',
-      status: 'disconnected',
-      lastSync: '2025-04-28 09:30',
-      type: 'Outbound'
-    },
-    {
-      id: 'int-5',
-      name: 'Data Warehouse',
-      status: 'connected',
-      lastSync: '2025-04-30 02:00',
-      type: 'Outbound'
-    }
-  ];
-  
-  const securitySettings = {
-    passwordPolicy: {
-      minLength: 12,
-      requireUppercase: true,
-      requireLowercase: true,
-      requireNumbers: true,
-      requireSpecialChars: true,
-      expirationDays: 90,
-      preventReuse: 10
-    },
-    loginPolicy: {
-      maxAttempts: 5,
-      lockoutDuration: 30,
-      sessionTimeout: 30,
-      requireMFA: true,
-      ipRestriction: false,
-      allowConcurrentSessions: false
-    },
-    dataProtection: {
-      encryptData: true,
-      encryptBackups: true,
-      dataRetention: 7,
-      anonymizeExports: false
-    }
+const SystemSettingsPage = () => {
+  const [activeTab, setActiveTab] = useState('general');
+  const [autoBackup, setAutoBackup] = useState(true);
+  const [dataRetention, setDataRetention] = useState(90);
+  const [emailNotifications, setEmailNotifications] = useState(true);
+  const [ldapEnabled, setLdapEnabled] = useState(false);
+  const [apiKeys, setApiKeys] = useState([
+    { name: 'Production API Key', key: 'sk_prod_2023_xxxxxxxxxxxxxxxxxxxx', active: true, created: '2023-09-15' },
+    { name: 'Development API Key', key: 'sk_dev_2023_xxxxxxxxxxxxxxxxxxxx', active: true, created: '2023-10-02' },
+    { name: 'Legacy API Key', key: 'sk_legacy_2022_xxxxxxxxxxxxxxxxxxxx', active: false, created: '2022-11-30' }
+  ]);
+
+  const handleDeleteKey = (index: number) => {
+    setApiKeys(apiKeys.filter((_, i) => i !== index));
   };
-  
-  const systemInfo = {
-    version: '2.8.3',
-    lastUpdated: '2025-04-15',
-    environment: 'Production',
-    server: 'aws-us-east-1',
-    database: 'PostgreSQL 16.1',
-    storage: '1.82 TB / 4.00 TB',
-    activeUsers: 142,
-    lastBackup: '2025-05-01 02:30 AM'
+
+  const handleToggleKeyStatus = (index: number) => {
+    const newKeys = [...apiKeys];
+    newKeys[index].active = !newKeys[index].active;
+    setApiKeys(newKeys);
   };
-  
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'connected':
-        return <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">Connected</Badge>;
-      case 'disconnected':
-        return <Badge variant="outline" className="bg-gray-100 text-gray-800 border-gray-200">Disconnected</Badge>;
-      case 'error':
-        return <Badge variant="destructive">Error</Badge>;
-      default:
-        return <Badge>Unknown</Badge>;
-    }
+
+  const addNewApiKey = () => {
+    const newKey = {
+      name: 'New API Key',
+      key: `sk_dev_${new Date().getFullYear()}_${'x'.repeat(20)}`,
+      active: true,
+      created: new Date().toISOString().split('T')[0]
+    };
+    setApiKeys([...apiKeys, newKey]);
   };
-  
+
   return (
-    <MainLayout>
+    <Layout>
       <PageHeader 
-        title="System Configuration" 
-        description="Manage system settings, integrations, and security"
+        title="System Settings" 
+        description="Configure system-wide settings and technical configurations"
         breadcrumbs={[
           { label: 'Settings', link: '/settings' },
-          { label: 'System Configuration' }
+          { label: 'System' }
         ]}
-        action={{
-          label: "Save Changes",
-          icon: Save,
-          onClick: () => console.log("Save system settings")
-        }}
       />
-      
-      <Tabs defaultValue="general" className="mb-6">
-        <TabsList>
+
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+        <TabsList className="grid w-full grid-cols-1 md:grid-cols-4">
           <TabsTrigger value="general">General</TabsTrigger>
-          <TabsTrigger value="integrations">Integrations</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
-          <TabsTrigger value="backups">Backups & Maintenance</TabsTrigger>
+          <TabsTrigger value="security">Security & Compliance</TabsTrigger>
+          <TabsTrigger value="database">Database & Backup</TabsTrigger>
+          <TabsTrigger value="api">API & Integrations</TabsTrigger>
         </TabsList>
         
-        <TabsContent value="general" className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <Card className="lg:col-span-2">
-              <CardHeader>
-                <CardTitle>General Settings</CardTitle>
-                <CardDescription>Configure basic system settings</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
+        {/* General Settings Tab */}
+        <TabsContent value="general" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Application Settings</CardTitle>
+              <CardDescription>Configure general application behavior and preferences</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-3">
-                  <label className="text-sm font-medium">System Name</label>
-                  <Input defaultValue="HealthNexus Research Hub" />
-                  <p className="text-xs text-muted-foreground">Displayed in the application header and emails</p>
+                  <Label htmlFor="app-name">Application Name</Label>
+                  <Input id="app-name" defaultValue="HealthNexus Research Hub" />
                 </div>
                 
                 <div className="space-y-3">
-                  <label className="text-sm font-medium">Institution Name</label>
-                  <Input defaultValue="Memorial Medical Research Center" />
-                  <p className="text-xs text-muted-foreground">Your organization's name used in reports and documentation</p>
+                  <Label htmlFor="default-language">Default Language</Label>
+                  <Select defaultValue="en">
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select language" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="en">English (US)</SelectItem>
+                      <SelectItem value="es">Spanish</SelectItem>
+                      <SelectItem value="fr">French</SelectItem>
+                      <SelectItem value="de">German</SelectItem>
+                      <SelectItem value="zh">Chinese (Simplified)</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-                
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-3">
-                  <label className="text-sm font-medium">Default Timezone</label>
-                  <Select defaultValue="America/New_York">
+                  <Label htmlFor="timezone">Default Timezone</Label>
+                  <Select defaultValue="utc">
                     <SelectTrigger>
                       <SelectValue placeholder="Select timezone" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="America/New_York">Eastern Time (ET)</SelectItem>
-                      <SelectItem value="America/Chicago">Central Time (CT)</SelectItem>
-                      <SelectItem value="America/Denver">Mountain Time (MT)</SelectItem>
-                      <SelectItem value="America/Los_Angeles">Pacific Time (PT)</SelectItem>
-                      <SelectItem value="UTC">UTC</SelectItem>
+                      <SelectItem value="utc">UTC (Coordinated Universal Time)</SelectItem>
+                      <SelectItem value="est">EST (Eastern Standard Time)</SelectItem>
+                      <SelectItem value="cst">CST (Central Standard Time)</SelectItem>
+                      <SelectItem value="mst">MST (Mountain Standard Time)</SelectItem>
+                      <SelectItem value="pst">PST (Pacific Standard Time)</SelectItem>
                     </SelectContent>
                   </Select>
-                  <p className="text-xs text-muted-foreground">Default timezone for dates and times</p>
                 </div>
                 
                 <div className="space-y-3">
-                  <label className="text-sm font-medium">Date Format</label>
-                  <Select defaultValue="MM/DD/YYYY">
+                  <Label htmlFor="date-format">Date Format</Label>
+                  <Select defaultValue="mm-dd-yyyy">
                     <SelectTrigger>
                       <SelectValue placeholder="Select date format" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="MM/DD/YYYY">MM/DD/YYYY</SelectItem>
-                      <SelectItem value="DD/MM/YYYY">DD/MM/YYYY</SelectItem>
-                      <SelectItem value="YYYY-MM-DD">YYYY-MM-DD</SelectItem>
+                      <SelectItem value="mm-dd-yyyy">MM/DD/YYYY</SelectItem>
+                      <SelectItem value="dd-mm-yyyy">DD/MM/YYYY</SelectItem>
+                      <SelectItem value="yyyy-mm-dd">YYYY/MM/DD</SelectItem>
                     </SelectContent>
                   </Select>
-                  <p className="text-xs text-muted-foreground">Format for displaying dates throughout the system</p>
                 </div>
-                
-                <div className="space-y-3">
+              </div>
+
+              <Separator />
+              
+              <div className="space-y-3">
+                <Label>System Notifications</Label>
+                <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">Maintenance Mode</h3>
-                      <p className="text-sm text-muted-foreground">Temporarily disable access for non-admin users</p>
+                    <div className="space-y-0.5">
+                      <Label className="text-base" htmlFor="email-notifications">Email Notifications</Label>
+                      <p className="text-sm text-muted-foreground">
+                        Receive important system alerts via email
+                      </p>
                     </div>
-                    <Switch defaultChecked={false} />
+                    <Switch 
+                      id="email-notifications" 
+                      checked={emailNotifications}
+                      onCheckedChange={setEmailNotifications}
+                    />
                   </div>
                 </div>
+              </div>
+              
+              <div className="pt-4 flex justify-end space-x-2">
+                <Button variant="outline">Reset to Default</Button>
+                <Button>Save Changes</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        {/* Security & Compliance Tab */}
+        <TabsContent value="security" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Security Settings</CardTitle>
+              <CardDescription>Configure security protocols and compliance features</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-3">
+                <Label>Authentication Methods</Label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Card className="shadow-none border">
+                    <CardContent className="pt-6">
+                      <div className="flex justify-between items-start">
+                        <div className="space-y-1">
+                          <h4 className="font-medium text-base flex items-center">
+                            <User className="mr-2 h-4 w-4" /> Standard Authentication
+                            <Badge className="ml-2" variant="outline">Default</Badge>
+                          </h4>
+                          <p className="text-sm text-muted-foreground">Username/password-based authentication</p>
+                        </div>
+                        <Switch defaultChecked={true} disabled />
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="shadow-none border">
+                    <CardContent className="pt-6">
+                      <div className="flex justify-between items-start">
+                        <div className="space-y-1">
+                          <h4 className="font-medium text-base flex items-center">
+                            <Shield className="mr-2 h-4 w-4" /> Two-Factor Authentication
+                          </h4>
+                          <p className="text-sm text-muted-foreground">Require 2FA for all users</p>
+                        </div>
+                        <Switch defaultChecked={true} />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label className="text-base" htmlFor="ldap">LDAP/Active Directory Integration</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Connect to your organization's directory service
+                    </p>
+                  </div>
+                  <Switch 
+                    id="ldap" 
+                    checked={ldapEnabled}
+                    onCheckedChange={setLdapEnabled}
+                  />
+                </div>
                 
-                <div className="space-y-3">
+                {ldapEnabled && (
+                  <div className="pt-4 space-y-3 rounded-md bg-muted/50 p-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="ldap-server">LDAP Server URL</Label>
+                      <Input id="ldap-server" placeholder="ldap://example.com:389" />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="bind-dn">Bind DN</Label>
+                        <Input id="bind-dn" placeholder="cn=admin,dc=example,dc=com" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="bind-password">Bind Password</Label>
+                        <Input id="bind-password" type="password" />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="search-base">Search Base</Label>
+                      <Input id="search-base" placeholder="ou=users,dc=example,dc=com" />
+                    </div>
+                    <div className="pt-2">
+                      <Button variant="secondary" size="sm">Test Connection</Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <Separator />
+              
+              <div className="space-y-3">
+                <Label>Compliance Settings</Label>
+                <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">Analytics & Tracking</h3>
-                      <p className="text-sm text-muted-foreground">Collect anonymous usage data for system improvement</p>
+                    <div className="space-y-0.5">
+                      <h4 className="font-medium">HIPAA Compliance Mode</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Enable additional security measures for HIPAA compliance
+                      </p>
+                    </div>
+                    <Switch defaultChecked={true} />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <h4 className="font-medium">GDPR Compliance Mode</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Enable features for GDPR compliance
+                      </p>
+                    </div>
+                    <Switch defaultChecked={true} />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <h4 className="font-medium">21 CFR Part 11 Compliance</h4>
+                      <p className="text-sm text-muted-foreground">
+                        FDA electronic records compliance for research
+                      </p>
                     </div>
                     <Switch defaultChecked={true} />
                   </div>
                 </div>
-              </CardContent>
-              <CardFooter>
-                <Button className="ml-auto">
-                  <Check className="mr-2 h-4 w-4" />
-                  Save Settings
-                </Button>
-              </CardFooter>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>System Information</CardTitle>
-                <CardDescription>Current system details and status</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-1">
-                  <p className="text-xs text-muted-foreground">Version</p>
-                  <p className="font-medium">{systemInfo.version}</p>
-                </div>
-                
-                <div className="space-y-1">
-                  <p className="text-xs text-muted-foreground">Last Updated</p>
-                  <p className="font-medium">{systemInfo.lastUpdated}</p>
-                </div>
-                
-                <div className="space-y-1">
-                  <p className="text-xs text-muted-foreground">Environment</p>
-                  <p className="font-medium">{systemInfo.environment}</p>
-                </div>
-                
-                <div className="space-y-1">
-                  <p className="text-xs text-muted-foreground">Server</p>
-                  <p className="font-medium">{systemInfo.server}</p>
-                </div>
-                
-                <div className="space-y-1">
-                  <p className="text-xs text-muted-foreground">Database</p>
-                  <p className="font-medium">{systemInfo.database}</p>
-                </div>
-                
-                <div className="space-y-1">
-                  <p className="text-xs text-muted-foreground">Storage</p>
-                  <p className="font-medium">{systemInfo.storage}</p>
-                </div>
-                
-                <div className="space-y-1">
-                  <p className="text-xs text-muted-foreground">Active Users</p>
-                  <p className="font-medium">{systemInfo.activeUsers}</p>
-                </div>
-                
-                <div className="space-y-1">
-                  <p className="text-xs text-muted-foreground">Last Backup</p>
-                  <p className="font-medium">{systemInfo.lastBackup}</p>
-                </div>
-              </CardContent>
-              <CardFooter className="flex flex-col gap-2">
-                <Button variant="outline" className="w-full">
-                  <RefreshCcw className="mr-2 h-4 w-4" />
-                  Check for Updates
-                </Button>
-              </CardFooter>
-            </Card>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="integrations" className="mt-6">
-          <Card>
-            <CardHeader>
-              <div className="flex justify-between items-center">
-                <div>
-                  <CardTitle>System Integrations</CardTitle>
-                  <CardDescription>Configure connections with external systems</CardDescription>
-                </div>
-                <Button>
-                  <Plus className="mr-2 h-4 w-4" />
-                  New Integration
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Integration</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Last Sync</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {integrations.map((integration) => (
-                    <TableRow key={integration.id}>
-                      <TableCell className="font-medium">{integration.name}</TableCell>
-                      <TableCell>{integration.type}</TableCell>
-                      <TableCell>{getStatusBadge(integration.status)}</TableCell>
-                      <TableCell>{integration.lastSync}</TableCell>
-                      <TableCell className="text-right">
-                        <Button variant="ghost" size="sm">Configure</Button>
-                        <Button variant="ghost" size="sm">
-                          <RefreshCcw className="h-4 w-4" />
-                          <span className="sr-only">Sync</span>
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-            <CardHeader className="border-t pt-6">
-              <CardTitle>API Configuration</CardTitle>
-              <CardDescription>Manage API settings and access tokens</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-medium">Enable API Access</h3>
-                    <p className="text-sm text-muted-foreground">Allow external systems to connect via API</p>
-                  </div>
-                  <Switch defaultChecked={true} />
-                </div>
               </div>
               
-              <div className="space-y-3">
-                <label className="text-sm font-medium">API Rate Limit</label>
-                <Select defaultValue="1000">
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select rate limit" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="500">500 requests/hour</SelectItem>
-                    <SelectItem value="1000">1000 requests/hour</SelectItem>
-                    <SelectItem value="5000">5000 requests/hour</SelectItem>
-                    <SelectItem value="unlimited">Unlimited</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="pt-4">
-                <Button variant="outline">
-                  <Shield className="mr-2 h-4 w-4" />
-                  Manage API Keys
-                </Button>
+              <div className="pt-4 flex justify-end space-x-2">
+                <Button variant="outline">Reset to Default</Button>
+                <Button>Save Changes</Button>
               </div>
             </CardContent>
           </Card>
         </TabsContent>
         
-        <TabsContent value="security" className="mt-6">
+        {/* Database & Backup Tab */}
+        <TabsContent value="database" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Security Settings</CardTitle>
-              <CardDescription>Configure system security and access controls</CardDescription>
+              <CardTitle>Database Configuration</CardTitle>
+              <CardDescription>Manage database connections and backup settings</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-medium mb-4">Password Policy</h3>
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-3">
-                        <label className="text-sm font-medium">Minimum Length</label>
-                        <Select defaultValue={securitySettings.passwordPolicy.minLength.toString()}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select length" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="8">8 characters</SelectItem>
-                            <SelectItem value="10">10 characters</SelectItem>
-                            <SelectItem value="12">12 characters</SelectItem>
-                            <SelectItem value="16">16 characters</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      <div className="space-y-3">
-                        <label className="text-sm font-medium">Password Expiration</label>
-                        <Select defaultValue={securitySettings.passwordPolicy.expirationDays.toString()}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select expiration" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="30">30 days</SelectItem>
-                            <SelectItem value="60">60 days</SelectItem>
-                            <SelectItem value="90">90 days</SelectItem>
-                            <SelectItem value="180">180 days</SelectItem>
-                            <SelectItem value="365">365 days</SelectItem>
-                            <SelectItem value="0">Never</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-3">
-                      <div className="flex flex-wrap gap-6">
-                        <div className="flex items-center gap-2">
-                          <Switch defaultChecked={securitySettings.passwordPolicy.requireUppercase} />
-                          <label className="text-sm">Require uppercase</label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Switch defaultChecked={securitySettings.passwordPolicy.requireLowercase} />
-                          <label className="text-sm">Require lowercase</label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Switch defaultChecked={securitySettings.passwordPolicy.requireNumbers} />
-                          <label className="text-sm">Require numbers</label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Switch defaultChecked={securitySettings.passwordPolicy.requireSpecialChars} />
-                          <label className="text-sm">Require special characters</label>
-                        </div>
-                      </div>
-                    </div>
+            <CardContent className="space-y-6">
+              <div className="space-y-3">
+                <Label>Connection Settings</Label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="db-host">Database Host</Label>
+                    <Input id="db-host" defaultValue="db-production.internal" readOnly />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="db-name">Database Name</Label>
+                    <Input id="db-name" defaultValue="healthnexus_prod" readOnly />
                   </div>
                 </div>
-                
-                <Separator />
-                
-                <div>
-                  <h3 className="text-lg font-medium mb-4">Login Security</h3>
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-3">
-                        <label className="text-sm font-medium">Failed Login Attempts</label>
-                        <Select defaultValue={securitySettings.loginPolicy.maxAttempts.toString()}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select attempts" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="3">3 attempts</SelectItem>
-                            <SelectItem value="5">5 attempts</SelectItem>
-                            <SelectItem value="10">10 attempts</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      <div className="space-y-3">
-                        <label className="text-sm font-medium">Session Timeout</label>
-                        <Select defaultValue={securitySettings.loginPolicy.sessionTimeout.toString()}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select timeout" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="15">15 minutes</SelectItem>
-                            <SelectItem value="30">30 minutes</SelectItem>
-                            <SelectItem value="60">1 hour</SelectItem>
-                            <SelectItem value="120">2 hours</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-3">
-                      <div className="flex flex-wrap gap-6">
-                        <div className="flex items-center gap-2">
-                          <Switch defaultChecked={securitySettings.loginPolicy.requireMFA} />
-                          <label className="text-sm">Require two-factor authentication</label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Switch defaultChecked={securitySettings.loginPolicy.ipRestriction} />
-                          <label className="text-sm">IP address restrictions</label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <Separator />
-                
-                <div>
-                  <h3 className="text-lg font-medium mb-4">Data Protection</h3>
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-3">
-                        <label className="text-sm font-medium">Data Retention Period</label>
-                        <Select defaultValue={securitySettings.dataProtection.dataRetention.toString()}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select period" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="1">1 year</SelectItem>
-                            <SelectItem value="3">3 years</SelectItem>
-                            <SelectItem value="5">5 years</SelectItem>
-                            <SelectItem value="7">7 years</SelectItem>
-                            <SelectItem value="10">10 years</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-3">
-                      <div className="flex flex-wrap gap-6">
-                        <div className="flex items-center gap-2">
-                          <Switch defaultChecked={securitySettings.dataProtection.encryptData} />
-                          <label className="text-sm">Encrypt data at rest</label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Switch defaultChecked={securitySettings.dataProtection.encryptBackups} />
-                          <label className="text-sm">Encrypt backups</label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Switch defaultChecked={securitySettings.dataProtection.anonymizeExports} />
-                          <label className="text-sm">Anonymize data exports</label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <div className="pt-2">
+                  <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+                    <Check className="mr-1 h-3 w-3" /> Connection Active
+                  </Badge>
                 </div>
               </div>
-            </CardContent>
-            <CardFooter>
-              <Button className="ml-auto">
-                <Check className="mr-2 h-4 w-4" />
-                Save Security Settings
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="backups" className="mt-6">
-          <Card>
-            <CardHeader>
-              <div className="flex justify-between items-center">
-                <div>
-                  <CardTitle>Backups & Maintenance</CardTitle>
-                  <CardDescription>Configure data backup and system maintenance</CardDescription>
-                </div>
-                <Button>
-                  Create Backup Now
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-medium mb-4">Automated Backups</h3>
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-3">
-                        <label className="text-sm font-medium">Backup Frequency</label>
+              
+              <Separator />
+              
+              <div className="space-y-3">
+                <Label>Backup Configuration</Label>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <h4 className="font-medium">Automatic Backups</h4>
+                      <p className="text-sm text-muted-foreground">
+                        System will create regular backups based on schedule
+                      </p>
+                    </div>
+                    <Switch 
+                      checked={autoBackup}
+                      onCheckedChange={setAutoBackup}
+                    />
+                  </div>
+                  
+                  {autoBackup && (
+                    <div className="space-y-4 rounded-md bg-muted/50 p-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="backup-frequency">Backup Frequency</Label>
                         <Select defaultValue="daily">
                           <SelectTrigger>
                             <SelectValue placeholder="Select frequency" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="hourly">Every hour</SelectItem>
+                            <SelectItem value="hourly">Hourly</SelectItem>
                             <SelectItem value="daily">Daily</SelectItem>
                             <SelectItem value="weekly">Weekly</SelectItem>
+                            <SelectItem value="monthly">Monthly</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                       
-                      <div className="space-y-3">
-                        <label className="text-sm font-medium">Retention Period</label>
-                        <Select defaultValue="30">
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select period" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="7">7 days</SelectItem>
-                            <SelectItem value="30">30 days</SelectItem>
-                            <SelectItem value="90">90 days</SelectItem>
-                            <SelectItem value="365">365 days</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="font-medium">Enable Automated Backups</h3>
-                          <p className="text-sm text-muted-foreground">Schedule regular backups of system data</p>
+                      <div className="space-y-2">
+                        <Label htmlFor="backup-time">Backup Time (for daily backups)</Label>
+                        <div className="flex items-center space-x-2">
+                          <Clock className="h-4 w-4 text-muted-foreground" />
+                          <Select defaultValue="02:00">
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select time" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="00:00">12:00 AM</SelectItem>
+                              <SelectItem value="01:00">1:00 AM</SelectItem>
+                              <SelectItem value="02:00">2:00 AM</SelectItem>
+                              <SelectItem value="03:00">3:00 AM</SelectItem>
+                              <SelectItem value="04:00">4:00 AM</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </div>
-                        <Switch defaultChecked={true} />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="backup-retention">Retention Period (days)</Label>
+                        <div className="space-y-3">
+                          <Slider
+                            defaultValue={[dataRetention]}
+                            max={365}
+                            min={7}
+                            step={1}
+                            onValueChange={(val) => setDataRetention(val[0])}
+                          />
+                          <div className="flex justify-between">
+                            <span className="text-sm">{dataRetention} days</span>
+                            <span className="text-sm text-muted-foreground">{Math.floor(dataRetention/30)} months</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <Label>Manual Backup</Label>
+                  <Button size="sm">
+                    <Database className="mr-2 h-4 w-4" /> Create Backup Now
+                  </Button>
                 </div>
                 
-                <Separator />
-                
-                <div>
-                  <h3 className="text-lg font-medium mb-4">System Maintenance</h3>
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-3">
-                        <label className="text-sm font-medium">Maintenance Window</label>
-                        <Select defaultValue="sunday-02">
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select window" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="sunday-02">Sunday, 2:00 AM - 4:00 AM</SelectItem>
-                            <SelectItem value="wednesday-22">Wednesday, 10:00 PM - 12:00 AM</SelectItem>
-                            <SelectItem value="saturday-20">Saturday, 8:00 PM - 10:00 PM</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="font-medium">Notify Users Before Maintenance</h3>
-                          <p className="text-sm text-muted-foreground">Send email notifications before scheduled maintenance</p>
+                <div className="border rounded-md">
+                  <div className="text-sm">
+                    <div className="bg-muted py-2 px-4 font-medium">Recent Backups</div>
+                    <div className="divide-y">
+                      <div className="flex justify-between items-center py-2 px-4">
+                        <div className="flex items-center">
+                          <FileSpreadsheet className="mr-2 h-4 w-4 text-muted-foreground" />
+                          <span>Full Backup - May 1, 2025 02:00 AM</span>
                         </div>
-                        <Switch defaultChecked={true} />
+                        <Button variant="ghost" size="sm">Download</Button>
+                      </div>
+                      <div className="flex justify-between items-center py-2 px-4">
+                        <div className="flex items-center">
+                          <FileSpreadsheet className="mr-2 h-4 w-4 text-muted-foreground" />
+                          <span>Full Backup - Apr 30, 2025 02:00 AM</span>
+                        </div>
+                        <Button variant="ghost" size="sm">Download</Button>
+                      </div>
+                      <div className="flex justify-between items-center py-2 px-4">
+                        <div className="flex items-center">
+                          <FileSpreadsheet className="mr-2 h-4 w-4 text-muted-foreground" />
+                          <span>Full Backup - Apr 29, 2025 02:00 AM</span>
+                        </div>
+                        <Button variant="ghost" size="sm">Download</Button>
                       </div>
                     </div>
-                  </div>
-                </div>
-                
-                <Separator />
-                
-                <div className="space-y-4">
-                  <h3 className="text-lg font-medium">Data Management</h3>
-                  <div className="flex gap-4">
-                    <Button variant="outline">
-                      <RefreshCcw className="mr-2 h-4 w-4" />
-                      Optimize Database
-                    </Button>
-                    <Button variant="outline" className="text-red-600 hover:bg-red-50 hover:text-red-700">
-                      <Trash2 className="mr-2 h-4 w-4" />
-                      Clear Cache
-                    </Button>
                   </div>
                 </div>
               </div>
+              
+              <div className="pt-4 flex justify-end space-x-2">
+                <Button variant="outline">Reset to Default</Button>
+                <Button>Save Changes</Button>
+              </div>
             </CardContent>
-            <CardFooter className="flex justify-between">
-              <Button variant="outline">Restore from Backup</Button>
-              <Button>Save Backup Settings</Button>
-            </CardFooter>
+          </Card>
+        </TabsContent>
+        
+        {/* API & Integrations Tab */}
+        <TabsContent value="api" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>API Configuration</CardTitle>
+              <CardDescription>Manage API keys and third-party integrations</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <Label>API Keys</Label>
+                  <Button size="sm" onClick={addNewApiKey}>
+                    <File className="mr-2 h-4 w-4" /> Generate New API Key
+                  </Button>
+                </div>
+                
+                <div className="border rounded-md">
+                  <div className="text-sm">
+                    <div className="bg-muted py-2 px-4 grid grid-cols-12 font-medium">
+                      <div className="col-span-3">Name</div>
+                      <div className="col-span-5">API Key</div>
+                      <div className="col-span-2">Created</div>
+                      <div className="col-span-2 text-right">Actions</div>
+                    </div>
+                    <div className="divide-y">
+                      {apiKeys.map((apiKey, index) => (
+                        <div key={index} className="grid grid-cols-12 py-2 px-4 items-center">
+                          <div className="col-span-3 font-medium">{apiKey.name}</div>
+                          <div className="col-span-5 font-mono text-xs bg-muted rounded px-2 py-1">{apiKey.key}</div>
+                          <div className="col-span-2 text-muted-foreground text-sm">{apiKey.created}</div>
+                          <div className="col-span-2 flex justify-end space-x-1">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleToggleKeyStatus(index)}
+                            >
+                              {apiKey.active ? (
+                                <Badge variant="outline" className="bg-green-50 text-green-700 hover:bg-green-50 border-green-200">Active</Badge>
+                              ) : (
+                                <Badge variant="outline" className="bg-gray-50 text-gray-500 hover:bg-gray-50 border-gray-200">Inactive</Badge>
+                              )}
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDeleteKey(index)}
+                            >
+                              <X className="h-4 w-4 text-muted-foreground hover:text-destructive" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <Separator />
+              
+              <div className="space-y-3">
+                <Label>Third-Party Integrations</Label>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Card className="shadow-none border">
+                    <CardContent className="pt-6">
+                      <div className="flex justify-between items-start">
+                        <div className="space-y-1">
+                          <h4 className="font-medium text-base flex items-center">
+                            <Mail className="mr-2 h-4 w-4" /> Email Service (SMTP)
+                          </h4>
+                          <p className="text-sm text-muted-foreground">Configure email delivery service</p>
+                        </div>
+                        <Button size="sm" variant="outline">Configure</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="shadow-none border">
+                    <CardContent className="pt-6">
+                      <div className="flex justify-between items-start">
+                        <div className="space-y-1">
+                          <h4 className="font-medium text-base flex items-center">
+                            <Calendar className="mr-2 h-4 w-4" /> Calendar Sync
+                          </h4>
+                          <p className="text-sm text-muted-foreground">Sync with external calendars</p>
+                        </div>
+                        <Button size="sm" variant="outline">Configure</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="shadow-none border">
+                    <CardContent className="pt-6">
+                      <div className="flex justify-between items-start">
+                        <div className="space-y-1">
+                          <h4 className="font-medium text-base flex items-center">
+                            <FileText className="mr-2 h-4 w-4" /> Document Storage
+                          </h4>
+                          <p className="text-sm text-muted-foreground">External document storage</p>
+                        </div>
+                        <Button size="sm" variant="outline">Configure</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="shadow-none border">
+                    <CardContent className="pt-6">
+                      <div className="flex justify-between items-start">
+                        <div className="space-y-1">
+                          <h4 className="font-medium text-base flex items-center">
+                            <Bell className="mr-2 h-4 w-4" /> Push Notifications
+                          </h4>
+                          <p className="text-sm text-muted-foreground">Mobile and browser notifications</p>
+                        </div>
+                        <Button size="sm" variant="outline">Configure</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+              
+              <div className="pt-4 flex justify-end space-x-2">
+                <Button variant="outline">Reset to Default</Button>
+                <Button>Save Changes</Button>
+              </div>
+            </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
-    </MainLayout>
+    </Layout>
   );
 };
 
