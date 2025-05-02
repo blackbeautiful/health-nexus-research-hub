@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -44,6 +45,21 @@ import QuizManagementPage from "./pages/studies/quiz-management";
 import CreateQuizPage from "./pages/studies/quiz-management/create";
 import QuizDetailsPage from "./pages/studies/quiz-management/[quizId]";
 import EditQuizPage from "./pages/studies/quiz-management/[quizId]/edit";
+
+// New pages
+import MedicalRecordsPage from "./pages/medical-records/index";
+import PatientHistoryPage from "./pages/medical-records/history";
+import DiagnosesPage from "./pages/medical-records/diagnoses";
+import ImagingResultsPage from "./pages/medical-records/imaging";
+import ExternalRecordsPage from "./pages/medical-records/external";
+import ClinicalReportsPage from "./pages/clinical-reports/index";
+import TreatmentOutcomesPage from "./pages/clinical-reports/outcomes";
+import PatientAnalyticsPage from "./pages/clinical-reports/patient-analytics";
+import ProviderMetricsPage from "./pages/clinical-reports/provider-metrics";
+import MedicationReportsPage from "./pages/clinical-reports/medications";
+import TreatmentPlansPage from "./pages/clinical-workflows/treatment-plans/index";
+import MedicalOrdersPage from "./pages/clinical-workflows/medical-orders/index";
+import PatientEducationPage from "./pages/clinical-workflows/patient-education/index";
 
 const queryClient = new QueryClient();
 
@@ -98,7 +114,24 @@ const App = () => (
           <Route path="/clinical-workflows/notes/new" element={<NewNotePage />} />
           <Route path="/clinical-workflows/prescriptions" element={<PrescriptionsPage />} />
           <Route path="/clinical-workflows/prescriptions/new" element={<NewPrescriptionPage />} />
+          <Route path="/clinical-workflows/treatment-plans" element={<TreatmentPlansPage />} />
+          <Route path="/clinical-workflows/medical-orders" element={<MedicalOrdersPage />} />
+          <Route path="/clinical-workflows/patient-education" element={<PatientEducationPage />} />
           <Route path="/lab-results" element={<LabResultsPage />} />
+          
+          {/* Medical Records */}
+          <Route path="/medical-records" element={<MedicalRecordsPage />} />
+          <Route path="/medical-records/history" element={<PatientHistoryPage />} />
+          <Route path="/medical-records/diagnoses" element={<DiagnosesPage />} />
+          <Route path="/medical-records/imaging" element={<ImagingResultsPage />} />
+          <Route path="/medical-records/external" element={<ExternalRecordsPage />} />
+          
+          {/* Clinical Reports */}
+          <Route path="/clinical-reports" element={<ClinicalReportsPage />} />
+          <Route path="/clinical-reports/outcomes" element={<TreatmentOutcomesPage />} />
+          <Route path="/clinical-reports/patient-analytics" element={<PatientAnalyticsPage />} />
+          <Route path="/clinical-reports/provider-metrics" element={<ProviderMetricsPage />} />
+          <Route path="/clinical-reports/medications" element={<MedicationReportsPage />} />
           
           {/* Patient Interaction Pages */}
           <Route path="/patient-portal/dashboard" element={<PatientPortalDashboard />} />
