@@ -61,6 +61,25 @@ import TreatmentPlansPage from "./pages/clinical-workflows/treatment-plans/index
 import MedicalOrdersPage from "./pages/clinical-workflows/medical-orders/index";
 import PatientEducationPage from "./pages/clinical-workflows/patient-education/index";
 
+// Analytics pages
+import EnrollmentAnalyticsPage from "./pages/analytics/enrollment";
+import StudyOutcomesPage from "./pages/analytics/outcomes";
+import SitePerformancePage from "./pages/analytics/site-performance";
+import DataQualityPage from "./pages/analytics/data-quality";
+import GeographicDistributionPage from "./pages/analytics/geographic";
+
+// Research data pages
+import DataCollectionPage from "./pages/research-data/collection";
+import DataExportsPage from "./pages/research-data/exports";
+import ResearchLabResultsPage from "./pages/research-data/lab-results";
+import BiospecimenTrackingPage from "./pages/research-data/biospecimen";
+
+// Admin & Settings pages
+import RolesPermissionsPage from "./pages/users/roles";
+import AccessRequestsPage from "./pages/users/access-requests";
+import NotificationsSettingsPage from "./pages/settings/notifications";
+import SystemSettingsPage from "./pages/settings/system";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -140,10 +159,25 @@ const App = () => (
           
           {/* Admin & Analytics Pages */}
           <Route path="/users" element={<UserManagementPage />} />
+          <Route path="/users/roles" element={<RolesPermissionsPage />} />
+          <Route path="/users/access-requests" element={<AccessRequestsPage />} />
           <Route path="/audit-logs" element={<AuditLogPage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/analytics/enrollment" element={<EnrollmentAnalyticsPage />} />
+          <Route path="/analytics/outcomes" element={<StudyOutcomesPage />} />
+          <Route path="/analytics/site-performance" element={<SitePerformancePage />} />
+          <Route path="/analytics/data-quality" element={<DataQualityPage />} />
+          <Route path="/analytics/geographic" element={<GeographicDistributionPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/settings/notifications" element={<NotificationsSettingsPage />} />
+          <Route path="/settings/system" element={<SystemSettingsPage />} />
           <Route path="/compliance" element={<CompliancePage />} />
+          
+          {/* Research Data Pages */}
+          <Route path="/research-data/collection" element={<DataCollectionPage />} />
+          <Route path="/research-data/exports" element={<DataExportsPage />} />
+          <Route path="/research-data/lab-results" element={<ResearchLabResultsPage />} />
+          <Route path="/research-data/biospecimen" element={<BiospecimenTrackingPage />} />
           
           {/* 404 Page */}
           <Route path="*" element={<NotFound />} />
