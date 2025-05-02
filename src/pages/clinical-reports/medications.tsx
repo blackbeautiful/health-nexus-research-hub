@@ -1,203 +1,331 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import PageHeader from '@/components/common/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Calendar, Download, Pill, Search, FileText, Filter, DollarSign } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
-  PieChart, Pie, Cell, Legend, LineChart, Line
+  Search, Filter, Download, Pill, ArrowUpRight, Calendar, AlertTriangle, CheckCircle,
+  Clock
+} from 'lucide-react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  BarChart, Bar, LineChart, Line, Cell, PieChart, Pie,
+  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 
 const MedicationReportsPage = () => {
-  const [selectedTimeframe, setSelectedTimeframe] = useState('quarter');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
-  
-  // Sample data for medication usage
-  const topMedicationsByVolume = [
-    { name: "Paclitaxel", count: 387, cost: 542980, category: "Chemotherapy" },
-    { name: "Trastuzumab", count: 245, cost: 1245000, category: "Targeted Therapy" },
-    { name: "Dexamethasone", count: 412, cost: 45320, category: "Supportive Care" },
-    { name: "Ondansetron", count: 384, cost: 76800, category: "Supportive Care" },
-    { name: "Pembrolizumab", count: 156, cost: 1123200, category: "Immunotherapy" },
-    { name: "Carboplatin", count: 298, cost: 268200, category: "Chemotherapy" },
-    { name: "Filgrastim", count: 265, cost: 238500, category: "Supportive Care" },
-    { name: "Docetaxel", count: 208, cost: 249600, category: "Chemotherapy" }
+  const medicationMetrics = [
+    { month: 'Jan', prescriptions: 312, refills: 187, adherence: 82 },
+    { month: 'Feb', prescriptions: 325, refills: 192, adherence: 83 },
+    { month: 'Mar', prescriptions: 335, refills: 201, adherence: 81 },
+    { month: 'Apr', prescriptions: 340, refills: 208, adherence: 84 },
+    { month: 'May', prescriptions: 348, refills: 212, adherence: 85 },
+    { month: 'Jun', prescriptions: 355, refills: 220, adherence: 86 },
+    { month: 'Jul', prescriptions: 368, refills: 225, adherence: 87 },
+    { month: 'Aug', prescriptions: 375, refills: 232, adherence: 88 },
+    { month: 'Sep', prescriptions: 382, refills: 240, adherence: 86 },
+    { month: 'Oct', prescriptions: 392, refills: 248, adherence: 87 },
+    { month: 'Nov', prescriptions: 403, refills: 256, adherence: 89 },
+    { month: 'Dec', prescriptions: 412, refills: 264, adherence: 90 }
   ];
   
-  const medicationCostTrend = [
-    { month: 'Jan', chemotherapy: 423000, targeted: 845000, immunotherapy: 620000, supportive: 124000 },
-    { month: 'Feb', chemotherapy: 410000, targeted: 862000, immunotherapy: 645000, supportive: 118000 },
-    { month: 'Mar', chemotherapy: 435000, targeted: 890000, immunotherapy: 680000, supportive: 132000 },
-    { month: 'Apr', chemotherapy: 428000, targeted: 910000, immunotherapy: 710000, supportive: 129000 },
-    { month: 'May', chemotherapy: 442000, targeted: 925000, immunotherapy: 695000, supportive: 135000 },
-    { month: 'Jun', chemotherapy: 450000, targeted: 935000, immunotherapy: 705000, supportive: 140000 }
+  const medicationTypeData = [
+    { name: 'Chemotherapy', count: 127, adherence: 92 },
+    { name: 'Hormonal Therapy', count: 98, adherence: 89 },
+    { name: 'Targeted Therapy', count: 76, adherence: 88 },
+    { name: 'Immunotherapy', count: 63, adherence: 91 },
+    { name: 'Supportive Medications', count: 187, adherence: 86 }
   ];
   
-  const categoryDistribution = [
-    { name: "Chemotherapy", value: 32 },
-    { name: "Targeted Therapy", value: 28 },
-    { name: "Immunotherapy", value: 24 },
-    { name: "Supportive Care", value: 16 }
+  const adverseEventData = [
+    { name: 'No Events', value: 78.5 },
+    { name: 'Mild', value: 12.3 },
+    { name: 'Moderate', value: 7.4 },
+    { name: 'Severe', value: 1.8 }
   ];
   
-  const adherenceRates = [
-    { name: "Paclitaxel", rate: 92 },
-    { name: "Trastuzumab", rate: 88 },
-    { name: "Pembrolizumab", rate: 94 },
-    { name: "Carboplatin", rate: 90 },
-    { name: "Docetaxel", rate: 86 }
+  const topMedications = [
+    { 
+      name: "Anastrozole", 
+      category: "Hormonal Therapy", 
+      prescriptions: 47, 
+      adherence: 91,
+      cost: "$142.50",
+      adverseEvents: 5.2
+    },
+    { 
+      name: "Tamoxifen", 
+      category: "Hormonal Therapy", 
+      prescriptions: 43, 
+      adherence: 89,
+      cost: "$78.25",
+      adverseEvents: 6.8
+    },
+    { 
+      name: "Paclitaxel", 
+      category: "Chemotherapy", 
+      prescriptions: 38, 
+      adherence: 94,
+      cost: "$1,247.80",
+      adverseEvents: 12.5
+    },
+    { 
+      name: "Pembrolizumab", 
+      category: "Immunotherapy", 
+      prescriptions: 32, 
+      adherence: 95,
+      cost: "$8,965.40",
+      adverseEvents: 7.3
+    },
+    { 
+      name: "Letrozole", 
+      category: "Hormonal Therapy", 
+      prescriptions: 31, 
+      adherence: 88,
+      cost: "$168.75",
+      adverseEvents: 4.7
+    },
+    { 
+      name: "Trastuzumab", 
+      category: "Targeted Therapy", 
+      prescriptions: 29, 
+      adherence: 93,
+      cost: "$4,872.30",
+      adverseEvents: 3.9
+    },
+    { 
+      name: "Ondansetron", 
+      category: "Supportive Care", 
+      prescriptions: 102, 
+      adherence: 84,
+      cost: "$45.60",
+      adverseEvents: 2.1
+    },
+    { 
+      name: "Dexamethasone", 
+      category: "Supportive Care", 
+      prescriptions: 98, 
+      adherence: 82,
+      cost: "$21.35",
+      adverseEvents: 8.4
+    }
   ];
-  
-  const COLORS = ['#4F46E5', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'];
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(value);
-  };
-  
-  const filteredMedications = topMedicationsByVolume.filter(med => {
-    const matchesSearch = med.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || med.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
-  
-  const totalCost = topMedicationsByVolume.reduce((acc, med) => acc + med.cost, 0);
-  const totalPrescriptions = topMedicationsByVolume.reduce((acc, med) => acc + med.count, 0);
-  
+  // Colors for charts
+  const COLORS = ['#22c55e', '#f59e0b', '#7c3aed', '#ef4444', '#0ea5e9', '#ec4899'];
+
   return (
     <MainLayout>
       <PageHeader
         title="Medication Reports"
-        description="Prescribing patterns, costs, and analytics"
+        description="Prescription analytics and medication usage metrics"
         breadcrumbs={[
           { label: 'Clinical Reports', link: '/clinical-reports' },
           { label: 'Medication Reports' }
         ]}
         action={{
-          label: 'Generate Report',
-          icon: FileText,
-          onClick: () => console.log('Generate medication report')
+          label: 'Export Report',
+          icon: Download,
+          onClick: () => console.log('Export medication report')
         }}
       />
-      
-      <div className="flex flex-col md:flex-row justify-between gap-4 mb-6">
-        <div className="flex flex-wrap gap-3">
-          <Select value={selectedTimeframe} onValueChange={setSelectedTimeframe}>
-            <SelectTrigger className="w-[160px]">
-              <Calendar className="mr-2 h-4 w-4" />
-              <SelectValue placeholder="Time period" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="month">This Month</SelectItem>
-              <SelectItem value="quarter">This Quarter</SelectItem>
-              <SelectItem value="year">This Year</SelectItem>
-              <SelectItem value="custom">Custom Range</SelectItem>
-            </SelectContent>
-          </Select>
-          
-          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-[180px]">
-              <Filter className="mr-2 h-4 w-4" />
-              <SelectValue placeholder="Medication category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              <SelectItem value="Chemotherapy">Chemotherapy</SelectItem>
-              <SelectItem value="Targeted Therapy">Targeted Therapy</SelectItem>
-              <SelectItem value="Immunotherapy">Immunotherapy</SelectItem>
-              <SelectItem value="Supportive Care">Supportive Care</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm">
-            <Download className="mr-2 h-4 w-4" />
-            Export Data
-          </Button>
-        </div>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Total Medication Cost</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(totalCost)}</div>
-            <div className="flex items-center text-xs text-muted-foreground mt-1">
-              <span className="text-amber-500 mr-1">↑ 8.4%</span> from previous period
-            </div>
-          </CardContent>
-        </Card>
-        
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">Total Prescriptions</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalPrescriptions}</div>
-            <div className="flex items-center text-xs text-muted-foreground mt-1">
-              <span className="text-green-500 mr-1">↑ 5.2%</span> from previous period
+            <div className="flex items-center">
+              <div>
+                <div className="text-2xl font-bold">4,347</div>
+                <div className="flex items-center text-xs text-green-600 mt-1">
+                  <ArrowUpRight className="h-3.5 w-3.5 mr-1" /> 
+                  <span>9.2% from last year</span>
+                </div>
+              </div>
+              <div className="ml-auto p-2 bg-blue-50 text-blue-500 rounded-full">
+                <Pill className="h-5 w-5" />
+              </div>
             </div>
           </CardContent>
         </Card>
         
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Avg. Cost Per Prescription</CardTitle>
+            <CardTitle className="text-sm font-medium">Monthly Rx (Avg)</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {formatCurrency(totalCost / totalPrescriptions)}
+            <div className="flex items-center">
+              <div>
+                <div className="text-2xl font-bold">362</div>
+                <div className="flex items-center text-xs text-green-600 mt-1">
+                  <ArrowUpRight className="h-3.5 w-3.5 mr-1" /> 
+                  <span>3.5% from last quarter</span>
+                </div>
+              </div>
+              <div className="ml-auto p-2 bg-green-50 text-green-500 rounded-full">
+                <Calendar className="h-5 w-5" />
+              </div>
             </div>
-            <div className="flex items-center text-xs text-muted-foreground mt-1">
-              <span className="text-amber-500 mr-1">↑ 3.1%</span> from previous period
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Medication Adherence</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center">
+              <div>
+                <div className="text-2xl font-bold">87.3%</div>
+                <div className="flex items-center text-xs text-green-600 mt-1">
+                  <ArrowUpRight className="h-3.5 w-3.5 mr-1" /> 
+                  <span>2.1% from last quarter</span>
+                </div>
+              </div>
+              <div className="ml-auto p-2 bg-amber-50 text-amber-500 rounded-full">
+                <CheckCircle className="h-5 w-5" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Adverse Events</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center">
+              <div>
+                <div className="text-2xl font-bold">5.8%</div>
+                <div className="flex items-center text-xs text-green-600 mt-1">
+                  <ArrowUpRight className="h-3.5 w-3.5 mr-1" /> 
+                  <span>1.4% decrease from last year</span>
+                </div>
+              </div>
+              <div className="ml-auto p-2 bg-red-50 text-red-500 rounded-full">
+                <AlertTriangle className="h-5 w-5" />
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+
+      <Card className="mb-6">
+        <CardHeader>
+          <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
+            <div>
+              <CardTitle>Medication Usage Trends</CardTitle>
+              <CardDescription>12-month analysis of prescriptions and adherence</CardDescription>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Select defaultValue="year">
+                <SelectTrigger className="w-[150px]">
+                  <SelectValue placeholder="Select period" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="year">Last 12 months</SelectItem>
+                  <SelectItem value="quarter">Last quarter</SelectItem>
+                  <SelectItem value="month">This month</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button variant="outline" size="icon">
+                <Download className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[350px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                data={medicationMetrics}
+                margin={{
+                  top: 20,
+                  right: 30,
+                  left: 0,
+                  bottom: 0,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="month" />
+                <YAxis yAxisId="left" />
+                <YAxis yAxisId="right" orientation="right" domain={[0, 100]} />
+                <Tooltip />
+                <Legend />
+                <Line 
+                  yAxisId="left"
+                  type="monotone" 
+                  dataKey="prescriptions" 
+                  name="New Prescriptions" 
+                  stroke="#0ea5e9" 
+                  activeDot={{ r: 8 }} 
+                  strokeWidth={2}
+                />
+                <Line 
+                  yAxisId="left"
+                  type="monotone" 
+                  dataKey="refills" 
+                  name="Refills" 
+                  stroke="#7c3aed" 
+                  strokeWidth={2}
+                />
+                <Line 
+                  yAxisId="right"
+                  type="monotone" 
+                  dataKey="adherence" 
+                  name="Adherence (%)" 
+                  stroke="#22c55e" 
+                  strokeWidth={2}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <Card>
           <CardHeader>
-            <CardTitle>Medication Category Distribution</CardTitle>
-            <CardDescription>Prescription breakdown by therapeutic class</CardDescription>
+            <CardTitle>Medication Categories</CardTitle>
+            <CardDescription>Prescription count by medication type</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-[300px] flex items-center justify-center">
+            <div className="h-[350px]">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={categoryDistribution}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {categoryDistribution.map((entry, index) => (
+                <BarChart
+                  data={medicationTypeData}
+                  margin={{
+                    top: 20,
+                    right: 30,
+                    left: 0,
+                    bottom: 5,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="count" name="Prescriptions" fill="#0ea5e9">
+                    {medicationTypeData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
-                  </Pie>
-                  <Tooltip formatter={(value) => [`${value}%`, 'Percentage']} />
-                  <Legend layout="vertical" align="center" verticalAlign="bottom" />
-                </PieChart>
+                  </Bar>
+                </BarChart>
               </ResponsiveContainer>
             </div>
           </CardContent>
@@ -205,151 +333,120 @@ const MedicationReportsPage = () => {
         
         <Card>
           <CardHeader>
-            <CardTitle>Medication Adherence Rates</CardTitle>
-            <CardDescription>Patient adherence to medication regimens</CardDescription>
+            <CardTitle>Adverse Events Distribution</CardTitle>
+            <CardDescription>Breakdown of medication side effect severity</CardDescription>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart
-                data={adherenceRates}
-                layout="vertical"
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 80,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" domain={[0, 100]} />
-                <YAxis type="category" dataKey="name" width={120} />
-                <Tooltip formatter={(value) => [`${value}%`, 'Adherence Rate']} />
-                <Bar dataKey="rate" fill="#4F46E5" />
-              </BarChart>
-            </ResponsiveContainer>
+            <div className="h-[350px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={adverseEventData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={100}
+                    fill="#8884d8"
+                    paddingAngle={5}
+                    dataKey="value"
+                    label={({name, value}) => `${name}: ${value}%`}
+                  >
+                    {adverseEventData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={
+                        index === 0 ? '#22c55e' : 
+                        index === 1 ? '#f59e0b' : 
+                        index === 2 ? '#fb7185' : 
+                        '#ef4444'} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(value) => `${value}%`} />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
           </CardContent>
         </Card>
       </div>
-      
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Medication Cost Trends</CardTitle>
-          <CardDescription>Monthly expenditure by medication category</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={350}>
-            <LineChart
-              data={medicationCostTrend}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip formatter={(value) => [formatCurrency(value as number), 'Cost']} />
-              <Legend />
-              <Line type="monotone" dataKey="chemotherapy" name="Chemotherapy" stroke="#4F46E5" activeDot={{ r: 8 }} />
-              <Line type="monotone" dataKey="targeted" name="Targeted Therapy" stroke="#10B981" />
-              <Line type="monotone" dataKey="immunotherapy" name="Immunotherapy" stroke="#F59E0B" />
-              <Line type="monotone" dataKey="supportive" name="Supportive Care" stroke="#8B5CF6" />
-            </LineChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
       
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
             <div>
-              <CardTitle>Top Medications by Volume</CardTitle>
-              <CardDescription>Most frequently prescribed medications</CardDescription>
+              <CardTitle>Medication Analysis</CardTitle>
+              <CardDescription>Top prescribed medications with key metrics</CardDescription>
             </div>
-            <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search medications..."
-                className="pl-8 w-full md:w-[250px]"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="search"
+                  placeholder="Search medications..."
+                  className="pl-8 w-[200px] md:w-[250px]"
+                />
+              </div>
+              <Button variant="outline" size="icon">
+                <Filter className="h-4 w-4" />
+              </Button>
             </div>
           </div>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="volume">
+          <Tabs defaultValue="all">
             <TabsList className="mb-6">
-              <TabsTrigger value="volume">By Volume</TabsTrigger>
-              <TabsTrigger value="cost">By Cost</TabsTrigger>
-              <TabsTrigger value="growth">By Growth Rate</TabsTrigger>
+              <TabsTrigger value="all">All Medications</TabsTrigger>
+              <TabsTrigger value="chemo">Chemotherapy</TabsTrigger>
+              <TabsTrigger value="hormonal">Hormonal Therapy</TabsTrigger>
+              <TabsTrigger value="targeted">Targeted Therapy</TabsTrigger>
+              <TabsTrigger value="supportive">Supportive Care</TabsTrigger>
             </TabsList>
             
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Medication</TableHead>
+                  <TableHead>Medication Name</TableHead>
                   <TableHead>Category</TableHead>
                   <TableHead className="text-right">Prescriptions</TableHead>
-                  <TableHead className="text-right">Total Cost</TableHead>
-                  <TableHead className="text-right">Avg. Cost Per Rx</TableHead>
-                  <TableHead>% of Total</TableHead>
+                  <TableHead className="text-right">Adherence</TableHead>
+                  <TableHead className="text-right">Adverse Events</TableHead>
+                  <TableHead className="text-right">Avg. Cost</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredMedications.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-center py-6 text-muted-foreground">
-                      No medications match your search criteria
+                {topMedications.map((med, index) => (
+                  <TableRow key={index} className="cursor-pointer hover:bg-muted/50">
+                    <TableCell className="font-medium">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+                        <span>{med.name}</span>
+                      </div>
                     </TableCell>
+                    <TableCell>{med.category}</TableCell>
+                    <TableCell className="text-right">{med.prescriptions}</TableCell>
+                    <TableCell className="text-right">
+                      <Badge variant={med.adherence >= 90 ? "default" : med.adherence >= 85 ? "outline" : "secondary"}>
+                        {med.adherence}%
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Badge variant={med.adverseEvents <= 5 ? "outline" : med.adverseEvents <= 10 ? "secondary" : "destructive"}>
+                        {med.adverseEvents}%
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">{med.cost}</TableCell>
                   </TableRow>
-                ) : (
-                  filteredMedications
-                    .sort((a, b) => b.count - a.count) // Sort by prescription count for "By Volume" tab
-                    .map((medication) => {
-                      const percentOfTotal = (medication.count / totalPrescriptions) * 100;
-                      
-                      return (
-                        <TableRow key={medication.name}>
-                          <TableCell>
-                            <div className="flex items-center">
-                              <Pill className="h-4 w-4 mr-2 text-primary" />
-                              {medication.name}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
-                              {medication.category}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-right">{medication.count}</TableCell>
-                          <TableCell className="text-right font-medium">{formatCurrency(medication.cost)}</TableCell>
-                          <TableCell className="text-right">{formatCurrency(medication.cost / medication.count)}</TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-2">
-                              <Progress value={percentOfTotal} className="h-2 w-20" />
-                              <span className="text-xs">{percentOfTotal.toFixed(1)}%</span>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      );
-                  })
-                )}
+                ))}
               </TableBody>
             </Table>
           </Tabs>
         </CardContent>
         <CardFooter className="border-t p-4 flex justify-between">
           <div className="text-sm text-muted-foreground">
-            Showing {filteredMedications.length} of {topMedicationsByVolume.length} medications
+            <div className="flex items-center">
+              <Clock className="h-3.5 w-3.5 mr-1 text-muted-foreground" />
+              <span>Last updated: May 2, 2025 at 10:25 AM</span>
+            </div>
           </div>
-          <Button variant="outline" size="sm">
-            <DollarSign className="mr-2 h-4 w-4" />
-            Cost Analysis
-          </Button>
+          <Button variant="outline">View All Medications</Button>
         </CardFooter>
       </Card>
     </MainLayout>

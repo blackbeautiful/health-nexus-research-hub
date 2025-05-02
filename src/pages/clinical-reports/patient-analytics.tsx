@@ -1,77 +1,94 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import PageHeader from '@/components/common/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { Calendar, Download, Filter, Users, UserCircle, FileSpreadsheet, Map, ArrowUpDown } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
-  PieChart, Pie, Cell, Legend, LineChart, Line
+  Download, Users, Clock, Calendar, MapPin, UserPlus, ArrowUpRight
+} from 'lucide-react';
+import {
+  PieChart, Pie, BarChart, Bar, LineChart, Line, Cell,
+  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 
 const PatientAnalyticsPage = () => {
-  const [selectedTimeframe, setSelectedTimeframe] = useState('12months');
-
-  // Sample data for charts
-  const ageDistribution = [
-    { age: '0-17', count: 84 },
-    { age: '18-30', count: 125 },
-    { age: '31-45', count: 230 },
-    { age: '46-60', count: 345 },
-    { age: '61-75', count: 287 },
-    { age: '76+', count: 143 }
+  const ageDemographics = [
+    { name: '0-18', value: 32 },
+    { name: '19-35', value: 78 },
+    { name: '36-50', value: 143 },
+    { name: '51-65', value: 187 },
+    { name: '66-80', value: 113 },
+    { name: '80+', value: 41 }
+  ];
+  
+  const genderDemographics = [
+    { name: 'Female', value: 317 },
+    { name: 'Male', value: 268 },
+    { name: 'Non-binary', value: 9 }
+  ];
+  
+  const ethnicityDemographics = [
+    { name: 'Caucasian', value: 246 },
+    { name: 'African American', value: 102 },
+    { name: 'Hispanic/Latino', value: 124 },
+    { name: 'Asian', value: 87 },
+    { name: 'Other', value: 35 }
+  ];
+  
+  const diagnosisByType = [
+    { name: 'Breast Cancer', value: 98 },
+    { name: 'Lung Cancer', value: 72 },
+    { name: 'Colorectal Cancer', value: 64 },
+    { name: 'Prostate Cancer', value: 57 },
+    { name: 'Lymphoma', value: 43 },
+    { name: 'Leukemia', value: 38 },
+    { name: 'Melanoma', value: 31 },
+    { name: 'Other', value: 191 }
+  ];
+  
+  const patientTrends = [
+    { month: 'Jan', newPatients: 28, dischargedPatients: 22, activePatients: 476 },
+    { month: 'Feb', newPatients: 31, dischargedPatients: 19, activePatients: 488 },
+    { month: 'Mar', newPatients: 25, dischargedPatients: 24, activePatients: 489 },
+    { month: 'Apr', newPatients: 34, dischargedPatients: 18, activePatients: 505 },
+    { month: 'May', newPatients: 29, dischargedPatients: 21, activePatients: 513 },
+    { month: 'Jun', newPatients: 32, dischargedPatients: 26, activePatients: 519 },
+    { month: 'Jul', newPatients: 37, dischargedPatients: 22, activePatients: 534 },
+    { month: 'Aug', newPatients: 30, dischargedPatients: 24, activePatients: 540 },
+    { month: 'Sep', newPatients: 33, dischargedPatients: 25, activePatients: 548 },
+    { month: 'Oct', newPatients: 39, dischargedPatients: 27, activePatients: 560 },
+    { month: 'Nov', newPatients: 35, dischargedPatients: 23, activePatients: 572 },
+    { month: 'Dec', newPatients: 42, dischargedPatients: 28, activePatients: 586 }
+  ];
+  
+  const insuranceTypes = [
+    { name: 'Private Insurance', value: 312 },
+    { name: 'Medicare', value: 173 },
+    { name: 'Medicaid', value: 84 },
+    { name: 'Self-Pay', value: 18 },
+    { name: 'Other', value: 7 }
+  ];
+  
+  const locationData = [
+    { name: 'San Francisco', value: 214 },
+    { name: 'Oakland', value: 127 },
+    { name: 'San Jose', value: 97 },
+    { name: 'Palo Alto', value: 58 },
+    { name: 'Berkeley', value: 42 },
+    { name: 'Other Bay Area', value: 56 }
   ];
 
-  const genderDistribution = [
-    { name: 'Female', value: 615 },
-    { name: 'Male', value: 585 },
-    { name: 'Other', value: 14 }
-  ];
-
-  const patientAcquisitionData = [
-    { month: 'Jan', new: 38, returning: 62 },
-    { month: 'Feb', new: 42, returning: 58 },
-    { month: 'Mar', new: 45, returning: 64 },
-    { month: 'Apr', new: 40, returning: 68 },
-    { month: 'May', new: 37, returning: 72 },
-    { month: 'Jun', new: 42, returning: 75 },
-    { month: 'Jul', new: 48, returning: 70 },
-    { month: 'Aug', new: 52, returning: 68 },
-    { month: 'Sep', new: 46, returning: 65 },
-    { month: 'Oct', new: 41, returning: 70 },
-    { month: 'Nov', new: 38, returning: 72 },
-    { month: 'Dec', new: 35, returning: 78 }
-  ];
-
-  const insuranceDistribution = [
-    { name: 'Private Insurance', value: 42 },
-    { name: 'Medicare', value: 28 },
-    { name: 'Medicaid', value: 18 },
-    { name: 'Self-Pay', value: 8 },
-    { name: 'Other', value: 4 }
-  ];
-
-  const zipCodeDistribution = [
-    { zipcode: '90210', patients: 125 },
-    { zipcode: '90001', patients: 87 },
-    { zipcode: '90045', patients: 103 },
-    { zipcode: '90036', patients: 142 },
-    { zipcode: '90066', patients: 118 },
-    { zipcode: 'Other', patients: 639 }
-  ];
-
-  const COLORS = ['#4F46E5', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'];
+  // Colors for charts
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658'];
 
   return (
     <MainLayout>
       <PageHeader
         title="Patient Analytics"
-        description="Demographic analysis and patient population insights"
+        description="Demographics and patient population insights"
         breadcrumbs={[
           { label: 'Clinical Reports', link: '/clinical-reports' },
           { label: 'Patient Analytics' }
@@ -79,38 +96,9 @@ const PatientAnalyticsPage = () => {
         action={{
           label: 'Export Data',
           icon: Download,
-          onClick: () => console.log('Export patient analytics')
+          onClick: () => console.log('Export analytics data')
         }}
       />
-
-      <div className="flex flex-col md:flex-row justify-between gap-4 mb-6">
-        <div className="flex flex-wrap gap-3">
-          <Select value={selectedTimeframe} onValueChange={setSelectedTimeframe}>
-            <SelectTrigger className="w-[160px]">
-              <Calendar className="mr-2 h-4 w-4" />
-              <SelectValue placeholder="Select period" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="3months">Last 3 months</SelectItem>
-              <SelectItem value="6months">Last 6 months</SelectItem>
-              <SelectItem value="12months">Last 12 months</SelectItem>
-              <SelectItem value="2years">Last 2 years</SelectItem>
-              <SelectItem value="5years">5 year analysis</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm">
-            <FileSpreadsheet className="mr-2 h-4 w-4" />
-            Patient Registry
-          </Button>
-          <Button variant="outline" size="sm">
-            <ArrowUpDown className="mr-2 h-4 w-4" />
-            Compare Periods
-          </Button>
-        </div>
-      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
         <Card>
@@ -118,191 +106,369 @@ const PatientAnalyticsPage = () => {
             <CardTitle className="text-sm font-medium">Total Patients</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">1,214</div>
-            <div className="flex items-center text-xs text-muted-foreground mt-1">
-              <span className="text-green-500 mr-1">↑ 8.4%</span> from previous period
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">New Patients</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">143</div>
-            <div className="flex items-center text-xs text-muted-foreground mt-1">
-              <span className="text-green-500 mr-1">↑ 12.6%</span> from previous period
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Patient Retention</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">87.2%</div>
-            <div className="flex items-center text-xs text-muted-foreground mt-1">
-              <span className="text-green-500 mr-1">↑ 2.1%</span> from previous period
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Avg. Visits Per Patient</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">4.3</div>
-            <div className="flex items-center text-xs text-muted-foreground mt-1">
-              <span className="text-amber-500 mr-1">↓ 0.2</span> from previous period
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Age Distribution</CardTitle>
-            <CardDescription>Patient count by age group</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={ageDistribution}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="age" />
-                <YAxis />
-                <Tooltip formatter={(value) => [`${value} patients`, 'Count']} />
-                <Bar dataKey="count" fill="#6366F1" />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Gender Distribution</CardTitle>
-            <CardDescription>Patient gender breakdown</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px] flex items-center justify-center">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={genderDistribution}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {genderDistribution.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value) => [`${value} patients`, 'Count']} />
-                  <Legend layout="vertical" align="center" verticalAlign="bottom" />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-      
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Patient Acquisition Trends</CardTitle>
-          <CardDescription>Monthly new vs. returning patients</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={350}>
-            <LineChart
-              data={patientAcquisitionData}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip formatter={(value) => [`${value} patients`, 'Count']} />
-              <Legend />
-              <Line type="monotone" dataKey="new" stroke="#4F46E5" activeDot={{ r: 8 }} name="New Patients" />
-              <Line type="monotone" dataKey="returning" stroke="#10B981" name="Returning Patients" />
-            </LineChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Insurance Distribution</CardTitle>
-            <CardDescription>Patient insurance coverage types</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px] flex items-center justify-center">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={insuranceDistribution}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {insuranceDistribution.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value) => [`${value}%`, 'Percentage']} />
-                  <Legend layout="vertical" align="center" verticalAlign="bottom" />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center">
               <div>
-                <CardTitle>Geographic Distribution</CardTitle>
-                <CardDescription>Patient distribution by zip code</CardDescription>
-              </div>
-              <Button variant="outline" size="sm">
-                <Map className="mr-2 h-4 w-4" />
-                View Map
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {zipCodeDistribution.map((item) => (
-                <div key={item.zipcode} className="space-y-1">
-                  <div className="flex justify-between">
-                    <span className="text-sm">ZIP Code {item.zipcode}</span>
-                    <span className="text-sm font-medium">{item.patients} patients</span>
-                  </div>
-                  <Progress value={(item.patients / 1214) * 100} className="h-2" />
-                  <div className="text-xs text-muted-foreground text-right">
-                    {((item.patients / 1214) * 100).toFixed(1)}% of total
-                  </div>
+                <div className="text-2xl font-bold">594</div>
+                <div className="flex items-center text-xs text-green-600 mt-1">
+                  <ArrowUpRight className="h-3.5 w-3.5 mr-1" /> 
+                  <span>3.9% from last month</span>
                 </div>
-              ))}
+              </div>
+              <div className="ml-auto p-2 bg-blue-50 text-blue-500 rounded-full">
+                <Users className="h-5 w-5" />
+              </div>
             </div>
           </CardContent>
         </Card>
+        
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">New Patients (MTD)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center">
+              <div>
+                <div className="text-2xl font-bold">42</div>
+                <div className="flex items-center text-xs text-green-600 mt-1">
+                  <ArrowUpRight className="h-3.5 w-3.5 mr-1" /> 
+                  <span>20% from previous month</span>
+                </div>
+              </div>
+              <div className="ml-auto p-2 bg-green-50 text-green-500 rounded-full">
+                <UserPlus className="h-5 w-5" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Avg. Patient Age</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center">
+              <div>
+                <div className="text-2xl font-bold">53.7</div>
+                <div className="flex items-center text-xs text-muted-foreground mt-1">
+                  <Clock className="h-3.5 w-3.5 mr-1" /> 
+                  <span>Years old</span>
+                </div>
+              </div>
+              <div className="ml-auto p-2 bg-amber-50 text-amber-500 rounded-full">
+                <Calendar className="h-5 w-5" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Service Area</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center">
+              <div>
+                <div className="text-2xl font-bold">86%</div>
+                <div className="flex items-center text-xs text-muted-foreground mt-1">
+                  <span>Bay Area residents</span>
+                </div>
+              </div>
+              <div className="ml-auto p-2 bg-indigo-50 text-indigo-500 rounded-full">
+                <MapPin className="h-5 w-5" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Tabs defaultValue="demographics" className="mb-6">
+        <TabsList>
+          <TabsTrigger value="demographics">Demographics</TabsTrigger>
+          <TabsTrigger value="trends">Patient Trends</TabsTrigger>
+          <TabsTrigger value="diagnoses">Diagnoses</TabsTrigger>
+          <TabsTrigger value="insurance">Insurance</TabsTrigger>
+        </TabsList>
+        
+        <div className="mt-6">
+          <TabsContent value="demographics">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Age Distribution</CardTitle>
+                  <CardDescription>Patient population by age group</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-[300px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart
+                        data={ageDemographics}
+                        margin={{
+                          top: 20,
+                          right: 30,
+                          left: 0,
+                          bottom: 5,
+                        }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                        <XAxis dataKey="name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Bar dataKey="value" name="Patients" fill="#0088FE" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle>Gender Distribution</CardTitle>
+                  <CardDescription>Patient population by gender</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-[300px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={genderDemographics}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={60}
+                          outerRadius={90}
+                          fill="#8884d8"
+                          paddingAngle={5}
+                          dataKey="value"
+                          label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                        >
+                          {genderDemographics.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                        <Legend />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle>Ethnicity Distribution</CardTitle>
+                  <CardDescription>Patient population by ethnicity</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-[300px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={ethnicityDemographics}
+                          cx="50%"
+                          cy="50%"
+                          outerRadius={90}
+                          fill="#8884d8"
+                          dataKey="value"
+                          label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                        >
+                          {ethnicityDemographics.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                        <Legend />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="trends">
+            <Card>
+              <CardHeader>
+                <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
+                  <div>
+                    <CardTitle>Patient Population Trends</CardTitle>
+                    <CardDescription>12-month patient volume analysis</CardDescription>
+                  </div>
+                  <Select defaultValue="year">
+                    <SelectTrigger className="w-[150px]">
+                      <SelectValue placeholder="Select period" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="year">Last 12 months</SelectItem>
+                      <SelectItem value="6months">Last 6 months</SelectItem>
+                      <SelectItem value="quarter">Last quarter</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[400px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart
+                      data={patientTrends}
+                      margin={{
+                        top: 20,
+                        right: 30,
+                        left: 0,
+                        bottom: 0,
+                      }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                      <XAxis dataKey="month" />
+                      <YAxis yAxisId="left" />
+                      <YAxis yAxisId="right" orientation="right" />
+                      <Tooltip />
+                      <Legend />
+                      <Line 
+                        yAxisId="left"
+                        type="monotone" 
+                        dataKey="newPatients" 
+                        name="New Patients" 
+                        stroke="#0088FE" 
+                        activeDot={{ r: 8 }} 
+                      />
+                      <Line 
+                        yAxisId="left"
+                        type="monotone" 
+                        dataKey="dischargedPatients" 
+                        name="Discharged" 
+                        stroke="#FF8042" 
+                      />
+                      <Line 
+                        yAxisId="right"
+                        type="monotone" 
+                        dataKey="activePatients" 
+                        name="Active Patients" 
+                        stroke="#00C49F" 
+                        strokeWidth={2}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="diagnoses">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Diagnosis Distribution</CardTitle>
+                  <CardDescription>Patient population by primary diagnosis</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-[350px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={diagnosisByType}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={60}
+                          outerRadius={90}
+                          fill="#8884d8"
+                          paddingAngle={5}
+                          dataKey="value"
+                          label
+                        >
+                          {diagnosisByType.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                        <Legend />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle>Geographic Distribution</CardTitle>
+                  <CardDescription>Patient population by location</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-[350px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart
+                        data={locationData}
+                        layout="vertical"
+                        margin={{
+                          top: 20,
+                          right: 30,
+                          left: 60,
+                          bottom: 5,
+                        }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                        <XAxis type="number" />
+                        <YAxis dataKey="name" type="category" width={100} />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="value" name="Patients" fill="#8884d8" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="insurance">
+            <Card>
+              <CardHeader>
+                <CardTitle>Insurance Coverage</CardTitle>
+                <CardDescription>Patient population by insurance type</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[400px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={insuranceTypes}
+                      margin={{
+                        top: 20,
+                        right: 30,
+                        left: 0,
+                        bottom: 5,
+                      }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <Bar dataKey="value" name="Patients" fill="#8884d8">
+                        {insuranceTypes.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <div className="text-sm text-muted-foreground">
+                  Note: Insurance data shown is based on current active patients only.
+                </div>
+              </CardFooter>
+            </Card>
+          </TabsContent>
+        </div>
+      </Tabs>
+      
+      <div className="flex justify-end gap-4">
+        <Button variant="outline">
+          <Download className="mr-2 h-4 w-4" />
+          Export Raw Data
+        </Button>
+        <Button variant="outline">
+          <Download className="mr-2 h-4 w-4" />
+          Export Charts
+        </Button>
       </div>
     </MainLayout>
   );

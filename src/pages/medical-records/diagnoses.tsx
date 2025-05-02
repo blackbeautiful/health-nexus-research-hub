@@ -1,145 +1,104 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import PageHeader from '@/components/common/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Search, Filter, Plus, FileText, Calendar, ArrowUpRight, Download } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-
-interface Diagnosis {
-  id: string;
-  code: string;
-  name: string;
-  category: string;
-  date: string;
-  provider: string;
-  status: 'active' | 'resolved' | 'chronic';
-}
+import { Search, Filter, Download, HeartPulse } from 'lucide-react';
 
 const DiagnosesPage = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  
-  const diagnoses: Diagnosis[] = [
-    { id: 'D-1001', code: 'C50.211', name: 'Malignant neoplasm of upper-inner quadrant of right female breast', category: 'Oncology', date: '2022-09-15', provider: 'Dr. Rebecca Martinez', status: 'active' },
-    { id: 'D-1002', code: 'I10', name: 'Essential (primary) hypertension', category: 'Cardiovascular', date: '2020-03-22', provider: 'Dr. James Wilson', status: 'chronic' },
-    { id: 'D-1003', code: 'E11.9', name: 'Type 2 diabetes mellitus without complications', category: 'Endocrine', date: '2019-11-05', provider: 'Dr. Elena Rodriguez', status: 'chronic' },
-    { id: 'D-1004', code: 'J45.909', name: 'Unspecified asthma, uncomplicated', category: 'Respiratory', date: '2018-06-12', provider: 'Dr. Robert Kim', status: 'chronic' },
-    { id: 'D-1005', code: 'M54.5', name: 'Low back pain', category: 'Musculoskeletal', date: '2021-08-30', provider: 'Dr. Anna Lopez', status: 'resolved' },
-  ];
-  
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active': return 'bg-amber-100 text-amber-800 border-amber-200';
-      case 'resolved': return 'bg-green-100 text-green-800 border-green-200';
-      case 'chronic': return 'bg-blue-100 text-blue-800 border-blue-200';
-      default: return '';
+  const patientDiagnoses = [
+    { 
+      id: 'DX-10245', 
+      date: '2025-04-10', 
+      code: 'C50.911', 
+      diagnosis: 'Malignant neoplasm of unspecified site of right female breast',
+      diagnosisType: 'Primary',
+      status: 'Active',
+      provider: 'Dr. Rebecca Martinez',
+      notes: 'Stage IIA (T2N0M0). Confirmed via biopsy and imaging.'
+    },
+    { 
+      id: 'DX-10244', 
+      date: '2025-04-10', 
+      code: 'Z17.0', 
+      diagnosis: 'Estrogen receptor positive status',
+      diagnosisType: 'Secondary',
+      status: 'Active',
+      provider: 'Dr. Rebecca Martinez',
+      notes: 'ER+/PR+, HER2-'
+    },
+    { 
+      id: 'DX-10243', 
+      date: '2025-04-08', 
+      code: 'E66.9', 
+      diagnosis: 'Obesity, unspecified',
+      diagnosisType: 'Secondary',
+      status: 'Active',
+      provider: 'Dr. James Wilson',
+      notes: 'BMI 32.4'
+    },
+    { 
+      id: 'DX-10242', 
+      date: '2024-08-15', 
+      code: 'I10', 
+      diagnosis: 'Essential (primary) hypertension',
+      diagnosisType: 'Secondary',
+      status: 'Active',
+      provider: 'Dr. Elena Rodriguez',
+      notes: 'Well-controlled on current medication regimen'
+    },
+    { 
+      id: 'DX-10241', 
+      date: '2023-11-22', 
+      code: 'J45.909', 
+      diagnosis: 'Unspecified asthma, uncomplicated',
+      diagnosisType: 'Secondary',
+      status: 'Resolved',
+      provider: 'Dr. Robert Kim',
+      notes: 'No recent exacerbations'
     }
-  };
-  
-  const filteredDiagnoses = diagnoses.filter(diagnosis => {
-    const matchesSearch = diagnosis.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          diagnosis.code.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || diagnosis.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
-  
-  const categories = Array.from(new Set(diagnoses.map(d => d.category)));
+  ];
 
   return (
     <MainLayout>
       <PageHeader
-        title="Patient Diagnoses"
-        description="Manage and track patient diagnostic information"
+        title="Diagnoses"
+        description="View and manage patient diagnoses and conditions"
         breadcrumbs={[
           { label: 'Medical Records', link: '/medical-records' },
           { label: 'Diagnoses' }
         ]}
         action={{
-          label: 'New Diagnosis',
-          icon: Plus,
+          label: 'Add Diagnosis',
+          icon: HeartPulse,
           onClick: () => console.log('Add new diagnosis')
         }}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Active Diagnoses</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {diagnoses.filter(d => d.status === 'active').length}
-            </div>
-            <div className="text-xs text-muted-foreground mt-1">
-              Requiring active management
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Chronic Conditions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {diagnoses.filter(d => d.status === 'chronic').length}
-            </div>
-            <div className="text-xs text-muted-foreground mt-1">
-              Ongoing management required
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Resolved Issues</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {diagnoses.filter(d => d.status === 'resolved').length}
-            </div>
-            <div className="text-xs text-muted-foreground mt-1">
-              Historical diagnoses
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-      
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <Card className="mb-6">
+        <CardHeader className="pb-3">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <CardTitle>Diagnosis List</CardTitle>
-              <CardDescription>Patient diagnoses and medical conditions</CardDescription>
+              <CardTitle>Patient Diagnoses</CardTitle>
+              <CardDescription>Sarah Johnson (PT-12345)</CardDescription>
             </div>
-            <div className="flex items-center gap-2 w-full md:w-auto">
-              <div className="relative flex-1 md:flex-none">
+            <div className="flex items-center space-x-2">
+              <div className="relative">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="search"
                   placeholder="Search diagnoses..."
-                  className="pl-8 w-full md:w-[200px]"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-8 w-[200px] md:w-[300px]"
                 />
               </div>
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-[150px]">
-                  <SelectValue placeholder="Filter category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  {categories.map(category => (
-                    <SelectItem key={category} value={category}>{category}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Button variant="outline" size="icon">
+                <Filter className="h-4 w-4" />
+              </Button>
               <Button variant="outline" size="icon">
                 <Download className="h-4 w-4" />
               </Button>
@@ -149,59 +108,108 @@ const DiagnosesPage = () => {
         <CardContent>
           <Tabs defaultValue="all">
             <TabsList className="mb-6">
-              <TabsTrigger value="all">All</TabsTrigger>
+              <TabsTrigger value="all">All Diagnoses</TabsTrigger>
               <TabsTrigger value="active">Active</TabsTrigger>
-              <TabsTrigger value="chronic">Chronic</TabsTrigger>
               <TabsTrigger value="resolved">Resolved</TabsTrigger>
+              <TabsTrigger value="primary">Primary</TabsTrigger>
+              <TabsTrigger value="secondary">Secondary</TabsTrigger>
             </TabsList>
             
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Code</TableHead>
-                  <TableHead>Diagnosis</TableHead>
-                  <TableHead>Category</TableHead>
+                  <TableHead>Diagnosis ID</TableHead>
                   <TableHead>Date</TableHead>
-                  <TableHead>Provider</TableHead>
+                  <TableHead>ICD-10 Code</TableHead>
+                  <TableHead>Diagnosis</TableHead>
+                  <TableHead>Type</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead>Provider</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredDiagnoses.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-center py-6 text-muted-foreground">
-                      No diagnoses match your search criteria
+                {patientDiagnoses.map((dx) => (
+                  <TableRow key={dx.id} className="cursor-pointer hover:bg-muted/50">
+                    <TableCell className="font-medium">{dx.id}</TableCell>
+                    <TableCell>{dx.date}</TableCell>
+                    <TableCell>{dx.code}</TableCell>
+                    <TableCell>{dx.diagnosis}</TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className={dx.diagnosisType === 'Primary' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-gray-100 text-gray-800 border-gray-200'}>
+                        {dx.diagnosisType}
+                      </Badge>
                     </TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className={dx.status === 'Active' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-amber-100 text-amber-800 border-amber-200'}>
+                        {dx.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{dx.provider}</TableCell>
                   </TableRow>
-                ) : (
-                  filteredDiagnoses.map((diagnosis) => (
-                    <TableRow key={diagnosis.id} className="cursor-pointer hover:bg-muted/50">
-                      <TableCell className="font-medium">{diagnosis.code}</TableCell>
-                      <TableCell>{diagnosis.name}</TableCell>
-                      <TableCell>{diagnosis.category}</TableCell>
-                      <TableCell>{diagnosis.date}</TableCell>
-                      <TableCell>{diagnosis.provider}</TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className={getStatusColor(diagnosis.status)}>
-                          {diagnosis.status.charAt(0).toUpperCase() + diagnosis.status.slice(1)}
-                        </Badge>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
+                ))}
               </TableBody>
             </Table>
           </Tabs>
         </CardContent>
-        <CardFooter className="flex justify-between border-t p-4">
-          <div className="text-sm text-muted-foreground">
-            Showing {filteredDiagnoses.length} of {diagnoses.length} diagnoses
-          </div>
-          <Button variant="outline" size="sm">
-            <FileText className="mr-2 h-4 w-4" />
-            View Full History
-          </Button>
+        <CardFooter className="border-t p-4">
+          <Button variant="outline" className="w-full">Load More Records</Button>
         </CardFooter>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Diagnosis Details</CardTitle>
+          <CardDescription>
+            Selected diagnosis information and related clinical data
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-medium mb-2">Malignant neoplasm of unspecified site of right female breast</h3>
+              <div className="flex flex-wrap gap-2 mb-4">
+                <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">Primary</Badge>
+                <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">Active</Badge>
+                <Badge variant="outline" className="bg-purple-100 text-purple-800 border-purple-200">ICD-10: C50.911</Badge>
+              </div>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <h4 className="text-sm font-medium mb-1 text-muted-foreground">Diagnosis Date</h4>
+                <p>April 10, 2025</p>
+              </div>
+              <div>
+                <h4 className="text-sm font-medium mb-1 text-muted-foreground">Diagnosed By</h4>
+                <p>Dr. Rebecca Martinez</p>
+              </div>
+              <div>
+                <h4 className="text-sm font-medium mb-1 text-muted-foreground">Diagnostic Method</h4>
+                <p>Core needle biopsy, Mammogram, Ultrasound</p>
+              </div>
+              <div>
+                <h4 className="text-sm font-medium mb-1 text-muted-foreground">Stage</h4>
+                <p>Stage IIA (T2N0M0)</p>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-sm font-medium mb-1 text-muted-foreground">Clinical Notes</h4>
+              <p className="text-sm">
+                Patient presented with a palpable mass in the right breast. Diagnostic mammogram revealed a 2.3 cm 
+                mass in the upper outer quadrant. Core needle biopsy confirmed invasive ductal carcinoma. 
+                Immunohistochemistry showed ER+/PR+, HER2-. No evidence of metastatic disease on staging scans.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="text-sm font-medium mb-1 text-muted-foreground">Treatment Plan</h4>
+              <p className="text-sm">
+                Surgical resection (lumpectomy) followed by adjuvant radiation therapy and hormone therapy with an aromatase inhibitor.
+              </p>
+            </div>
+          </div>
+        </CardContent>
       </Card>
     </MainLayout>
   );

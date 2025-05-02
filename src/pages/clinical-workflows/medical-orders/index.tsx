@@ -1,18 +1,17 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import PageHeader from '@/components/common/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { 
-  Search, Filter, Plus, Calendar, FileText, Clock, Download, 
-  MoreHorizontal, ClipboardList, Zap, CheckCircle, X, AlertCircle
+  Search, Filter, FileText, Plus, TestTube, Calendar, 
+  FileSpreadsheet, MoreHorizontal, Clock, CheckCircle, AlertTriangle
 } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,184 +23,160 @@ import {
 
 interface MedicalOrder {
   id: string;
-  type: 'lab' | 'imaging' | 'procedure' | 'consultation' | 'referral';
-  patientName: string;
+  patient: string;
   patientId: string;
+  orderType: string;
   description: string;
   provider: string;
-  orderDate: string;
-  status: 'pending' | 'approved' | 'completed' | 'cancelled' | 'denied';
+  orderedDate: string;
+  dueDate: string;
+  status: 'pending' | 'scheduled' | 'completed' | 'canceled';
   priority: 'routine' | 'urgent' | 'stat';
-  dueDate?: string;
-  notes?: string;
 }
 
 const MedicalOrdersPage = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [typeFilter, setTypeFilter] = useState('all');
-  
-  // Sample medical orders data
   const medicalOrders: MedicalOrder[] = [
     {
-      id: 'ORD-2025-1001',
-      type: 'lab',
-      patientName: 'Sarah Johnson',
+      id: 'ORD-10245',
+      patient: 'Sarah Johnson',
       patientId: 'PT-12345',
-      description: 'Complete Blood Count, Comprehensive Metabolic Panel',
+      orderType: 'Laboratory',
+      description: 'CBC, CMP, Tumor Markers (CA 15-3, CEA)',
       provider: 'Dr. Rebecca Martinez',
-      orderDate: '2025-04-10',
+      orderedDate: '2025-04-30',
+      dueDate: '2025-05-03',
       status: 'pending',
-      priority: 'routine',
-      dueDate: '2025-04-15'
+      priority: 'routine'
     },
     {
-      id: 'ORD-2025-1002',
-      type: 'imaging',
-      patientName: 'Michael Smith',
+      id: 'ORD-10244',
+      patient: 'Michael Smith',
       patientId: 'PT-12346',
-      description: 'Chest CT with contrast',
+      orderType: 'Imaging',
+      description: 'CT Scan - Chest/Abdomen/Pelvis with contrast',
       provider: 'Dr. James Wilson',
-      orderDate: '2025-04-09',
-      status: 'approved',
-      priority: 'urgent',
-      dueDate: '2025-04-11',
-      notes: 'Patient has history of lung nodules'
+      orderedDate: '2025-04-29',
+      dueDate: '2025-05-06',
+      status: 'scheduled',
+      priority: 'routine'
     },
     {
-      id: 'ORD-2025-1003',
-      type: 'procedure',
-      patientName: 'Emma Thompson',
+      id: 'ORD-10243',
+      patient: 'Emma Thompson',
       patientId: 'PT-12347',
-      description: 'Bone Marrow Biopsy',
+      orderType: 'Laboratory',
+      description: 'CBC with Differential, CMP, LFTs',
       provider: 'Dr. Elena Rodriguez',
-      orderDate: '2025-04-08',
+      orderedDate: '2025-04-29',
+      dueDate: '2025-05-02',
       status: 'completed',
-      priority: 'routine',
-      dueDate: '2025-04-12'
+      priority: 'urgent'
     },
     {
-      id: 'ORD-2025-1004',
-      type: 'consultation',
-      patientName: 'John Davis',
+      id: 'ORD-10242',
+      patient: 'John Davis',
       patientId: 'PT-12348',
-      description: 'Radiation Oncology Consultation',
+      orderType: 'Consult',
+      description: 'Surgical Oncology Consultation',
       provider: 'Dr. Robert Kim',
-      orderDate: '2025-04-10',
-      status: 'pending',
-      priority: 'routine',
-      dueDate: '2025-04-17'
+      orderedDate: '2025-04-28',
+      dueDate: '2025-05-12',
+      status: 'scheduled',
+      priority: 'routine'
     },
     {
-      id: 'ORD-2025-1005',
-      type: 'lab',
-      patientName: 'Linda Wilson',
+      id: 'ORD-10241',
+      patient: 'Linda Wilson',
       patientId: 'PT-12349',
-      description: 'Tumor Marker Panel, CA-125',
-      provider: 'Dr. Rebecca Martinez',
-      orderDate: '2025-04-07',
+      orderType: 'Laboratory',
+      description: 'CBC, CMP, Immunoglobulins',
+      provider: 'Dr. Sarah Williams',
+      orderedDate: '2025-04-28',
+      dueDate: '2025-04-30',
       status: 'completed',
-      priority: 'routine',
-      dueDate: '2025-04-10'
+      priority: 'routine'
     },
     {
-      id: 'ORD-2025-1006',
-      type: 'imaging',
-      patientName: 'David Brown',
+      id: 'ORD-10240',
+      patient: 'Robert Johnson',
       patientId: 'PT-12350',
-      description: 'PET/CT Scan',
-      provider: 'Dr. James Wilson',
-      orderDate: '2025-04-06',
-      status: 'cancelled',
-      priority: 'urgent',
-      dueDate: '2025-04-08',
-      notes: 'Patient requested cancellation due to scheduling conflict'
+      orderType: 'Procedure',
+      description: 'Bone Marrow Biopsy',
+      provider: 'Dr. Sarah Williams',
+      orderedDate: '2025-04-25',
+      dueDate: '2025-05-02',
+      status: 'completed',
+      priority: 'urgent'
     },
     {
-      id: 'ORD-2025-1007',
-      type: 'referral',
-      patientName: 'Sarah Johnson',
+      id: 'ORD-10239',
+      patient: 'Sarah Johnson',
       patientId: 'PT-12345',
-      description: 'Genetic Counseling Referral',
+      orderType: 'Imaging',
+      description: 'Mammogram - Diagnostic',
       provider: 'Dr. Rebecca Martinez',
-      orderDate: '2025-04-10',
-      status: 'approved',
-      priority: 'routine',
-      dueDate: '2025-04-24'
+      orderedDate: '2025-04-20',
+      dueDate: '2025-04-27',
+      status: 'completed',
+      priority: 'routine'
     },
     {
-      id: 'ORD-2025-1008',
-      type: 'lab',
-      patientName: 'Michael Smith',
+      id: 'ORD-10238',
+      patient: 'Michael Smith',
       patientId: 'PT-12346',
-      description: 'Molecular Profiling, EGFR Mutation Analysis',
+      orderType: 'Imaging',
+      description: 'Bone Scan',
       provider: 'Dr. James Wilson',
-      orderDate: '2025-04-09',
-      status: 'denied',
-      priority: 'urgent',
-      dueDate: '2025-04-12',
-      notes: 'Insurance denied coverage, requesting additional documentation'
-    },
+      orderedDate: '2025-04-18',
+      dueDate: '2025-04-26',
+      status: 'canceled',
+      priority: 'routine'
+    }
   ];
-  
-  const getStatusColor = (status: string) => {
+
+  const orderCounts = {
+    laboratory: 142,
+    imaging: 87,
+    consult: 53,
+    procedure: 35,
+    other: 18
+  };
+
+  // Function to render status badge with appropriate color
+  const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'pending': return 'bg-amber-100 text-amber-800 border-amber-200';
-      case 'approved': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'completed': return 'bg-green-100 text-green-800 border-green-200';
-      case 'cancelled': return 'bg-gray-100 text-gray-800 border-gray-200';
-      case 'denied': return 'bg-red-100 text-red-800 border-red-200';
-      default: return '';
+      case 'pending':
+        return <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-200">Pending</Badge>;
+      case 'scheduled':
+        return <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">Scheduled</Badge>;
+      case 'completed':
+        return <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">Completed</Badge>;
+      case 'canceled':
+        return <Badge variant="outline" className="bg-red-100 text-red-800 border-red-200">Canceled</Badge>;
+      default:
+        return null;
     }
   };
-  
-  const getPriorityColor = (priority: string) => {
+
+  // Function to render priority badge with appropriate color
+  const getPriorityBadge = (priority: string) => {
     switch (priority) {
-      case 'routine': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'urgent': return 'bg-amber-100 text-amber-800 border-amber-200';
-      case 'stat': return 'bg-red-100 text-red-800 border-red-200';
-      default: return '';
+      case 'routine':
+        return <Badge variant="outline" className="bg-gray-100 text-gray-800 border-gray-200">Routine</Badge>;
+      case 'urgent':
+        return <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-200">Urgent</Badge>;
+      case 'stat':
+        return <Badge variant="outline" className="bg-red-100 text-red-800 border-red-200">STAT</Badge>;
+      default:
+        return null;
     }
   };
-  
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case 'lab': return <ClipboardList className="h-4 w-4 mr-2" />;
-      case 'imaging': return <FileText className="h-4 w-4 mr-2" />;
-      case 'procedure': return <Zap className="h-4 w-4 mr-2" />;
-      case 'consultation': return <Calendar className="h-4 w-4 mr-2" />;
-      case 'referral': return <FileText className="h-4 w-4 mr-2" />;
-      default: return null;
-    }
-  };
-  
-  // Filter orders based on search term, status filter, and type filter
-  const filteredOrders = medicalOrders.filter(order => {
-    const matchesSearch = 
-      order.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.patientId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.id.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
-    const matchesType = typeFilter === 'all' || order.type === typeFilter;
-    
-    return matchesSearch && matchesStatus && matchesType;
-  });
-  
-  // Count orders by status
-  const pendingCount = medicalOrders.filter(order => order.status === 'pending').length;
-  const approvedCount = medicalOrders.filter(order => order.status === 'approved').length;
-  const completedCount = medicalOrders.filter(order => order.status === 'completed').length;
-  const cancelledOrDeniedCount = medicalOrders.filter(
-    order => order.status === 'cancelled' || order.status === 'denied'
-  ).length;
-  
+
   return (
     <MainLayout>
       <PageHeader
         title="Medical Orders"
-        description="Manage laboratory, imaging, and other clinical orders"
+        description="Create and manage patient orders and requests"
         breadcrumbs={[
           { label: 'Clinical Workflows', link: '/clinical-workflows' },
           { label: 'Medical Orders' }
@@ -212,238 +187,316 @@ const MedicalOrdersPage = () => {
           onClick: () => console.log('Create new medical order')
         }}
       />
-      
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Pending</CardTitle>
+            <CardTitle className="text-sm font-medium">Laboratory</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{pendingCount}</div>
-            <div className="text-xs text-muted-foreground mt-1">
-              Awaiting approval
+            <div className="flex items-center">
+              <div className="text-2xl font-bold">{orderCounts.laboratory}</div>
+              <div className="ml-auto p-2 bg-purple-50 text-purple-500 rounded-full">
+                <TestTube className="h-5 w-5" />
+              </div>
             </div>
           </CardContent>
         </Card>
         
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Approved</CardTitle>
+            <CardTitle className="text-sm font-medium">Imaging</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{approvedCount}</div>
-            <div className="text-xs text-muted-foreground mt-1">
-              Ready for scheduling
+            <div className="flex items-center">
+              <div className="text-2xl font-bold">{orderCounts.imaging}</div>
+              <div className="ml-auto p-2 bg-blue-50 text-blue-500 rounded-full">
+                <FileSpreadsheet className="h-5 w-5" />
+              </div>
             </div>
           </CardContent>
         </Card>
         
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Completed</CardTitle>
+            <CardTitle className="text-sm font-medium">Consults</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{completedCount}</div>
-            <div className="text-xs text-muted-foreground mt-1">
-              Successfully executed
+            <div className="flex items-center">
+              <div className="text-2xl font-bold">{orderCounts.consult}</div>
+              <div className="ml-auto p-2 bg-green-50 text-green-500 rounded-full">
+                <FileText className="h-5 w-5" />
+              </div>
             </div>
           </CardContent>
         </Card>
         
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Cancelled/Denied</CardTitle>
+            <CardTitle className="text-sm font-medium">Procedures</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{cancelledOrDeniedCount}</div>
-            <div className="text-xs text-muted-foreground mt-1">
-              Not completed
+            <div className="flex items-center">
+              <div className="text-2xl font-bold">{orderCounts.procedure}</div>
+              <div className="ml-auto p-2 bg-amber-50 text-amber-500 rounded-full">
+                <Calendar className="h-5 w-5" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Other</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center">
+              <div className="text-2xl font-bold">{orderCounts.other}</div>
+              <div className="ml-auto p-2 bg-gray-100 text-gray-500 rounded-full">
+                <FileText className="h-5 w-5" />
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
       
-      <div className="mb-6 flex flex-col sm:flex-row gap-4 justify-between">
-        <div className="flex flex-wrap gap-3">
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center gap-2">
           <div className="relative">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
               placeholder="Search orders..."
-              className="pl-8 w-full sm:w-[250px]"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-8 w-[250px] md:w-[300px]"
             />
           </div>
-          
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[180px]">
-              <Filter className="mr-2 h-4 w-4" />
-              <SelectValue placeholder="Filter by status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Statuses</SelectItem>
-              <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="approved">Approved</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
-              <SelectItem value="cancelled">Cancelled</SelectItem>
-              <SelectItem value="denied">Denied</SelectItem>
-            </SelectContent>
-          </Select>
-          
-          <Select value={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger className="w-[180px]">
-              <Filter className="mr-2 h-4 w-4" />
-              <SelectValue placeholder="Filter by type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Types</SelectItem>
-              <SelectItem value="lab">Laboratory</SelectItem>
-              <SelectItem value="imaging">Imaging</SelectItem>
-              <SelectItem value="procedure">Procedure</SelectItem>
-              <SelectItem value="consultation">Consultation</SelectItem>
-              <SelectItem value="referral">Referral</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm">
-            <Calendar className="mr-2 h-4 w-4" />
-            Date Range
+          <Button variant="outline" size="icon">
+            <Filter className="h-4 w-4" />
           </Button>
-          <Button variant="outline" size="sm">
-            <Download className="mr-2 h-4 w-4" />
-            Export
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline">
+            <Plus className="h-4 w-4 mr-2" />
+            Lab Order
+          </Button>
+          <Button variant="outline">
+            <Plus className="h-4 w-4 mr-2" />
+            Imaging Order
+          </Button>
+          <Button variant="outline">
+            <Plus className="h-4 w-4 mr-2" />
+            Consult
           </Button>
         </div>
       </div>
-      
+
       <Card>
-        <CardHeader className="pb-3">
-          <Tabs defaultValue="all">
-            <TabsList>
-              <TabsTrigger value="all">All Orders</TabsTrigger>
-              <TabsTrigger value="labs">Labs</TabsTrigger>
-              <TabsTrigger value="imaging">Imaging</TabsTrigger>
-              <TabsTrigger value="procedures">Procedures</TabsTrigger>
-              <TabsTrigger value="consultations">Consults</TabsTrigger>
-            </TabsList>
-          </Tabs>
+        <CardHeader>
+          <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
+            <div>
+              <CardTitle>Medical Orders</CardTitle>
+              <CardDescription>All patient orders and service requests</CardDescription>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
+          <Tabs defaultValue="all" className="mb-6">
+            <TabsList>
+              <TabsTrigger value="all">All Orders</TabsTrigger>
+              <TabsTrigger value="pending">Pending</TabsTrigger>
+              <TabsTrigger value="scheduled">Scheduled</TabsTrigger>
+              <TabsTrigger value="completed">Completed</TabsTrigger>
+              <TabsTrigger value="lab">Laboratory</TabsTrigger>
+              <TabsTrigger value="imaging">Imaging</TabsTrigger>
+            </TabsList>
+          </Tabs>
+          
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Order ID</TableHead>
-                <TableHead>Type</TableHead>
                 <TableHead>Patient</TableHead>
+                <TableHead>Order Type</TableHead>
                 <TableHead>Description</TableHead>
                 <TableHead>Provider</TableHead>
                 <TableHead>Due Date</TableHead>
                 <TableHead>Priority</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredOrders.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={9} className="text-center py-10 text-muted-foreground">
-                    No orders match your criteria
+              {medicalOrders.map((order) => (
+                <TableRow key={order.id} className="cursor-pointer hover:bg-muted/50">
+                  <TableCell className="font-medium">{order.id}</TableCell>
+                  <TableCell>
+                    <div>
+                      <div>{order.patient}</div>
+                      <div className="text-xs text-muted-foreground">{order.patientId}</div>
+                    </div>
                   </TableCell>
-                </TableRow>
-              ) : (
-                filteredOrders.map((order) => (
-                  <TableRow key={order.id}>
-                    <TableCell className="font-medium">{order.id}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center">
-                        {getTypeIcon(order.type)}
-                        <span className="capitalize">{order.type}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div>
-                        <div>{order.patientName}</div>
-                        <div className="text-xs text-muted-foreground">{order.patientId}</div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div>
-                        <div className="font-medium">{order.description}</div>
-                        {order.notes && <div className="text-xs text-muted-foreground mt-1">{order.notes}</div>}
-                      </div>
-                    </TableCell>
-                    <TableCell>{order.provider}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1">
-                        <Calendar className="h-3 w-3" />
-                        <span>{order.dueDate || 'N/A'}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className={getPriorityColor(order.priority)}>
-                        {order.priority.charAt(0).toUpperCase() + order.priority.slice(1)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className={getStatusColor(order.status)}>
-                        {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuItem onClick={() => console.log(`View ${order.id}`)}>
-                            <FileText className="mr-2 h-4 w-4" />
-                            View Details
-                          </DropdownMenuItem>
-                          {order.status === 'pending' && (
-                            <DropdownMenuItem onClick={() => console.log(`Approve ${order.id}`)}>
-                              <CheckCircle className="mr-2 h-4 w-4" />
-                              Approve Order
+                  <TableCell>{order.orderType}</TableCell>
+                  <TableCell>{order.description}</TableCell>
+                  <TableCell>{order.provider}</TableCell>
+                  <TableCell>{order.dueDate}</TableCell>
+                  <TableCell>{getPriorityBadge(order.priority)}</TableCell>
+                  <TableCell>{getStatusBadge(order.status)}</TableCell>
+                  <TableCell className="text-right">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem onClick={() => console.log(`View ${order.id}`)}>
+                          <FileText className="mr-2 h-4 w-4" />
+                          View Details
+                        </DropdownMenuItem>
+                        
+                        {(order.status === 'pending' || order.status === 'scheduled') && (
+                          <>
+                            <DropdownMenuItem onClick={() => console.log(`Edit ${order.id}`)}>
+                              <FileText className="mr-2 h-4 w-4" />
+                              Edit Order
                             </DropdownMenuItem>
-                          )}
-                          {(order.status === 'pending' || order.status === 'approved') && (
+                            <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => console.log(`Complete ${order.id}`)}>
                               <CheckCircle className="mr-2 h-4 w-4" />
-                              Mark Completed
+                              Mark as Completed
                             </DropdownMenuItem>
-                          )}
-                          {(order.status === 'pending' || order.status === 'approved') && (
-                            <DropdownMenuItem onClick={() => console.log(`Cancel ${order.id}`)}>
-                              <X className="mr-2 h-4 w-4" />
+                            <DropdownMenuItem onClick={() => console.log(`Cancel ${order.id}`)} className="text-red-600">
+                              <AlertTriangle className="mr-2 h-4 w-4" />
                               Cancel Order
                             </DropdownMenuItem>
-                          )}
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem onClick={() => console.log(`Print ${order.id}`)}>
-                            <Download className="mr-2 h-4 w-4" />
-                            Print Order
+                          </>
+                        )}
+                        
+                        {order.status === 'completed' && (
+                          <DropdownMenuItem onClick={() => console.log(`Results ${order.id}`)}>
+                            <FileSpreadsheet className="mr-2 h-4 w-4" />
+                            View Results
                           </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
+                        )}
+                        
+                        <DropdownMenuItem onClick={() => console.log(`Reorder ${order.id}`)}>
+                          <FileText className="mr-2 h-4 w-4" />
+                          Reorder
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </CardContent>
         <CardFooter className="border-t p-4 flex justify-between">
           <div className="text-sm text-muted-foreground">
-            Showing {filteredOrders.length} of {medicalOrders.length} orders
+            Showing {medicalOrders.length} of 335 orders
           </div>
-          <Button variant="outline" size="sm">Load More</Button>
+          <Button variant="outline">Load More</Button>
         </CardFooter>
       </Card>
+
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Upcoming Orders</CardTitle>
+            <CardDescription>Orders due in the next 7 days</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {medicalOrders
+                .filter(order => order.status === 'pending' || order.status === 'scheduled')
+                .slice(0, 4)
+                .map((order) => (
+                  <div key={order.id} className="flex justify-between items-start pb-4 border-b">
+                    <div>
+                      <div className="font-medium">{order.description}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {order.patient} ({order.patientId})
+                      </div>
+                      <div className="flex items-center mt-1 text-xs text-muted-foreground">
+                        <Calendar className="h-3 w-3 mr-1" />
+                        <span>Due: {order.dueDate}</span>
+                      </div>
+                    </div>
+                    <div>
+                      {getStatusBadge(order.status)}
+                    </div>
+                  </div>
+              ))}
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button variant="outline" className="w-full">View All Upcoming</Button>
+          </CardFooter>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Activity</CardTitle>
+            <CardDescription>Latest updates to orders</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex gap-4 items-start">
+                <div className="p-2 bg-green-50 text-green-500 rounded-full">
+                  <CheckCircle className="h-4 w-4" />
+                </div>
+                <div>
+                  <div className="font-medium">Order Completed</div>
+                  <div className="text-sm text-muted-foreground">Laboratory results for Emma Thompson are ready</div>
+                  <div className="text-xs text-muted-foreground mt-1">Today at 9:45 AM</div>
+                </div>
+              </div>
+              
+              <div className="flex gap-4 items-start">
+                <div className="p-2 bg-blue-50 text-blue-500 rounded-full">
+                  <Calendar className="h-4 w-4" />
+                </div>
+                <div>
+                  <div className="font-medium">Order Scheduled</div>
+                  <div className="text-sm text-muted-foreground">CT Scan for Michael Smith scheduled for May 6</div>
+                  <div className="text-xs text-muted-foreground mt-1">Today at 8:30 AM</div>
+                </div>
+              </div>
+              
+              <div className="flex gap-4 items-start">
+                <div className="p-2 bg-purple-50 text-purple-500 rounded-full">
+                  <FileText className="h-4 w-4" />
+                </div>
+                <div>
+                  <div className="font-medium">New Order Created</div>
+                  <div className="text-sm text-muted-foreground">Laboratory order created for Sarah Johnson</div>
+                  <div className="text-xs text-muted-foreground mt-1">Today at 7:15 AM</div>
+                </div>
+              </div>
+              
+              <div className="flex gap-4 items-start">
+                <div className="p-2 bg-red-50 text-red-500 rounded-full">
+                  <AlertTriangle className="h-4 w-4" />
+                </div>
+                <div>
+                  <div className="font-medium">Order Canceled</div>
+                  <div className="text-sm text-muted-foreground">Bone Scan for Michael Smith was canceled</div>
+                  <div className="text-xs text-muted-foreground mt-1">Yesterday at 4:30 PM</div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter>
+            <div className="w-full text-center text-xs text-muted-foreground">
+              <div className="flex items-center justify-center">
+                <Clock className="h-3.5 w-3.5 mr-1" />
+                <span>Last updated: May 2, 2025 at 10:30 AM</span>
+              </div>
+            </div>
+          </CardFooter>
+        </Card>
+      </div>
     </MainLayout>
   );
 };

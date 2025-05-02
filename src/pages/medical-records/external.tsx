@@ -3,256 +3,337 @@ import React from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import PageHeader from '@/components/common/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Search, Upload, FileText, Download, Eye, Calendar, Building2, ExternalLink, Plus } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { 
+  Search, Filter, Download, FileUp, ExternalLink, Eye, File, FileText, 
+  Building, Calendar, MoreHorizontal 
+} from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface ExternalRecord {
   id: string;
-  type: string;
-  documentName: string;
-  source: string;
+  recordType: string;
+  facility: string;
   date: string;
-  status: 'imported' | 'pending' | 'requested';
-  size?: string;
+  description: string;
+  fileType: string;
+  uploadedBy: string;
+  uploadDate: string;
+  status: "verified" | "pending" | "rejected";
+  size: string;
 }
 
 const ExternalRecordsPage = () => {
   const externalRecords: ExternalRecord[] = [
-    { id: 'ER-1001', type: 'Discharge Summary', documentName: 'Hospital Discharge Summary - University Medical Center', source: 'University Medical Center', date: '2022-08-15', status: 'imported', size: '1.2 MB' },
-    { id: 'ER-1002', type: 'Specialist Consultation', documentName: 'Oncology Consultation - Dr. Michael Brown', source: 'Memorial Cancer Institute', date: '2022-08-30', status: 'imported', size: '850 KB' },
-    { id: 'ER-1003', type: 'Lab Results', documentName: 'Complete Blood Count and Metabolic Panel', source: 'Quest Diagnostics', date: '2022-09-05', status: 'imported', size: '450 KB' },
-    { id: 'ER-1004', type: 'Imaging', documentName: 'MRI Report - Right Breast', source: 'Imaging Associates', date: '2022-09-08', status: 'imported', size: '2.1 MB' },
-    { id: 'ER-1005', type: 'Previous Medications', documentName: 'Medication History', source: 'City Pharmacy', date: '2022-09-10', status: 'requested' },
-    { id: 'ER-1006', type: 'Surgical Records', documentName: 'Prior Surgical History', source: 'Regional Surgical Center', date: '2022-09-12', status: 'pending' },
+    {
+      id: "EXT-1001",
+      recordType: "Mammogram Report",
+      facility: "Westside Imaging Center",
+      date: "2025-03-22",
+      description: "Diagnostic mammogram with suspicious findings",
+      fileType: "PDF",
+      uploadedBy: "Dr. Rebecca Martinez",
+      uploadDate: "2025-03-25",
+      status: "verified",
+      size: "1.2 MB"
+    },
+    {
+      id: "EXT-1002",
+      recordType: "Pathology Report",
+      facility: "Central City Laboratory",
+      date: "2025-03-24",
+      description: "Breast biopsy pathology results",
+      fileType: "PDF",
+      uploadedBy: "Dr. Rebecca Martinez",
+      uploadDate: "2025-03-26",
+      status: "verified",
+      size: "3.5 MB"
+    },
+    {
+      id: "EXT-1003",
+      recordType: "Surgical Consultation",
+      facility: "Memorial General Hospital",
+      date: "2025-03-30",
+      description: "Surgical oncology consultation notes",
+      fileType: "PDF",
+      uploadedBy: "Dr. Michael Chen",
+      uploadDate: "2025-04-01",
+      status: "verified",
+      size: "852 KB"
+    },
+    {
+      id: "EXT-1004",
+      recordType: "Prior Imaging",
+      facility: "Westside Imaging Center",
+      date: "2024-03-15",
+      description: "Previous screening mammogram for comparison",
+      fileType: "DICOM",
+      uploadedBy: "External Records Dept",
+      uploadDate: "2025-03-25",
+      status: "verified",
+      size: "24.6 MB"
+    },
+    {
+      id: "EXT-1005",
+      recordType: "Medical Oncology Notes",
+      facility: "City Cancer Center",
+      date: "2025-04-05",
+      description: "Initial medical oncology consultation",
+      fileType: "PDF",
+      uploadedBy: "Dr. Sarah Williams",
+      uploadDate: "2025-04-06",
+      status: "pending",
+      size: "1.8 MB"
+    },
+    {
+      id: "EXT-1006",
+      recordType: "Radiation Oncology Notes",
+      facility: "Regional Radiation Center",
+      date: "2025-04-08",
+      description: "Radiation therapy planning consultation",
+      fileType: "PDF",
+      uploadedBy: "Dr. James Wilson",
+      uploadDate: "2025-04-09",
+      status: "pending",
+      size: "2.1 MB"
+    },
+    {
+      id: "EXT-1007",
+      recordType: "Laboratory Results",
+      facility: "Memorial General Hospital",
+      date: "2025-04-02",
+      description: "Preoperative laboratory studies",
+      fileType: "PDF",
+      uploadedBy: "Dr. Elena Rodriguez",
+      uploadDate: "2025-04-03",
+      status: "verified",
+      size: "756 KB"
+    }
   ];
 
-  const getStatusColor = (status: string) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'imported': return 'bg-green-100 text-green-800 border-green-200';
-      case 'pending': return 'bg-amber-100 text-amber-800 border-amber-200';
-      case 'requested': return 'bg-blue-100 text-blue-800 border-blue-200';
-      default: return '';
+      case 'verified':
+        return <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">Verified</Badge>;
+      case 'pending':
+        return <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-200">Pending</Badge>;
+      case 'rejected':
+        return <Badge variant="outline" className="bg-red-100 text-red-800 border-red-200">Rejected</Badge>;
+      default:
+        return null;
     }
   };
 
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case 'imported': return 'Imported';
-      case 'pending': return 'Pending';
-      case 'requested': return 'Requested';
-      default: return status;
+  const getFileIcon = (fileType: string) => {
+    switch (fileType) {
+      case 'PDF':
+        return <FileText className="h-4 w-4 text-red-500" />;
+      case 'DICOM':
+        return <File className="h-4 w-4 text-blue-500" />;
+      default:
+        return <File className="h-4 w-4" />;
     }
   };
 
   return (
     <MainLayout>
       <PageHeader
-        title="External Medical Records"
-        description="Import and manage patient records from external sources"
+        title="External Records"
+        description="View and manage records from external facilities"
         breadcrumbs={[
           { label: 'Medical Records', link: '/medical-records' },
           { label: 'External Records' }
         ]}
         action={{
-          label: 'Import Records',
-          icon: Upload,
-          onClick: () => console.log('Import external records')
+          label: 'Upload Record',
+          icon: FileUp,
+          onClick: () => console.log('Upload external record')
         }}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Imported Records</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {externalRecords.filter(r => r.status === 'imported').length}
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>Request Records</CardTitle>
+          <CardDescription>Request patient records from external facilities</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="col-span-1 md:col-span-2">
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium mb-1 block">Facility Name</label>
+                  <Input placeholder="Enter facility name" />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium mb-1 block">Contact Person</label>
+                    <Input placeholder="Name" />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium mb-1 block">Contact Email/Phone</label>
+                    <Input placeholder="Email or phone number" />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-1 block">Records Description</label>
+                  <Input placeholder="Type of records needed" />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium mb-1 block">Date Range From</label>
+                    <Input type="date" />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium mb-1 block">Date Range To</label>
+                    <Input type="date" />
+                  </div>
+                </div>
+                <Button>
+                  Submit Request
+                </Button>
+              </div>
             </div>
-            <div className="text-xs text-muted-foreground mt-1">
-              Successfully imported and available
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Pending Records</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {externalRecords.filter(r => r.status === 'pending').length}
-            </div>
-            <div className="text-xs text-muted-foreground mt-1">
-              Awaiting processing
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Requested Records</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {externalRecords.filter(r => r.status === 'requested').length}
-            </div>
-            <div className="text-xs text-muted-foreground mt-1">
-              Request sent to external provider
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Total Size</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {externalRecords
-                .filter(r => r.size)
-                .reduce((acc, record) => {
-                  const size = parseFloat(record.size?.split(' ')[0] || '0');
-                  const unit = record.size?.split(' ')[1];
-                  return acc + (unit === 'MB' ? size * 1024 : size);
-                }, 0) / 1024}
-              {' MB'}
-            </div>
-            <div className="text-xs text-muted-foreground mt-1">
-              Storage used by external records
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            
+            <Card className="bg-muted/30">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">Patient Authorization</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-xs space-y-2">
+                  <p>Before requesting records, ensure patient authorization is obtained.</p>
+                  <div className="flex items-center mt-4 text-sm">
+                    <Button variant="outline" size="sm" className="w-full">
+                      <Download className="h-4 w-4 mr-2" />
+                      Download Authorization Form
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </CardContent>
+      </Card>
       
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
               <CardTitle>External Records</CardTitle>
-              <CardDescription>Patient: Sarah Johnson (PT-12345)</CardDescription>
+              <CardDescription>Records uploaded from outside facilities</CardDescription>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap gap-2">
               <div className="relative">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="search"
                   placeholder="Search records..."
-                  className="pl-8 w-[250px]"
+                  className="pl-8 w-[200px] md:w-[250px]"
                 />
               </div>
-              <Select defaultValue="all">
-                <SelectTrigger className="w-[150px]">
-                  <SelectValue placeholder="Record type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="discharge">Discharge Summary</SelectItem>
-                  <SelectItem value="consultation">Consultation</SelectItem>
-                  <SelectItem value="lab">Lab Results</SelectItem>
-                  <SelectItem value="imaging">Imaging</SelectItem>
-                  <SelectItem value="medication">Medications</SelectItem>
-                  <SelectItem value="surgical">Surgical Records</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button variant="outline" size="sm">
-                <Calendar className="mr-2 h-4 w-4" />
-                Date Range
+              <Button variant="outline" size="icon">
+                <Filter className="h-4 w-4" />
+              </Button>
+              <Button variant="outline" size="icon">
+                <Download className="h-4 w-4" />
               </Button>
             </div>
           </div>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="all">
-            <TabsList className="mb-6">
-              <TabsTrigger value="all">All Records</TabsTrigger>
-              <TabsTrigger value="imported">Imported</TabsTrigger>
-              <TabsTrigger value="pending">Pending</TabsTrigger>
-              <TabsTrigger value="requested">Requested</TabsTrigger>
-            </TabsList>
-            
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Record ID</TableHead>
-                  <TableHead>Document</TableHead>
-                  <TableHead>Source</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Actions</TableHead>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Record ID</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Facility</TableHead>
+                <TableHead>Record Date</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {externalRecords.map((record) => (
+                <TableRow key={record.id} className="cursor-pointer hover:bg-muted/50">
+                  <TableCell className="font-medium">{record.id}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center space-x-2">
+                      {getFileIcon(record.fileType)}
+                      <span>{record.recordType}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center space-x-1 text-sm">
+                      <Building className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span>{record.facility}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center space-x-1 text-sm">
+                      <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span>{record.date}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>{record.description}</TableCell>
+                  <TableCell>{getStatusBadge(record.status)}</TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem onClick={() => console.log(`View ${record.id}`)}>
+                          <Eye className="mr-2 h-4 w-4" />
+                          View Record
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => console.log(`Download ${record.id}`)}>
+                          <Download className="mr-2 h-4 w-4" />
+                          Download
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={() => console.log(`Verify ${record.id}`)}>
+                          {record.status === "pending" ? (
+                            <>
+                              <FileText className="mr-2 h-4 w-4" />
+                              Verify Record
+                            </>
+                          ) : (
+                            <>
+                              <FileText className="mr-2 h-4 w-4" />
+                              Update Status
+                            </>
+                          )}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => console.log(`Link ${record.id}`)}>
+                          <ExternalLink className="mr-2 h-4 w-4" />
+                          Link to Patient Record
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {externalRecords.map((record) => (
-                  <TableRow key={record.id}>
-                    <TableCell className="font-medium">{record.id}</TableCell>
-                    <TableCell>
-                      <div>
-                        <div className="font-medium">{record.documentName}</div>
-                        <div className="text-xs text-muted-foreground">{record.type}</div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1">
-                        <Building2 className="h-3 w-3 text-muted-foreground" />
-                        <span>{record.source}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>{record.date}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className={getStatusColor(record.status)}>
-                        {getStatusLabel(record.status)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex gap-2">
-                        {record.status === 'imported' && (
-                          <>
-                            <Button size="sm" variant="ghost">
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                            <Button size="sm" variant="ghost">
-                              <Download className="h-4 w-4" />
-                            </Button>
-                          </>
-                        )}
-                        {record.status === 'requested' && (
-                          <Button size="sm" variant="ghost">
-                            <ExternalLink className="h-4 w-4" />
-                          </Button>
-                        )}
-                        {record.status === 'pending' && (
-                          <Button size="sm" variant="ghost">
-                            <FileText className="h-4 w-4" />
-                          </Button>
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Tabs>
+              ))}
+            </TableBody>
+          </Table>
         </CardContent>
         <CardFooter className="border-t p-4 flex justify-between">
           <div className="text-sm text-muted-foreground">
             Showing {externalRecords.length} records
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm">
-              <Upload className="mr-2 h-4 w-4" />
-              Upload Documents
-            </Button>
-            <Button size="sm">
-              <Plus className="mr-2 h-4 w-4" />
-              Request Records
-            </Button>
-          </div>
+          <Button variant="outline" size="sm">Load More</Button>
         </CardFooter>
       </Card>
     </MainLayout>
