@@ -1,6 +1,20 @@
-
 import React, { useState } from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { UploadIcon, FileText, File, FileSymlink, Paperclip, PlusSquare, Trash2, Download, Edit } from 'lucide-react';
 import MainLayout from '@/components/layout/MainLayout';
 import PageHeader from '@/components/common/PageHeader';
@@ -68,30 +82,99 @@ const statusVariants: Record<string, string> = {
   rejected: 'destructive'
 };
 
+const SortableDocumentItem = ({ doc, index, onDelete }) => {
+  const FileIcon = fileIcons[doc.type] || fileIcons.default;
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id: doc.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className="border rounded-md p-4 bg-card flex items-center justify-between hover:shadow-sm transition"
+    >
+      <div className="flex items-center space-x-4">
+        <div className="bg-muted rounded-md p-2">
+          <FileIcon className="h-6 w-6 text-primary" />
+        </div>
+        <div>
+          <h4 className="font-medium">{doc.name}</h4>
+          <div className="flex items-center text-xs text-muted-foreground">
+            <span>{doc.size}</span>
+            <span className="mx-2">•</span>
+            <span>{doc.uploadedBy}</span>
+            <span className="mx-2">•</span>
+            <span>{doc.uploadDate}</span>
+          </div>
+        </div>
+      </div>
+      <div className="flex items-center space-x-2">
+        <Badge variant={statusVariants[doc.status] || 'default'}>
+          {doc.status}
+        </Badge>
+        <Button size="icon" variant="ghost">
+          <Download className="h-4 w-4" />
+        </Button>
+        <Button size="icon" variant="ghost">
+          <Edit className="h-4 w-4" />
+        </Button>
+        <Button 
+          size="icon" 
+          variant="ghost" 
+          className="text-destructive"
+          onClick={() => onDelete(doc.id)}
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+  );
+};
+
 const ProtocolDocumentsPage = () => {
   const { toast } = useToast();
   const [documents, setDocuments] = useState(mockDocuments);
   const [activeTab, setActiveTab] = useState('all');
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  
-  // Handle document reordering with drag and drop
-  const handleDragEnd = (result: any) => {
-    if (!result.destination) {
-      return;
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      setDocuments((items) => {
+        const oldIndex = items.findIndex((item) => item.id === active.id);
+        const newIndex = items.findIndex((item) => item.id === over.id);
+        
+        const newItems = arrayMove(items, oldIndex, newIndex);
+        toast({
+          title: "Documents Reordered",
+          description: "The document order has been updated.",
+        });
+        return newItems;
+      });
     }
-    
-    const items = Array.from(documents);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-    
-    setDocuments(items);
-    toast({
-      title: "Documents Reordered",
-      description: "The document order has been updated.",
-    });
   };
-  
+
   // Filter documents based on active tab and search query
   const filteredDocuments = documents.filter(doc => {
     const matchesTab = activeTab === 'all' || doc.type === activeTab;
@@ -206,84 +289,43 @@ const ProtocolDocumentsPage = () => {
               )}
               
               <TabsContent value={activeTab} className="mt-4">
-                <DragDropContext onDragEnd={handleDragEnd}>
-                  <Droppable droppableId="documents">
-                    {(provided) => (
-                      <div 
-                        {...provided.droppableProps} 
-                        ref={provided.innerRef} 
-                        className="space-y-2"
-                      >
-                        {filteredDocuments.length === 0 ? (
-                          <div className="text-center py-8 border rounded-md">
-                            <FileText className="mx-auto h-12 w-12 text-muted-foreground/50" />
-                            <h3 className="mt-2 font-medium">No Documents Found</h3>
-                            <p className="text-sm text-muted-foreground">
-                              {activeTab === 'all' 
-                                ? "Upload documents to get started" 
-                                : `No ${activeTab} documents found`}
-                            </p>
-                            <Button variant="outline" className="mt-4" onClick={handleUploadClick}>
-                              <PlusSquare className="mr-2 h-4 w-4" />
-                              Upload Document
-                            </Button>
-                          </div>
-                        ) : (
-                          filteredDocuments.map((doc, index) => {
-                            const FileIcon = fileIcons[doc.type] || fileIcons.default;
-                            
-                            return (
-                              <Draggable key={doc.id} draggableId={doc.id} index={index}>
-                                {(provided) => (
-                                  <div
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                    className="border rounded-md p-4 bg-card flex items-center justify-between hover:shadow-sm transition"
-                                  >
-                                    <div className="flex items-center space-x-4">
-                                      <div className="bg-muted rounded-md p-2">
-                                        <FileIcon className="h-6 w-6 text-primary" />
-                                      </div>
-                                      <div>
-                                        <h4 className="font-medium">{doc.name}</h4>
-                                        <div className="flex items-center text-xs text-muted-foreground">
-                                          <span>{doc.size}</span>
-                                          <span className="mx-2">•</span>
-                                          <span>{doc.uploadDate}</span>
-                                          <span className="mx-2">•</span>
-                                          <span>Uploaded by {doc.uploadedBy}</span>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    
-                                    <div className="flex items-center space-x-2">
-                                      <Badge className="capitalize">{doc.status}</Badge>
-                                      <Button variant="ghost" size="icon">
-                                        <Download className="h-4 w-4" />
-                                      </Button>
-                                      <Button variant="ghost" size="icon">
-                                        <Edit className="h-4 w-4" />
-                                      </Button>
-                                      <Button 
-                                        variant="ghost" 
-                                        size="icon"
-                                        onClick={() => handleDeleteDocument(doc.id)}
-                                      >
-                                        <Trash2 className="h-4 w-4 text-destructive" />
-                                      </Button>
-                                    </div>
-                                  </div>
-                                )}
-                              </Draggable>
-                            );
-                          })
-                        )}
-                        {provided.placeholder}
-                      </div>
-                    )}
-                  </Droppable>
-                </DragDropContext>
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
+                >
+                  <SortableContext
+                    items={filteredDocuments.map(doc => doc.id)}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    <div className="space-y-2">
+                      {filteredDocuments.length === 0 ? (
+                        <div className="text-center py-8 border rounded-md">
+                          <FileText className="mx-auto h-12 w-12 text-muted-foreground/50" />
+                          <h3 className="mt-2 font-medium">No Documents Found</h3>
+                          <p className="text-sm text-muted-foreground">
+                            {activeTab === 'all' 
+                              ? "Upload documents to get started" 
+                              : `No ${activeTab} documents found`}
+                          </p>
+                          <Button variant="outline" className="mt-4" onClick={handleUploadClick}>
+                            <PlusSquare className="mr-2 h-4 w-4" />
+                            Upload Document
+                          </Button>
+                        </div>
+                      ) : (
+                        filteredDocuments.map((doc, index) => (
+                          <SortableDocumentItem
+                            key={doc.id}
+                            doc={doc}
+                            index={index}
+                            onDelete={handleDeleteDocument}
+                          />
+                        ))
+                      )}
+                    </div>
+                  </SortableContext>
+                </DndContext>
               </TabsContent>
             </Tabs>
           </CardContent>
