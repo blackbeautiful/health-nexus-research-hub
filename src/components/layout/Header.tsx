@@ -31,9 +31,10 @@ const Header = ({ title }: HeaderProps) => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Implement search functionality
+      // Implement search functionality - for now just log
       console.log('Searching for:', searchQuery);
       // You could navigate to a search results page or filter current content
+      // navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
     }
   };
 
@@ -57,13 +58,13 @@ const Header = ({ title }: HeaderProps) => {
   return (
     <header className="w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 md:px-6 flex items-center justify-between">
-        {/* Mobile Menu Trigger */}
+        {/* Mobile Menu Trigger and Title */}
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" className="md:hidden" onClick={toggleSidebar}>
             <Menu className="h-5 w-5" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-lg font-medium md:text-xl">{title}</h1>
+            <h1 className="text-lg font-medium md:text-xl">{title || 'HealthNexus'}</h1>
           </div>
         </div>
 
