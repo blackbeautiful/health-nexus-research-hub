@@ -75,11 +75,11 @@ const fileIcons: Record<string, React.ElementType> = {
 };
 
 // Document status badge variants
-const statusVariants: Record<string, string> = {
-  approved: 'success',
-  review: 'warning',
-  draft: 'default',
-  rejected: 'destructive'
+const statusVariants: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
+  approved: "outline",
+  review: "secondary",
+  draft: "default",
+  rejected: "destructive"
 };
 
 const SortableDocumentItem = ({ doc, index, onDelete }) => {

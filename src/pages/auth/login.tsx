@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -89,129 +88,37 @@ const LoginPage = () => {
   };
   
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <div className="w-full max-w-md">
-        <div className="mb-8 text-center">
-          <Logo />
-          <h1 className="mt-6 text-2xl font-semibold">HealthNexus Research Hub</h1>
-          <p className="text-sm text-muted-foreground mt-1">Advancing Clinical Research</p>
-        </div>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Login to your account</CardTitle>
-            <CardDescription>
-              Enter your credentials to access the research portal
-            </CardDescription>
-          </CardHeader>
-          <form onSubmit={handleSubmit}>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="email"
-                    placeholder="name@example.com"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => handleChange('email', e.target.value)}
-                    className={`pl-10 ${errors.email ? 'border-destructive' : ''}`}
-                    disabled={isLoading}
-                  />
-                </div>
-                {errors.email && (
-                  <p className="text-sm text-destructive flex items-center mt-1">
-                    <AlertCircle className="h-4 w-4 mr-1" />
-                    {errors.email}
-                  </p>
-                )}
-                <p className="text-xs text-muted-foreground">
-                  Try: patient@example.com, researcher@example.com, or admin@example.com
-                </p>
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <Label htmlFor="password">Password</Label>
-                  <Link 
-                    to="/password-reset" 
-                    className="text-xs text-primary hover:underline"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={(e) => handleChange('password', e.target.value)}
-                    className={`pl-10 ${errors.password ? 'border-destructive' : ''}`}
-                    disabled={isLoading}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-0 top-0 h-full px-3"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4 text-muted-foreground" />
-                    ) : (
-                      <Eye className="h-4 w-4 text-muted-foreground" />
-                    )}
-                  </Button>
-                </div>
-                {errors.password && (
-                  <p className="text-sm text-destructive flex items-center mt-1">
-                    <AlertCircle className="h-4 w-4 mr-1" />
-                    {errors.password}
-                  </p>
-                )}
-                <p className="text-xs text-muted-foreground">
-                  Use "password123" for demo login
-                </p>
-              </div>
-              
-              <div className="flex items-center space-x-2 pt-2">
-                <Checkbox 
-                  id="remember-me" 
-                  checked={formData.rememberMe} 
-                  onCheckedChange={(checked) => handleChange('rememberMe', checked)}
-                  disabled={isLoading}
-                />
-                <Label htmlFor="remember-me" className="text-sm">Remember me for 30 days</Label>
-              </div>
-            </CardContent>
-            
-            <CardFooter className="flex flex-col space-y-4">
-              <Button 
-                type="submit" 
-                className="w-full" 
-                disabled={isLoading}
-              >
-                {isLoading ? 'Signing in...' : 'Sign In'}
-              </Button>
-              
-              <p className="text-center text-sm text-muted-foreground">
-                Don't have an account?{" "}
-                <span className="text-primary hover:underline">
-                  Contact your administrator
-                </span>
-              </p>
-            </CardFooter>
-          </form>
-        </Card>
-        
-        <p className="mt-4 text-center text-xs text-muted-foreground">
-          &copy; 2025 HealthNexus Research Hub. All rights reserved.<br />
-          HIPAA & GDPR Compliant
-        </p>
-      </div>
+    <div className="flex items-center justify-center min-h-screen bg-background">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>Welcome Back</CardTitle>
+          <CardDescription>Sign in to your account</CardDescription>
+        </CardHeader>
+        <form onSubmit={handleSubmit}>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input id="password" type="password" required />
+            </div>
+          </CardContent>
+          <CardFooter className="flex flex-col space-y-4">
+            <Button type="submit" className="w-full">Sign In</Button>
+            <div className="text-sm text-center space-x-2">
+              <Link to="/forgot-password" className="text-primary hover:underline">
+                Forgot Password?
+              </Link>
+              <span>•</span>
+              <Link to="/register" className="text-primary hover:underline">
+                Create Account
+              </Link>
+            </div>
+          </CardFooter>
+        </form>
+      </Card>
     </div>
   );
 };

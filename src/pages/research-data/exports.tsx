@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -195,7 +194,7 @@ const DataExportsPage = () => {
                         <Checkbox 
                           id="headers" 
                           checked={includeHeaders}
-                          onCheckedChange={setIncludeHeaders}
+                          onCheckedChange={(checked) => setIncludeHeaders(checked === true)}
                         />
                         <Label htmlFor="headers">Include column headers</Label>
                       </div>
@@ -203,7 +202,7 @@ const DataExportsPage = () => {
                         <Checkbox 
                           id="anonymize" 
                           checked={anonymizeData}
-                          onCheckedChange={setAnonymizeData}
+                          onCheckedChange={(checked) => setAnonymizeData(checked === true)}
                         />
                         <Label htmlFor="anonymize">Anonymize patient data</Label>
                       </div>
