@@ -46,17 +46,21 @@ import CreateQuizPage from "./pages/studies/quiz-management/create";
 import QuizDetailsPage from "./pages/studies/quiz-management/[quizId]";
 import EditQuizPage from "./pages/studies/quiz-management/[quizId]/edit";
 
-// New pages
+// Medical Records pages
 import MedicalRecordsPage from "./pages/medical-records/index";
 import PatientHistoryPage from "./pages/medical-records/history";
 import DiagnosesPage from "./pages/medical-records/diagnoses";
 import ImagingResultsPage from "./pages/medical-records/imaging";
 import ExternalRecordsPage from "./pages/medical-records/external";
+
+// Clinical Reports pages
 import ClinicalReportsPage from "./pages/clinical-reports/index";
 import TreatmentOutcomesPage from "./pages/clinical-reports/outcomes";
 import PatientAnalyticsPage from "./pages/clinical-reports/patient-analytics";
 import ProviderMetricsPage from "./pages/clinical-reports/provider-metrics";
 import MedicationReportsPage from "./pages/clinical-reports/medications";
+
+// Clinical Workflows pages
 import TreatmentPlansPage from "./pages/clinical-workflows/treatment-plans/index";
 import MedicalOrdersPage from "./pages/clinical-workflows/medical-orders/index";
 import PatientEducationPage from "./pages/clinical-workflows/patient-education/index";
@@ -93,6 +97,26 @@ import FacilitiesPage from "./pages/facilities/index";
 
 // Dashboard for clinical users
 import ClinicalDashboard from "./pages/dashboards/clinical-dashboard";
+
+// New pages to fix 404s
+import NursingNotesPage from "./pages/clinical-workflows/nursing-notes/index";
+import NewNursingNotePage from "./pages/clinical-workflows/nursing-notes/new";
+import QualityControlPage from "./pages/lab/quality-control";
+import SampleTrackingPage from "./pages/lab/samples";
+import CheckInOutPage from "./pages/appointments/checkin";
+import PatientPortalSupportPage from "./pages/patient-portal/support";
+import RecruitmentPage from "./pages/studies/recruitment";
+import FormBuilderPage from "./pages/forms/builder";
+import CRFManagementPage from "./pages/forms/crfs";
+import VitalSignsPage from "./pages/clinical-data/vitals";
+import MedicationAdministrationPage from "./pages/clinical-workflows/medications";
+import DischargePlanningPage from "./pages/clinical-workflows/discharge";
+import DataQueryPage from "./pages/data/queries";
+import HandoffReportsPage from "./pages/reports/handoff";
+import SupportPage from "./pages/support/index";
+import HelpPage from "./pages/help/index";
+import UsageAnalyticsPage from "./pages/analytics/usage";
+import RevenueReportsPage from "./pages/analytics/revenue";
 
 const queryClient = new QueryClient();
 
@@ -136,6 +160,7 @@ const App = () => (
           <Route path="/studies/sites" element={<StudySitesPage />} />
           <Route path="/studies/protocol-documents" element={<ProtocolDocumentsPage />} />
           <Route path="/studies/patient-randomization" element={<PatientRandomizationPage />} />
+          <Route path="/studies/recruitment" element={<RecruitmentPage />} />
           
           {/* Quiz Management Routes */}
           <Route path="/studies/quiz-management" element={<QuizManagementPage />} />
@@ -145,14 +170,23 @@ const App = () => (
           
           {/* Clinical Data & Workflows */}
           <Route path="/clinical-data" element={<ClinicalDataPage />} />
+          <Route path="/clinical-data/vitals" element={<VitalSignsPage />} />
           <Route path="/clinical-workflows/notes" element={<ClinicalNotesPage />} />
           <Route path="/clinical-workflows/notes/new" element={<NewNotePage />} />
+          <Route path="/clinical-workflows/nursing-notes" element={<NursingNotesPage />} />
+          <Route path="/clinical-workflows/nursing-notes/new" element={<NewNursingNotePage />} />
           <Route path="/clinical-workflows/prescriptions" element={<PrescriptionsPage />} />
           <Route path="/clinical-workflows/prescriptions/new" element={<NewPrescriptionPage />} />
           <Route path="/clinical-workflows/treatment-plans" element={<TreatmentPlansPage />} />
           <Route path="/clinical-workflows/medical-orders" element={<MedicalOrdersPage />} />
+          <Route path="/clinical-workflows/medications" element={<MedicationAdministrationPage />} />
           <Route path="/clinical-workflows/patient-education" element={<PatientEducationPage />} />
+          <Route path="/clinical-workflows/discharge" element={<DischargePlanningPage />} />
           <Route path="/lab-results" element={<LabResultsPage />} />
+          
+          {/* Laboratory Pages */}
+          <Route path="/lab/quality-control" element={<QualityControlPage />} />
+          <Route path="/lab/samples" element={<SampleTrackingPage />} />
           
           {/* Medical Records */}
           <Route path="/medical-records" element={<MedicalRecordsPage />} />
@@ -170,8 +204,26 @@ const App = () => (
           
           {/* Patient Interaction Pages */}
           <Route path="/patient-portal/dashboard" element={<PatientPortalDashboard />} />
+          <Route path="/patient-portal/support" element={<PatientPortalSupportPage />} />
           <Route path="/messages" element={<MessagingPage />} />
           <Route path="/appointments" element={<AppointmentsPage />} />
+          <Route path="/appointments/checkin" element={<CheckInOutPage />} />
+          
+          {/* Form Builder and CRFs */}
+          <Route path="/forms/builder" element={<FormBuilderPage />} />
+          <Route path="/forms/crfs" element={<CRFManagementPage />} />
+          
+          {/* Data Management */}
+          <Route path="/data/queries" element={<DataQueryPage />} />
+          
+          {/* Reports */}
+          <Route path="/reports/handoff" element={<HandoffReportsPage />} />
+          
+          {/* Support */}
+          <Route path="/support" element={<SupportPage />} />
+          
+          {/* Help */}
+          <Route path="/help" element={<HelpPage />} />
           
           {/* Admin & Analytics Pages */}
           <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
@@ -185,6 +237,8 @@ const App = () => (
           <Route path="/analytics/site-performance" element={<SitePerformancePage />} />
           <Route path="/analytics/data-quality" element={<DataQualityPage />} />
           <Route path="/analytics/geographic" element={<GeographicDistributionPage />} />
+          <Route path="/analytics/usage" element={<UsageAnalyticsPage />} />
+          <Route path="/analytics/revenue" element={<RevenueReportsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/settings/notifications" element={<NotificationsSettingsPage />} />
           <Route path="/settings/system" element={<SystemSettingsPage />} />
