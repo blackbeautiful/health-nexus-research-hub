@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -17,7 +16,9 @@ import {
   Shield,
   AlertTriangle,
   Dna,
-  Pill
+  Pill,
+  Scan,
+  Microscope
 } from 'lucide-react';
 import { 
   Tabs, 
@@ -33,6 +34,7 @@ import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import MedicalHistoryTab from '@/components/patients/MedicalHistoryTab';
 import TreatmentPlanTab from '@/components/patients/TreatmentPlanTab';
+import InvestigationsTab from '@/components/patients/InvestigationsTab';
 import { mockPatients } from '@/data/mockPatients';
 
 const PatientDetailsPage = () => {
@@ -174,7 +176,7 @@ const PatientDetailsPage = () => {
       
       {/* Patient data tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-8">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-9">
           <TabsTrigger value="overview">
             <User className="h-4 w-4 mr-2" />
             Overview
@@ -186,6 +188,10 @@ const PatientDetailsPage = () => {
           <TabsTrigger value="treatment">
             <Pill className="h-4 w-4 mr-2" />
             Treatment
+          </TabsTrigger>
+          <TabsTrigger value="investigations">
+            <Microscope className="h-4 w-4 mr-2" />
+            Investigations
           </TabsTrigger>
           <TabsTrigger value="labs">
             <TestTube className="h-4 w-4 mr-2" />
@@ -200,7 +206,7 @@ const PatientDetailsPage = () => {
             Genomics
           </TabsTrigger>
           <TabsTrigger value="imaging">
-            <FileText className="h-4 w-4 mr-2" />
+            <Scan className="h-4 w-4 mr-2" />
             Imaging
           </TabsTrigger>
           <TabsTrigger value="notes">
@@ -295,6 +301,10 @@ const PatientDetailsPage = () => {
         
         <TabsContent value="treatment">
           <TreatmentPlanTab patientId={patient.id} />
+        </TabsContent>
+
+        <TabsContent value="investigations">
+          <InvestigationsTab patientId={patient.id} />
         </TabsContent>
         
         <TabsContent value="labs">

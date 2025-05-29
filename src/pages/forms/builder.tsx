@@ -1,5 +1,22 @@
 
 import React, { useState } from 'react';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,7 +24,84 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Save, Eye, Copy, Trash2, Edit, FileText, Calendar } from 'lucide-react';
+import { Plus, Save, Eye, Copy, Trash2, Edit, FileText, Calendar, GripVertical, Type, List, Calendar as CalendarIcon, Upload } from 'lucide-react';
+
+interface FormField {
+  id: string;
+  type: 'text' | 'textarea' | 'select' | 'radio' | 'checkbox' | 'date' | 'file';
+  label: string;
+  required: boolean;
+  options?: string[];
+}
+
+interface SortableFieldProps {
+  field: FormField;
+  onDelete: (id: string) => void;
+}
+
+const SortableField: React.FC<SortableFieldProps> = ({ field, onDelete }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: field.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
+    >
+      <div className="flex items-start justify-between">
+        <div className="flex items-center space-x-3 flex-1">
+          <div
+            {...attributes}
+            {...listeners}
+            className="cursor-grab hover:cursor-grabbing p-1 text-gray-400 hover:text-gray-600"
+          >
+            <GripVertical className="h-4 w-4" />
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center space-x-2 mb-2">
+              <span className="font-medium">{field.label}</span>
+              {field.required && <Badge variant="destructive" className="text-xs">Required</Badge>}
+              <Badge variant="outline" className="text-xs">{field.type}</Badge>
+            </div>
+            {field.type === 'text' && <Input placeholder={field.label} disabled />}
+            {field.type === 'textarea' && <Textarea placeholder={field.label} disabled rows={2} />}
+            {field.type === 'select' && (
+              <select className="w-full border rounded p-2" disabled>
+                <option>Select an option...</option>
+                {field.options?.map((option, i) => (
+                  <option key={i} value={option}>{option}</option>
+                ))}
+              </select>
+            )}
+            {field.type === 'date' && <Input type="date" disabled />}
+            {field.type === 'file' && <Input type="file" disabled />}
+          </div>
+        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onDelete(field.id)}
+          className="text-red-500 hover:text-red-700"
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+  );
+};
 
 const FormBuilderPage = () => {
   const [forms, setForms] = useState([
@@ -30,21 +124,57 @@ const FormBuilderPage = () => {
       lastModified: '2025-01-15',
       responses: 0,
       fields: 8
-    },
-    {
-      id: 'F003',
-      name: 'Quality of Life Assessment',
-      description: 'Patient-reported outcome measure for quality of life',
-      status: 'Published',
-      created: '2025-01-08',
-      lastModified: '2025-01-13',
-      responses: 23,
-      fields: 15
     }
   ]);
 
   const [selectedForm, setSelectedForm] = useState(null);
   const [isBuilding, setIsBuilding] = useState(false);
+  const [formFields, setFormFields] = useState<FormField[]>([]);
+  const [formName, setFormName] = useState('');
+  const [formDescription, setFormDescription] = useState('');
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const fieldTypes = [
+    { type: 'text', label: 'Text Input', icon: Type },
+    { type: 'textarea', label: 'Text Area', icon: FileText },
+    { type: 'select', label: 'Select Dropdown', icon: List },
+    { type: 'date', label: 'Date Picker', icon: CalendarIcon },
+    { type: 'file', label: 'File Upload', icon: Upload },
+  ];
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (active.id !== over?.id) {
+      setFormFields((items) => {
+        const oldIndex = items.findIndex((item) => item.id === active.id);
+        const newIndex = items.findIndex((item) => item.id === over?.id);
+
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+  };
+
+  const addField = (type: string) => {
+    const newField: FormField = {
+      id: `field-${Date.now()}`,
+      type: type as FormField['type'],
+      label: `${type.charAt(0).toUpperCase() + type.slice(1)} Field`,
+      required: false,
+      options: type === 'select' ? ['Option 1', 'Option 2', 'Option 3'] : undefined,
+    };
+    setFormFields([...formFields, newField]);
+  };
+
+  const deleteField = (fieldId: string) => {
+    setFormFields(formFields.filter(field => field.id !== fieldId));
+  };
 
   const getStatusBadge = (status: string) => {
     return status === 'Published' ? 
@@ -55,11 +185,16 @@ const FormBuilderPage = () => {
   const handleCreateForm = () => {
     setIsBuilding(true);
     setSelectedForm(null);
+    setFormFields([]);
+    setFormName('');
+    setFormDescription('');
   };
 
   const handleEditForm = (form: any) => {
     setSelectedForm(form);
     setIsBuilding(true);
+    setFormName(form.name);
+    setFormDescription(form.description);
   };
 
   const handleDeleteForm = (formId: string) => {
@@ -94,7 +229,7 @@ const FormBuilderPage = () => {
           </div>
 
           {/* Form Builder Interface */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             {/* Form Properties */}
             <Card>
               <CardHeader>
@@ -103,12 +238,17 @@ const FormBuilderPage = () => {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Form Name</label>
-                  <Input defaultValue={selectedForm?.name || ''} placeholder="Enter form name" />
+                  <Input 
+                    value={formName} 
+                    onChange={(e) => setFormName(e.target.value)}
+                    placeholder="Enter form name" 
+                  />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Description</label>
                   <Textarea 
-                    defaultValue={selectedForm?.description || ''} 
+                    value={formDescription}
+                    onChange={(e) => setFormDescription(e.target.value)}
                     placeholder="Describe the purpose of this form" 
                     rows={3} 
                   />
@@ -120,41 +260,55 @@ const FormBuilderPage = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Field Types</CardTitle>
+                <CardDescription>Drag or click to add fields</CardDescription>
               </CardHeader>
               <CardContent className="space-y-2">
-                <Button variant="outline" className="w-full justify-start">
-                  Text Input
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  Text Area
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  Select Dropdown
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  Radio Buttons
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  Checkboxes
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  Date Picker
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  File Upload
-                </Button>
+                {fieldTypes.map((fieldType) => (
+                  <Button 
+                    key={fieldType.type}
+                    variant="outline" 
+                    className="w-full justify-start"
+                    onClick={() => addField(fieldType.type)}
+                  >
+                    <fieldType.icon className="h-4 w-4 mr-2" />
+                    {fieldType.label}
+                  </Button>
+                ))}
               </CardContent>
             </Card>
 
-            {/* Form Preview */}
-            <Card>
+            {/* Form Builder Canvas */}
+            <Card className="lg:col-span-2">
               <CardHeader>
-                <CardTitle>Form Preview</CardTitle>
+                <CardTitle>Form Builder</CardTitle>
+                <CardDescription>Drag to reorder fields</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-8 text-muted-foreground">
-                  Drag fields here to build your form
-                </div>
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
+                >
+                  <SortableContext items={formFields} strategy={verticalListSortingStrategy}>
+                    <div className="space-y-4 min-h-[400px]">
+                      {formFields.length === 0 ? (
+                        <div className="text-center py-12 text-muted-foreground border-2 border-dashed rounded-lg">
+                          <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                          <p>No fields added yet</p>
+                          <p className="text-sm">Click on field types to add them to your form</p>
+                        </div>
+                      ) : (
+                        formFields.map((field) => (
+                          <SortableField
+                            key={field.id}
+                            field={field}
+                            onDelete={deleteField}
+                          />
+                        ))
+                      )}
+                    </div>
+                  </SortableContext>
+                </DndContext>
               </CardContent>
             </Card>
           </div>

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -53,7 +52,8 @@ import {
   Archive,
   Clock,
   DollarSign,
-  Mail
+  Mail,
+  User
 } from 'lucide-react';
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -64,7 +64,7 @@ import SidebarMenuGroup from './sidebar/SidebarMenuGroup';
 import { MenuItemType } from './sidebar/SidebarMenuItem';
 
 type AppMode = 'clinical' | 'research' | 'admin';
-type UserRole = 'admin' | 'clinician' | 'researcher' | 'facility_admin' | 'nurse' | 'lab_tech' | 'receptionist' | 'pi' | 'coordinator';
+type UserRole = 'admin' | 'clinician' | 'researcher' | 'facility_admin' | 'nurse' | 'lab_tech' | 'receptionist' | 'pi' | 'coordinator' | 'patient' | 'participant';
 
 const AppSidebar = () => {
   const navigate = useNavigate();
@@ -370,7 +370,66 @@ const AppSidebar = () => {
     }
   ];
 
-  // Get menu based on current role
+  const getPatientMenu = () => [
+    {
+      title: 'My Health',
+      items: [
+        { title: "Dashboard", icon: LayoutDashboard, url: "/patient-portal/dashboard" },
+        { title: "My Profile", icon: User, url: "/patient-portal/profile" },
+        { title: "Medical Records", icon: FileText, url: "/patient-portal/medical-records" },
+        { title: "Lab Results", icon: TestTube, url: "/patient-portal/lab-results" },
+        { title: "Imaging Results", icon: Scan, url: "/patient-portal/imaging" },
+        { title: "Medications", icon: Pill, url: "/patient-portal/medications" }
+      ]
+    },
+    {
+      title: 'Care Team',
+      items: [
+        { title: "My Appointments", icon: Calendar, url: "/patient-portal/appointments" },
+        { title: "Messages", icon: MessageSquare, url: "/patient-portal/messages" },
+        { title: "Care Team", icon: Users, url: "/patient-portal/care-team" }
+      ]
+    },
+    {
+      title: 'Health Tools',
+      items: [
+        { title: "Symptom Tracker", icon: Activity, url: "/patient-portal/symptoms" },
+        { title: "Education Materials", icon: BookOpen, url: "/patient-portal/education" },
+        { title: "Treatment Plan", icon: HeartPulse, url: "/patient-portal/treatment-plan" }
+      ]
+    }
+  ];
+
+  const getParticipantMenu = () => [
+    {
+      title: 'Study Participation',
+      items: [
+        { title: "Dashboard", icon: LayoutDashboard, url: "/participant-portal/dashboard" },
+        { title: "My Study", icon: FlaskRound, url: "/participant-portal/study" },
+        { title: "Study Schedule", icon: Calendar, url: "/participant-portal/schedule" },
+        { title: "Consent Documents", icon: FileText, url: "/participant-portal/consent" },
+        { title: "Study Data", icon: Database, url: "/participant-portal/data" }
+      ]
+    },
+    {
+      title: 'Study Activities',
+      items: [
+        { title: "Forms & Surveys", icon: Clipboard, url: "/participant-portal/forms" },
+        { title: "Lab Results", icon: TestTube, url: "/participant-portal/lab-results" },
+        { title: "Visit Reports", icon: FileText, url: "/participant-portal/visits" },
+        { title: "Messages", icon: MessageSquare, url: "/participant-portal/messages" }
+      ]
+    },
+    {
+      title: 'Resources',
+      items: [
+        { title: "Study Information", icon: BookOpen, url: "/participant-portal/information" },
+        { title: "Contact Study Team", icon: Users, url: "/participant-portal/contact" },
+        { title: "Withdraw from Study", icon: Shield, url: "/participant-portal/withdraw" }
+      ]
+    }
+  ];
+
   const getMenuForRole = () => {
     switch (userRole) {
       case 'admin':
@@ -388,6 +447,10 @@ const AppSidebar = () => {
         return getResearcherMenu();
       case 'coordinator':
         return getCoordinatorMenu();
+      case 'patient':
+        return getPatientMenu();
+      case 'participant':
+        return getParticipantMenu();
       default:
         return getDefaultMenu();
     }
@@ -404,7 +467,9 @@ const AppSidebar = () => {
       'receptionist': 'Reception Staff',
       'researcher': 'Dr. Research Lead',
       'pi': 'Principal Investigator',
-      'coordinator': 'Study Coordinator'
+      'coordinator': 'Study Coordinator',
+      'patient': 'Sarah Johnson',
+      'participant': 'John Smith'
     };
 
     const roleSubtitles = {
@@ -415,13 +480,15 @@ const AppSidebar = () => {
       'receptionist': 'Front Office',
       'researcher': 'Research Scientist',
       'pi': 'Principal Investigator',
-      'coordinator': 'Clinical Research'
+      'coordinator': 'Clinical Research',
+      'patient': 'Patient',
+      'participant': 'Study Participant'
     };
 
     return {
       name: roleDisplayNames[userRole] || 'User',
       subtitle: roleSubtitles[userRole] || 'Staff Member',
-      initials: userRole === 'admin' ? 'SA' : userRole === 'nurse' ? 'SW' : userRole === 'lab_tech' ? 'MC' : 'DR'
+      initials: userRole === 'patient' ? 'SJ' : userRole === 'participant' ? 'JS' : userRole === 'admin' ? 'SA' : userRole === 'nurse' ? 'SW' : userRole === 'lab_tech' ? 'MC' : 'DR'
     };
   };
 
@@ -449,11 +516,13 @@ const AppSidebar = () => {
               <option value="researcher">Researcher</option>
               <option value="pi">Principal Investigator</option>
               <option value="coordinator">Coordinator</option>
+              <option value="patient">Patient</option>
+              <option value="participant">Participant</option>
             </select>
           </div>
         )}
         
-        {state !== "collapsed" && userRole !== 'admin' && (
+        {state !== "collapsed" && !['admin', 'patient', 'participant'].includes(userRole) && (
           <Tabs 
             defaultValue={appMode} 
             className="w-full" 
@@ -483,6 +552,24 @@ const AppSidebar = () => {
             <Badge variant="outline" className="w-full justify-center py-2 bg-primary/10 text-primary border-primary/20">
               <Settings className="h-3 w-3 mr-1" />
               Admin Panel
+            </Badge>
+          </div>
+        )}
+
+        {state !== "collapsed" && userRole === 'patient' && (
+          <div className="w-full">
+            <Badge variant="outline" className="w-full justify-center py-2 bg-blue-10 text-blue-600 border-blue-200">
+              <User className="h-3 w-3 mr-1" />
+              Patient Portal
+            </Badge>
+          </div>
+        )}
+
+        {state !== "collapsed" && userRole === 'participant' && (
+          <div className="w-full">
+            <Badge variant="outline" className="w-full justify-center py-2 bg-green-10 text-green-600 border-green-200">
+              <FlaskRound className="h-3 w-3 mr-1" />
+              Study Portal
             </Badge>
           </div>
         )}
