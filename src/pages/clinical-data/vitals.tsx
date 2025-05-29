@@ -203,11 +203,11 @@ const VitalSignsPage = () => {
                 <div className="space-y-3">
                   <div className="p-3 border-l-4 border-red-500 bg-red-50">
                     <div className="font-medium">Maria Garcia - Elevated Temperature</div>
-                    <div className="text-sm text-muted-foreground">Temperature: 99.2°F (Normal: <100.4°F)</div>
+                    <div className="text-sm text-muted-foreground">Temperature: 99.2°F (Normal: &lt;100.4°F)</div>
                   </div>
                   <div className="p-3 border-l-4 border-yellow-500 bg-yellow-50">
                     <div className="font-medium">Maria Garcia - Low Oxygen Saturation</div>
-                    <div className="text-sm text-muted-foreground">O2 Sat: 96% (Normal: >95%)</div>
+                    <div className="text-sm text-muted-foreground">O2 Sat: 96% (Normal: &gt;95%)</div>
                   </div>
                 </div>
               </CardContent>
