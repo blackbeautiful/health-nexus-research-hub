@@ -71,7 +71,7 @@ const AppSidebar = () => {
   const { state } = useSidebar();
   const [openGroups, setOpenGroups] = useState<string[]>([]);
   const [appMode, setAppMode] = useState<AppMode>('clinical');
-  const [userRole, setUserRole] = useState<UserRole>('admin');
+  const [userRole, setUserRole] = useState<UserRole>('clinician'); // Default to clinician for testing
   
   useEffect(() => {
     const savedMode = localStorage.getItem('appMode') as AppMode;
@@ -111,26 +111,17 @@ const AppSidebar = () => {
     }
   };
 
-  // Role-specific menu configurations
-  const getMenuForRole = () => {
-    switch (userRole) {
-      case 'admin':
-        return getAdminMenu();
-      case 'clinician':
-        return getClinicianMenu();
-      case 'nurse':
-        return getNurseMenu();
-      case 'lab_tech':
-        return getLabTechMenu();
-      case 'receptionist':
-        return getReceptionistMenu();
-      case 'researcher':
-      case 'pi':
-        return getResearcherMenu();
-      case 'coordinator':
-        return getCoordinatorMenu();
-      default:
-        return getDefaultMenu();
+  // Add a role switcher for testing purposes
+  const handleRoleChange = (newRole: UserRole) => {
+    setUserRole(newRole);
+    localStorage.setItem('userRole', newRole);
+    // Reset to appropriate mode for the role
+    if (newRole === 'admin') {
+      setAppMode('admin');
+    } else if (['researcher', 'pi', 'coordinator'].includes(newRole)) {
+      setAppMode('research');
+    } else {
+      setAppMode('clinical');
     }
   };
 
@@ -379,6 +370,29 @@ const AppSidebar = () => {
     }
   ];
 
+  // Get menu based on current role
+  const getMenuForRole = () => {
+    switch (userRole) {
+      case 'admin':
+        return getAdminMenu();
+      case 'clinician':
+        return getClinicianMenu();
+      case 'nurse':
+        return getNurseMenu();
+      case 'lab_tech':
+        return getLabTechMenu();
+      case 'receptionist':
+        return getReceptionistMenu();
+      case 'researcher':
+      case 'pi':
+        return getResearcherMenu();
+      case 'coordinator':
+        return getCoordinatorMenu();
+      default:
+        return getDefaultMenu();
+    }
+  };
+
   const menuGroups = getMenuForRole();
 
   const getUserDisplayInfo = () => {
@@ -407,7 +421,7 @@ const AppSidebar = () => {
     return {
       name: roleDisplayNames[userRole] || 'User',
       subtitle: roleSubtitles[userRole] || 'Staff Member',
-      initials: userRole === 'admin' ? 'SA' : 'DR'
+      initials: userRole === 'admin' ? 'SA' : userRole === 'nurse' ? 'SW' : userRole === 'lab_tech' ? 'MC' : 'DR'
     };
   };
 
@@ -417,6 +431,27 @@ const AppSidebar = () => {
     <Sidebar collapsible="icon" className="border-r">
       <SidebarHeader className="flex flex-col justify-center items-center p-4 border-b space-y-4">
         <Logo />
+        
+        {/* Role Switcher for Testing */}
+        {state !== "collapsed" && (
+          <div className="w-full">
+            <label className="text-xs text-muted-foreground mb-2 block">Switch Role (Testing)</label>
+            <select 
+              value={userRole} 
+              onChange={(e) => handleRoleChange(e.target.value as UserRole)}
+              className="w-full text-xs border rounded p-1"
+            >
+              <option value="admin">Admin</option>
+              <option value="clinician">Clinician</option>
+              <option value="nurse">Nurse</option>
+              <option value="lab_tech">Lab Tech</option>
+              <option value="receptionist">Receptionist</option>
+              <option value="researcher">Researcher</option>
+              <option value="pi">Principal Investigator</option>
+              <option value="coordinator">Coordinator</option>
+            </select>
+          </div>
+        )}
         
         {state !== "collapsed" && userRole !== 'admin' && (
           <Tabs 
