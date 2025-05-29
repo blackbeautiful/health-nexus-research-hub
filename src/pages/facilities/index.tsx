@@ -1,106 +1,62 @@
-
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import Layout from '@/components/layout/Layout';
 import PageHeader from '@/components/common/PageHeader';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
 import { Avatar } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogDescription, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogTrigger 
+} from '@/components/ui/dialog';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
-import { Building2, Plus, FileSearch, Users, Search, BarChart2, Briefcase, FlaskRound } from 'lucide-react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import {
+  Plus,
+  Building2,
+  Users,
+  MapPin,
+  Calendar,
+  Edit,
+  Trash2,
+  Phone,
+  Mail,
+  Globe,
+  CheckCircle,
+  AlertCircle,
+  Clock
+} from 'lucide-react';
 
 const facilityFormSchema = z.object({
-  name: z.string().min(2, "Facility name is required"),
-  type: z.string().min(1, "Facility type is required"),
-  modules: z.array(z.string()).nonempty("Select at least one module"),
-  adminEmail: z.string().email("Valid email is required"),
-  location: z.string().min(2, "Location is required"),
-  subscriptionTier: z.string().min(1, "Subscription tier is required"),
+  name: z.string().min(2, 'Facility name must be at least 2 characters'),
+  type: z.string().min(1, 'Please select a facility type'),
+  modules: z.array(z.string()).min(1, 'Please select at least one module'),
+  adminEmail: z.string().email('Please enter a valid email address'),
+  location: z.string().min(2, 'Location must be at least 2 characters'),
+  subscriptionTier: z.string().min(1, 'Please select a subscription tier'),
 });
 
-const facilities = [
-  {
-    id: '1',
-    name: 'General Hospital',
-    type: 'Hospital',
-    location: 'New York, USA',
-    modules: ['clinical'],
-    admins: 3,
-    users: 48,
-    status: 'active',
-    subscription: 'Enterprise',
-    lastActive: '2 hours ago'
-  },
-  {
-    id: '2',
-    name: 'Medical Research Institute',
-    type: 'Research',
-    location: 'Boston, USA',
-    modules: ['research'],
-    admins: 2,
-    users: 27,
-    status: 'active',
-    subscription: 'Professional',
-    lastActive: '5 minutes ago'
-  },
-  {
-    id: '3',
-    name: 'City Health Clinic',
-    type: 'Clinic',
-    location: 'Chicago, USA',
-    modules: ['clinical', 'research'],
-    admins: 1,
-    users: 15,
-    status: 'active',
-    subscription: 'Professional',
-    lastActive: '1 day ago'
-  },
-  {
-    id: '4',
-    name: 'Wellness Medical Center',
-    type: 'Clinic',
-    location: 'Los Angeles, USA',
-    modules: ['clinical'],
-    admins: 2,
-    users: 22,
-    status: 'inactive',
-    subscription: 'Starter',
-    lastActive: '10 days ago'
-  },
-  {
-    id: '5',
-    name: 'Advanced Cancer Research',
-    type: 'Research',
-    location: 'Seattle, USA',
-    modules: ['research'],
-    admins: 4,
-    users: 36,
-    status: 'pending',
-    subscription: 'Enterprise',
-    lastActive: 'Never'
-  }
-];
+type FacilityFormData = z.infer<typeof facilityFormSchema>;
 
 const FacilitiesPage = () => {
-  const [searchText, setSearchText] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all');
-  const [filterType, setFilterType] = useState('all');
-  const [addFacilityOpen, setAddFacilityOpen] = useState(false);
   const { toast } = useToast();
-  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('all');
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
-  const form = useForm({
+  const form = useForm<FacilityFormData>({
     resolver: zodResolver(facilityFormSchema),
     defaultValues: {
       name: '',
@@ -108,34 +64,107 @@ const FacilitiesPage = () => {
       modules: [],
       adminEmail: '',
       location: '',
-      subscriptionTier: ''
-    }
+      subscriptionTier: '',
+    },
   });
 
-  const onSubmit = (data: z.infer<typeof facilityFormSchema>) => {
+  const onSubmit = (data: FacilityFormData) => {
+    console.log('Form data:', data);
     toast({
-      title: "Facility created",
-      description: `${data.name} has been created successfully.`,
+      title: "Facility Added",
+      description: `${data.name} has been successfully added to the platform.`,
     });
-    setAddFacilityOpen(false);
+    setIsAddDialogOpen(false);
     form.reset();
   };
 
-  const filteredFacilities = facilities.filter(facility => {
-    const matchesSearch = facility.name.toLowerCase().includes(searchText.toLowerCase()) ||
-                        facility.location.toLowerCase().includes(searchText.toLowerCase());
-    const matchesStatus = filterStatus === 'all' || facility.status === filterStatus;
-    const matchesType = filterType === 'all' || facility.type.toLowerCase() === filterType.toLowerCase();
-    
-    return matchesSearch && matchesStatus && matchesType;
-  });
+  const facilities = [
+    {
+      id: 1,
+      name: 'City General Hospital',
+      type: 'Hospital',
+      location: 'New York, NY',
+      modules: ['Clinical', 'Research'],
+      staff: 245,
+      patients: 1250,
+      studies: 12,
+      status: 'active',
+      subscription: 'Enterprise',
+      adminName: 'Dr. Sarah Johnson',
+      adminEmail: 'sarah.johnson@citygeneral.com',
+      phone: '+1 (555) 123-4567',
+      joinDate: '2024-01-15'
+    },
+    {
+      id: 2,
+      name: 'Global Research Institute',
+      type: 'Research Center',
+      location: 'San Francisco, CA',
+      modules: ['Research'],
+      staff: 85,
+      patients: 320,
+      studies: 35,
+      status: 'active',
+      subscription: 'Premium',
+      adminName: 'Dr. David Lee',
+      adminEmail: 'david.lee@globalresearch.org',
+      phone: '+1 (555) 987-6543',
+      joinDate: '2024-02-20'
+    },
+    {
+      id: 3,
+      name: 'Community Health Clinic',
+      type: 'Clinic',
+      location: 'Chicago, IL',
+      modules: ['Clinical'],
+      staff: 30,
+      patients: 800,
+      studies: 0,
+      status: 'active',
+      subscription: 'Standard',
+      adminName: 'Maria Rodriguez',
+      adminEmail: 'maria.rodriguez@communityhealth.com',
+      phone: '+1 (555) 345-6789',
+      joinDate: '2024-03-01'
+    },
+    {
+      id: 4,
+      name: 'Advanced Medical Labs',
+      type: 'Laboratory',
+      location: 'Houston, TX',
+      modules: [],
+      staff: 45,
+      patients: 0,
+      studies: 0,
+      status: 'pending',
+      subscription: 'Basic',
+      adminName: 'James Wilson',
+      adminEmail: 'james.wilson@advancedlabs.com',
+      phone: '+1 (555) 456-7890',
+      joinDate: '2024-03-10'
+    },
+    {
+      id: 5,
+      name: 'Coastal Rehabilitation Center',
+      type: 'Rehabilitation Center',
+      location: 'Miami, FL',
+      modules: ['Clinical'],
+      staff: 60,
+      patients: 450,
+      studies: 5,
+      status: 'active',
+      subscription: 'Premium',
+      adminName: 'Emily Chen',
+      adminEmail: 'emily.chen@coastalrehab.com',
+      phone: '+1 (555) 567-8901',
+      joinDate: '2024-03-15'
+    }
+  ];
 
   const getStatusBadge = (status: string) => {
-    switch(status) {
+    switch (status) {
       case 'active':
         return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Active</Badge>;
-      case 'inactive':
-        return <Badge variant="outline" className="text-gray-500">Inactive</Badge>;
       case 'pending':
         return <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100">Pending</Badge>;
       default:
@@ -143,88 +172,58 @@ const FacilitiesPage = () => {
     }
   };
 
-  const getModuleBadges = (modules: string[]) => {
-    return modules.map(module => {
-      if (module === 'clinical') {
-        return (
-          <Badge key={module} variant="secondary" className="mr-1">
-            <Briefcase className="h-3 w-3 mr-1" />
-            Clinical
-          </Badge>
-        );
-      } else {
-        return (
-          <Badge key={module} variant="secondary" className="mr-1">
-            <FlaskRound className="h-3 w-3 mr-1" />
-            Research
-          </Badge>
-        );
-      }
-    });
+  const getFacilityTypeIcon = (type: string) => {
+    switch (type) {
+      case 'Hospital':
+        return <Building2 className="h-4 w-4 mr-2" />;
+      case 'Research Center':
+        return <Globe className="h-4 w-4 mr-2" />;
+      case 'Clinic':
+        return <MapPin className="h-4 w-4 mr-2" />;
+      case 'Laboratory':
+        return <TestTube className="h-4 w-4 mr-2" />;
+      case 'Rehabilitation Center':
+        return <Activity className="h-4 w-4 mr-2" />;
+      default:
+        return <Building2 className="h-4 w-4 mr-2" />;
+    }
   };
 
   return (
     <Layout>
       <PageHeader
         title="Facilities Management"
-        description="Manage all healthcare facilities and research institutions registered on the platform"
+        description="Manage healthcare facilities and research institutions"
         breadcrumbs={[
           { label: 'Home', link: '/' },
+          { label: 'Admin', link: '/admin/dashboard' },
           { label: 'Facilities' }
         ]}
       />
 
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
-          <div className="relative w-full sm:w-80">
-            <Search className="absolute top-2.5 left-3 h-4 w-4 text-muted-foreground" />
-            <Input 
-              placeholder="Search facilities..." 
-              className="pl-9" 
-              value={searchText} 
-              onChange={(e) => setSearchText(e.target.value)}
-            />
-          </div>
-          <div className="flex gap-2">
-            <Select value={filterStatus} onValueChange={setFilterStatus}>
-              <SelectTrigger className="w-[130px]">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="inactive">Inactive</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={filterType} onValueChange={setFilterType}>
-              <SelectTrigger className="w-[130px]">
-                <SelectValue placeholder="Facility Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="hospital">Hospital</SelectItem>
-                <SelectItem value="clinic">Clinic</SelectItem>
-                <SelectItem value="research">Research</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex gap-4">
+          <Input
+            placeholder="Search facilities..."
+            className="w-64"
+          />
         </div>
-        
-        <Dialog open={addFacilityOpen} onOpenChange={setAddFacilityOpen}>
+        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="w-full sm:w-auto">
-              <Plus className="mr-2 h-4 w-4" />
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
               Add Facility
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[500px]">
+          <DialogContent className="max-w-2xl">
             <DialogHeader>
               <DialogTitle>Add New Facility</DialogTitle>
-              <DialogDescription>Create a new healthcare facility or research institution.</DialogDescription>
+              <DialogDescription>
+                Add a new healthcare facility or research institution to the platform.
+              </DialogDescription>
             </DialogHeader>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <FormField
                   control={form.control}
                   name="name"
@@ -232,8 +231,9 @@ const FacilitiesPage = () => {
                     <FormItem>
                       <FormLabel>Facility Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="General Hospital" {...field} />
+                        <Input placeholder="Enter facility name" {...field} />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -246,81 +246,58 @@ const FacilitiesPage = () => {
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select facility type" />
+                            <SelectValue placeholder="Select a type" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="hospital">Hospital</SelectItem>
-                          <SelectItem value="clinic">Clinic</SelectItem>
-                          <SelectItem value="research">Research Institution</SelectItem>
-                          <SelectItem value="laboratory">Laboratory</SelectItem>
+                          <SelectItem value="Hospital">Hospital</SelectItem>
+                          <SelectItem value="Clinic">Clinic</SelectItem>
+                          <SelectItem value="Research Center">Research Center</SelectItem>
+                          <SelectItem value="Laboratory">Laboratory</SelectItem>
+                          <SelectItem value="Rehabilitation Center">Rehabilitation Center</SelectItem>
                         </SelectContent>
                       </Select>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
                 <FormField
                   control={form.control}
                   name="modules"
-                  render={() => (
+                  render={({ field }) => (
                     <FormItem>
-                      <div className="mb-2">
-                        <FormLabel>Modules</FormLabel>
-                      </div>
+                      <FormLabel>Modules</FormLabel>
                       <div className="flex flex-col space-y-2">
-                        <FormField
-                          control={form.control}
-                          name="modules"
-                          render={({ field }) => {
-                            return (
-                              <FormItem className="flex flex-row items-center space-x-2 space-y-0">
-                                <FormControl>
-                                  <Checkbox
-                                    checked={field.value?.includes('clinical')}
-                                    onCheckedChange={(checked) => {
-                                      return checked
-                                        ? field.onChange([...field.value, 'clinical'])
-                                        : field.onChange(field.value?.filter((value) => value !== 'clinical'))
-                                    }}
-                                  />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                  <div className="flex items-center">
-                                    <Briefcase className="h-4 w-4 mr-2" />
-                                    Clinical Module
-                                  </div>
-                                </FormLabel>
-                              </FormItem>
-                            )
-                          }}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="modules"
-                          render={({ field }) => {
-                            return (
-                              <FormItem className="flex flex-row items-center space-x-2 space-y-0">
-                                <FormControl>
-                                  <Checkbox
-                                    checked={field.value?.includes('research')}
-                                    onCheckedChange={(checked) => {
-                                      return checked
-                                        ? field.onChange([...field.value, 'research'])
-                                        : field.onChange(field.value?.filter((value) => value !== 'research'))
-                                    }}
-                                  />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                  <div className="flex items-center">
-                                    <FlaskRound className="h-4 w-4 mr-2" />
-                                    Research Module
-                                  </div>
-                                </FormLabel>
-                              </FormItem>
-                            )
-                          }}
-                        />
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="clinical"
+                            checked={field.value.includes('clinical')}
+                            onCheckedChange={(checked) => {
+                              return checked
+                                ? field.onChange([...field.value, 'clinical'])
+                                : field.onChange(field.value.filter((value) => value !== 'clinical'))
+                            }}
+                          />
+                          <Label htmlFor="clinical" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed">
+                            Clinical
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="research"
+                            checked={field.value.includes('research')}
+                            onCheckedChange={(checked) => {
+                              return checked
+                                ? field.onChange([...field.value, 'research'])
+                                : field.onChange(field.value.filter((value) => value !== 'research'))
+                            }}
+                          />
+                          <Label htmlFor="research" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed">
+                            Research
+                          </Label>
+                        </div>
                       </div>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -331,280 +308,218 @@ const FacilitiesPage = () => {
                     <FormItem>
                       <FormLabel>Admin Email</FormLabel>
                       <FormControl>
-                        <Input type="email" placeholder="admin@facility.com" {...field} />
+                        <Input type="email" placeholder="admin@example.com" {...field} />
                       </FormControl>
-                      <FormDescription>
-                        Primary admin will receive an invitation email.
-                      </FormDescription>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="location"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Location</FormLabel>
+                <FormField
+                  control={form.control}
+                  name="location"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Location</FormLabel>
+                      <FormControl>
+                        <Input placeholder="City, State" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="subscriptionTier"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Subscription Tier</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
-                          <Input placeholder="City, Country" {...field} />
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a tier" />
+                          </SelectTrigger>
                         </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="subscriptionTier"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Subscription Tier</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select tier" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="starter">Starter</SelectItem>
-                            <SelectItem value="professional">Professional</SelectItem>
-                            <SelectItem value="enterprise">Enterprise</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormItem>
-                    )}
-                  />
+                        <SelectContent>
+                          <SelectItem value="Basic">Basic</SelectItem>
+                          <SelectItem value="Standard">Standard</SelectItem>
+                          <SelectItem value="Premium">Premium</SelectItem>
+                          <SelectItem value="Enterprise">Enterprise</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="flex justify-end gap-2">
+                  <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button type="submit">Add Facility</Button>
                 </div>
-                
-                <DialogFooter className="pt-4">
-                  <Button type="submit">Create Facility</Button>
-                </DialogFooter>
               </form>
             </Form>
           </DialogContent>
         </Dialog>
       </div>
 
-      <Tabs defaultValue="all">
-        <TabsList>
-          <TabsTrigger value="all">All Facilities</TabsTrigger>
-          <TabsTrigger value="active">Active</TabsTrigger>
-          <TabsTrigger value="pending">Pending</TabsTrigger>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+        <TabsList className="grid w-full grid-cols-4 h-12 p-1 bg-muted/50 rounded-lg border">
+          <TabsTrigger 
+            value="all" 
+            className="h-10 px-6 font-medium transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:border data-[state=active]:border-border"
+          >
+            All Facilities
+          </TabsTrigger>
+          <TabsTrigger 
+            value="hospitals" 
+            className="h-10 px-6 font-medium transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:border data-[state=active]:border-border"
+          >
+            Hospitals
+          </TabsTrigger>
+          <TabsTrigger 
+            value="research" 
+            className="h-10 px-6 font-medium transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:border data-[state=active]:border-border"
+          >
+            Research Centers
+          </TabsTrigger>
+          <TabsTrigger 
+            value="pending" 
+            className="h-10 px-6 font-medium transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:border data-[state=active]:border-border"
+          >
+            Pending Approval
+          </TabsTrigger>
         </TabsList>
-        
-        <TabsContent value="all" className="mt-4">
+
+        <TabsContent value="all" className="space-y-4">
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle>Facilities ({filteredFacilities.length})</CardTitle>
-              <CardDescription>
-                Manage all healthcare facilities and research institutions.
-              </CardDescription>
+            <CardHeader>
+              <CardTitle>All Facilities</CardTitle>
+              <CardDescription>A comprehensive list of all facilities in the system.</CardDescription>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Facility</TableHead>
-                    <TableHead>Location</TableHead>
-                    <TableHead>Modules</TableHead>
-                    <TableHead>Users</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredFacilities.map((facility) => (
-                    <TableRow key={facility.id}>
-                      <TableCell>
-                        <div className="flex items-center">
-                          <Avatar className="h-8 w-8 mr-3">
-                            <div className="flex h-full w-full items-center justify-center bg-muted rounded-full">
-                              <Building2 className="h-4 w-4" />
-                            </div>
-                          </Avatar>
-                          <div>
-                            <div className="font-medium">{facility.name}</div>
-                            <div className="text-xs text-muted-foreground">{facility.type}</div>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>{facility.location}</TableCell>
-                      <TableCell>
-                        <div className="flex flex-wrap gap-1">
-                          {getModuleBadges(facility.modules)}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center">
-                          <Users className="h-4 w-4 mr-1 text-muted-foreground" /> 
-                          <span>{facility.users}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>{getStatusBadge(facility.status)}</TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            onClick={() => navigate(`/facilities/${facility.id}`)}
-                          >
-                            <FileSearch className="h-4 w-4 mr-1" /> View
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            onClick={() => navigate(`/analytics/site-performance?facilityId=${facility.id}`)}
-                          >
-                            <BarChart2 className="h-4 w-4 mr-1" /> Analytics
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {facilities.map(facility => (
+                  <div key={facility.id} className="border rounded-lg p-4 space-y-2">
+                    <div className="flex items-center space-x-3 text-sm">
+                      {getFacilityTypeIcon(facility.type)}
+                      <span className="font-semibold">{facility.name}</span>
+                    </div>
+                    <div className="text-xs text-muted-foreground flex items-center space-x-1">
+                      <MapPin className="h-3 w-3" />
+                      <span>{facility.location}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      {getStatusBadge(facility.status)}
+                      <Button variant="outline" size="sm">
+                        <Edit className="h-4 w-4 mr-2" />
+                        Manage
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
-        
-        <TabsContent value="active" className="mt-4">
+
+        <TabsContent value="hospitals" className="space-y-4">
           <Card>
-            <CardContent className="pt-6">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Facility</TableHead>
-                    <TableHead>Location</TableHead>
-                    <TableHead>Modules</TableHead>
-                    <TableHead>Users</TableHead>
-                    <TableHead>Subscription</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredFacilities
-                    .filter(facility => facility.status === 'active')
-                    .map((facility) => (
-                      <TableRow key={facility.id}>
-                        <TableCell>
-                          <div className="flex items-center">
-                            <Avatar className="h-8 w-8 mr-3">
-                              <div className="flex h-full w-full items-center justify-center bg-muted rounded-full">
-                                <Building2 className="h-4 w-4" />
-                              </div>
-                            </Avatar>
-                            <div>
-                              <div className="font-medium">{facility.name}</div>
-                              <div className="text-xs text-muted-foreground">{facility.type}</div>
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>{facility.location}</TableCell>
-                        <TableCell>
-                          <div className="flex flex-wrap gap-1">
-                            {getModuleBadges(facility.modules)}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center">
-                            <Users className="h-4 w-4 mr-1 text-muted-foreground" /> 
-                            <span>{facility.users}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell>{facility.subscription}</TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex justify-end gap-2">
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
-                              onClick={() => navigate(`/facilities/${facility.id}`)}
-                            >
-                              <FileSearch className="h-4 w-4 mr-1" /> View
-                            </Button>
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
-                              onClick={() => navigate(`/analytics/site-performance?facilityId=${facility.id}`)}
-                            >
-                              <BarChart2 className="h-4 w-4 mr-1" /> Analytics
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
+            <CardHeader>
+              <CardTitle>Hospitals</CardTitle>
+              <CardDescription>List of all hospital facilities.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {facilities
+                  .filter(facility => facility.type === 'Hospital')
+                  .map(facility => (
+                    <div key={facility.id} className="border rounded-lg p-4 space-y-2">
+                      <div className="flex items-center space-x-3 text-sm">
+                        {getFacilityTypeIcon(facility.type)}
+                        <span className="font-semibold">{facility.name}</span>
+                      </div>
+                      <div className="text-xs text-muted-foreground flex items-center space-x-1">
+                        <MapPin className="h-3 w-3" />
+                        <span>{facility.location}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        {getStatusBadge(facility.status)}
+                        <Button variant="outline" size="sm">
+                          <Edit className="h-4 w-4 mr-2" />
+                          Manage
+                        </Button>
+                      </div>
+                    </div>
                   ))}
-                </TableBody>
-              </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
-        
-        <TabsContent value="pending" className="mt-4">
+
+        <TabsContent value="research" className="space-y-4">
           <Card>
-            <CardContent className="pt-6">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Facility</TableHead>
-                    <TableHead>Location</TableHead>
-                    <TableHead>Modules</TableHead>
-                    <TableHead>Requested On</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredFacilities
-                    .filter(facility => facility.status === 'pending')
-                    .map((facility) => (
-                      <TableRow key={facility.id}>
-                        <TableCell>
-                          <div className="flex items-center">
-                            <Avatar className="h-8 w-8 mr-3">
-                              <div className="flex h-full w-full items-center justify-center bg-muted rounded-full">
-                                <Building2 className="h-4 w-4" />
-                              </div>
-                            </Avatar>
-                            <div>
-                              <div className="font-medium">{facility.name}</div>
-                              <div className="text-xs text-muted-foreground">{facility.type}</div>
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>{facility.location}</TableCell>
-                        <TableCell>
-                          <div className="flex flex-wrap gap-1">
-                            {getModuleBadges(facility.modules)}
-                          </div>
-                        </TableCell>
-                        <TableCell>5 days ago</TableCell>
-                        <TableCell>
-                          <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100">
-                            Pending
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex justify-end gap-2">
-                            <Button size="sm" onClick={() => {
-                              toast({
-                                title: "Facility approved",
-                                description: `${facility.name} has been approved.`
-                              });
-                            }}>
-                              Approve
-                            </Button>
-                            <Button variant="outline" size="sm" onClick={() => {
-                              toast({
-                                title: "Facility rejected",
-                                description: `${facility.name} has been rejected.`
-                              });
-                            }}>
-                              Reject
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
+            <CardHeader>
+              <CardTitle>Research Centers</CardTitle>
+              <CardDescription>List of all research facilities.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {facilities
+                  .filter(facility => facility.type === 'Research Center')
+                  .map(facility => (
+                    <div key={facility.id} className="border rounded-lg p-4 space-y-2">
+                      <div className="flex items-center space-x-3 text-sm">
+                        {getFacilityTypeIcon(facility.type)}
+                        <span className="font-semibold">{facility.name}</span>
+                      </div>
+                      <div className="text-xs text-muted-foreground flex items-center space-x-1">
+                        <MapPin className="h-3 w-3" />
+                        <span>{facility.location}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        {getStatusBadge(facility.status)}
+                        <Button variant="outline" size="sm">
+                          <Edit className="h-4 w-4 mr-2" />
+                          Manage
+                        </Button>
+                      </div>
+                    </div>
                   ))}
-                </TableBody>
-              </Table>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="pending" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Pending Approval</CardTitle>
+              <CardDescription>Facilities awaiting approval.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {facilities
+                  .filter(facility => facility.status === 'pending')
+                  .map(facility => (
+                    <div key={facility.id} className="border rounded-lg p-4 space-y-2">
+                      <div className="flex items-center space-x-3 text-sm">
+                        {getFacilityTypeIcon(facility.type)}
+                        <span className="font-semibold">{facility.name}</span>
+                      </div>
+                      <div className="text-xs text-muted-foreground flex items-center space-x-1">
+                        <MapPin className="h-3 w-3" />
+                        <span>{facility.location}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        {getStatusBadge(facility.status)}
+                        <Button variant="outline" size="sm">
+                          <CheckCircle className="h-4 w-4 mr-2" />
+                          Approve
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

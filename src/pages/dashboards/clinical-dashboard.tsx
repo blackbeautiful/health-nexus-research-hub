@@ -22,7 +22,8 @@ import {
   CalendarClock,
   User,
   CheckCircle,
-  Clock
+  Clock,
+  Plus
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -118,10 +119,25 @@ const ClinicalDashboard = () => {
       />
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="grid w-full grid-cols-1 md:grid-cols-3">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="patients">My Patients</TabsTrigger>
-          <TabsTrigger value="tasks">My Tasks</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 h-12 p-1 bg-muted/50 rounded-lg border">
+          <TabsTrigger 
+            value="overview" 
+            className="h-10 px-6 font-medium transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:border data-[state=active]:border-border"
+          >
+            Overview
+          </TabsTrigger>
+          <TabsTrigger 
+            value="patients" 
+            className="h-10 px-6 font-medium transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:border data-[state=active]:border-border"
+          >
+            My Patients
+          </TabsTrigger>
+          <TabsTrigger 
+            value="tasks" 
+            className="h-10 px-6 font-medium transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:border data-[state=active]:border-border"
+          >
+            My Tasks
+          </TabsTrigger>
         </TabsList>
         
         <TabsContent value="overview" className="space-y-4">
