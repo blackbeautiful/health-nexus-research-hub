@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import PageHeader from '@/components/common/PageHeader';
@@ -143,13 +142,15 @@ const ClinicalDashboard = () => {
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {userStats.map((stat, i) => (
-              <StatCard
-                key={i}
-                title={stat.title}
-                value={stat.value}
-                icon={stat.icon}
-                color={stat.color}
-              />
+              <div key={i} className="flex flex-col space-y-1.5 p-4 rounded-lg border">
+                <div className="flex items-center gap-2">
+                  <div className={`p-2 rounded-full ${stat.color}`}>
+                    <stat.icon className="h-4 w-4" />
+                  </div>
+                  <h3 className="tracking-tight text-sm font-medium">{stat.title}</h3>
+                </div>
+                <div className="text-2xl font-bold">{stat.value}</div>
+              </div>
             ))}
           </div>
           

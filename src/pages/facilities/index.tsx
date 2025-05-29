@@ -37,7 +37,9 @@ import {
   Globe,
   CheckCircle,
   AlertCircle,
-  Clock
+  Clock,
+  TestTube,
+  Activity
 } from 'lucide-react';
 
 const facilityFormSchema = z.object({
