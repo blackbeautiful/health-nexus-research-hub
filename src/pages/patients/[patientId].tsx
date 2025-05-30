@@ -35,6 +35,9 @@ import { useToast } from '@/hooks/use-toast';
 import MedicalHistoryTab from '@/components/patients/MedicalHistoryTab';
 import TreatmentPlanTab from '@/components/patients/TreatmentPlanTab';
 import InvestigationsTab from '@/components/patients/InvestigationsTab';
+import LabResultsTab from '@/components/patients/LabResultsTab';
+import VitalSignsTab from '@/components/patients/VitalSignsTab';
+import ImagingTab from '@/components/patients/ImagingTab';
 import { mockPatients } from '@/data/mockPatients';
 
 const PatientDetailsPage = () => {
@@ -308,51 +311,11 @@ const PatientDetailsPage = () => {
         </TabsContent>
         
         <TabsContent value="labs">
-          <div className="mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Laboratory Results</CardTitle>
-                <CardDescription>Patient's laboratory test results and trends</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center p-8">
-                  <TestTube className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-xl font-medium mb-2">Lab Results Module</h3>
-                  <p className="text-muted-foreground mb-6">
-                    This feature will be implemented in the next update, allowing you to view complete lab histories, 
-                    track trends, and receive alerts for abnormal values.
-                  </p>
-                  <Button onClick={() => handleAction('Add lab results')}>
-                    Add Lab Results
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <LabResultsTab patientId={patient.id} />
         </TabsContent>
 
         <TabsContent value="vitals">
-          <div className="mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Vitals & Symptoms</CardTitle>
-                <CardDescription>Track patient's vital signs and reported symptoms</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center p-8">
-                  <Activity className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-xl font-medium mb-2">Vitals Tracking Module</h3>
-                  <p className="text-muted-foreground mb-6">
-                    This feature will be implemented in the next update, allowing you to track vital signs,
-                    monitor symptoms, and document CTCAE-graded toxicities.
-                  </p>
-                  <Button onClick={() => handleAction('Record vitals')}>
-                    Record Vitals
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <VitalSignsTab patientId={patient.id} />
         </TabsContent>
         
         <TabsContent value="genomics">
@@ -380,27 +343,7 @@ const PatientDetailsPage = () => {
         </TabsContent>
         
         <TabsContent value="imaging">
-          <div className="mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Imaging Studies</CardTitle>
-                <CardDescription>Patient's imaging studies and RECIST evaluations</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center p-8">
-                  <FileText className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-xl font-medium mb-2">Imaging Module</h3>
-                  <p className="text-muted-foreground mb-6">
-                    This feature will be implemented in the next update, allowing you to view imaging studies,
-                    perform RECIST measurements, and track tumor response over time.
-                  </p>
-                  <Button onClick={() => handleAction('Upload imaging')}>
-                    Upload Imaging Study
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <ImagingTab patientId={patient.id} />
         </TabsContent>
         
         <TabsContent value="notes">

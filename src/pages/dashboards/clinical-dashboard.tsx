@@ -22,7 +22,10 @@ import {
   User,
   CheckCircle,
   Clock,
-  Plus
+  Plus,
+  TrendingUp,
+  TestTube,
+  Stethoscope
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -45,26 +48,148 @@ const ClinicalDashboard = () => {
   ];
   
   const upcomingAppointments = [
-    { id: 1, patientName: 'James Wilson', time: '09:00 AM', type: 'Check-up', status: 'confirmed' },
-    { id: 2, patientName: 'Maria Garcia', time: '10:30 AM', type: 'Follow-up', status: 'confirmed' },
-    { id: 3, patientName: 'Robert Johnson', time: '11:45 AM', type: 'Consultation', status: 'pending' },
-    { id: 4, patientName: 'Emily Chen', time: '01:15 PM', type: 'Treatment', status: 'confirmed' },
-    { id: 5, patientName: 'Michael Brown', time: '03:00 PM', type: 'New Patient', status: 'confirmed' }
+    { 
+      id: 1, 
+      patientName: 'James Wilson', 
+      patientId: 'P-1001',
+      time: '09:00 AM', 
+      type: 'Check-up', 
+      status: 'confirmed',
+      lastVisit: '2 weeks ago',
+      alerts: ['Lab results available']
+    },
+    { 
+      id: 2, 
+      patientName: 'Maria Garcia', 
+      patientId: 'P-1002',
+      time: '10:30 AM', 
+      type: 'Follow-up', 
+      status: 'confirmed',
+      lastVisit: '1 month ago',
+      alerts: ['Vital signs due']
+    },
+    { 
+      id: 3, 
+      patientName: 'Robert Johnson', 
+      patientId: 'P-1003',
+      time: '11:45 AM', 
+      type: 'Consultation', 
+      status: 'pending',
+      lastVisit: '3 days ago',
+      alerts: ['Treatment plan review']
+    },
+    { 
+      id: 4, 
+      patientName: 'Emily Chen', 
+      patientId: 'P-1004',
+      time: '01:15 PM', 
+      type: 'Treatment', 
+      status: 'confirmed',
+      lastVisit: '1 week ago',
+      alerts: ['Imaging results ready']
+    },
+    { 
+      id: 5, 
+      patientName: 'Michael Brown', 
+      patientId: 'P-1005',
+      time: '03:00 PM', 
+      type: 'New Patient', 
+      status: 'confirmed',
+      lastVisit: 'First visit',
+      alerts: []
+    }
   ];
   
   const recentNotifications = [
-    { id: 1, title: 'Lab Results Ready', message: 'Lab results for patient Emily Chen are ready for review', time: '10 min ago', type: 'alert' },
-    { id: 2, title: 'Appointment Confirmed', message: 'James Wilson confirmed his appointment for today at 9:00 AM', time: '1 hour ago', type: 'info' },
-    { id: 3, title: 'Medication Refill Request', message: 'Robert Johnson requested a refill for their prescription', time: '2 hours ago', type: 'action' },
-    { id: 4, title: 'New Clinical Note', message: 'Dr. Sarah added a new clinical note for patient Maria Garcia', time: '3 hours ago', type: 'info' },
+    { 
+      id: 1, 
+      title: 'Lab Results Ready', 
+      message: 'Lab results for patient Emily Chen are ready for review', 
+      time: '10 min ago', 
+      type: 'alert',
+      patientId: 'P-1004',
+      actionable: true
+    },
+    { 
+      id: 2, 
+      title: 'Appointment Confirmed', 
+      message: 'James Wilson confirmed his appointment for today at 9:00 AM', 
+      time: '1 hour ago', 
+      type: 'info',
+      patientId: 'P-1001',
+      actionable: false
+    },
+    { 
+      id: 3, 
+      title: 'Critical Lab Value', 
+      message: 'Robert Johnson has critically low neutrophil count - requires immediate attention', 
+      time: '2 hours ago', 
+      type: 'critical',
+      patientId: 'P-1003',
+      actionable: true
+    },
+    { 
+      id: 4, 
+      title: 'Medication Refill Request', 
+      message: 'Robert Johnson requested a refill for their prescription', 
+      time: '2 hours ago', 
+      type: 'action',
+      patientId: 'P-1003',
+      actionable: true
+    }
   ];
   
   const recentTasks = [
-    { id: 1, title: 'Review Lab Results', patient: 'Emily Chen', dueDate: 'Today, 2:00 PM', priority: 'high', completed: false },
-    { id: 2, title: 'Update Treatment Plan', patient: 'James Wilson', dueDate: 'Today, 5:00 PM', priority: 'medium', completed: false },
-    { id: 3, title: 'Call Patient for Follow-up', patient: 'Maria Garcia', dueDate: 'Tomorrow, 10:00 AM', priority: 'medium', completed: false },
-    { id: 4, title: 'Complete Medical Records', patient: 'Robert Johnson', dueDate: 'Yesterday', priority: 'high', completed: true },
-    { id: 5, title: 'Insurance Verification', patient: 'Michael Brown', dueDate: 'Yesterday', priority: 'low', completed: true }
+    { 
+      id: 1, 
+      title: 'Review Lab Results', 
+      patient: 'Emily Chen', 
+      patientId: 'P-1004',
+      dueDate: 'Today, 2:00 PM', 
+      priority: 'high', 
+      completed: false,
+      type: 'clinical'
+    },
+    { 
+      id: 2, 
+      title: 'Update Treatment Plan', 
+      patient: 'James Wilson', 
+      patientId: 'P-1001',
+      dueDate: 'Today, 5:00 PM', 
+      priority: 'medium', 
+      completed: false,
+      type: 'clinical'
+    },
+    { 
+      id: 3, 
+      title: 'Call Patient for Follow-up', 
+      patient: 'Maria Garcia', 
+      patientId: 'P-1002',
+      dueDate: 'Tomorrow, 10:00 AM', 
+      priority: 'medium', 
+      completed: false,
+      type: 'administrative'
+    },
+    { 
+      id: 4, 
+      title: 'Complete Medical Records', 
+      patient: 'Robert Johnson', 
+      patientId: 'P-1003',
+      dueDate: 'Yesterday', 
+      priority: 'high', 
+      completed: true,
+      type: 'documentation'
+    },
+    { 
+      id: 5, 
+      title: 'Insurance Verification', 
+      patient: 'Michael Brown', 
+      patientId: 'P-1005',
+      dueDate: 'Yesterday', 
+      priority: 'low', 
+      completed: true,
+      type: 'administrative'
+    }
   ];
 
   const getStatusBadge = (status: string) => {
@@ -83,6 +208,8 @@ const ClinicalDashboard = () => {
   const getNotificationIcon = (type: string) => {
     switch(type) {
       case 'alert':
+        return <TestTube className="h-5 w-5 text-blue-500" />;
+      case 'critical':
         return <AlertCircle className="h-5 w-5 text-red-500" />;
       case 'info':
         return <Bell className="h-5 w-5 text-blue-500" />;
@@ -104,6 +231,10 @@ const ClinicalDashboard = () => {
       default:
         return <Badge variant="outline">{priority}</Badge>;
     }
+  };
+
+  const handlePatientClick = (patientId: string) => {
+    navigate(`/patients/${patientId}`);
   };
 
   return (
@@ -163,17 +294,36 @@ const ClinicalDashboard = () => {
               <CardContent className="p-0">
                 <div className="divide-y">
                   {upcomingAppointments.slice(0, 4).map(appointment => (
-                    <div key={appointment.id} className="flex justify-between items-center p-4 hover:bg-muted/50">
-                      <div>
-                        <div className="font-medium">{appointment.patientName}</div>
+                    <div key={appointment.id} className="flex justify-between items-center p-4 hover:bg-muted/50 cursor-pointer"
+                         onClick={() => handlePatientClick(appointment.patientId)}>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <div className="font-medium">{appointment.patientName}</div>
+                          <Badge variant="outline" className="text-xs">{appointment.patientId}</Badge>
+                        </div>
                         <div className="text-sm text-muted-foreground flex items-center mt-1">
                           <Clock className="h-3 w-3 mr-1" />
                           {appointment.time} - {appointment.type}
                         </div>
+                        <div className="text-xs text-muted-foreground">
+                          Last visit: {appointment.lastVisit}
+                        </div>
+                        {appointment.alerts.length > 0 && (
+                          <div className="flex gap-1 mt-1">
+                            {appointment.alerts.map((alert, index) => (
+                              <Badge key={index} variant="outline" className="text-xs bg-yellow-50 text-yellow-700">
+                                {alert}
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
                       </div>
                       <div className="flex items-center gap-2">
                         {getStatusBadge(appointment.status)}
-                        <Button variant="ghost" size="sm" onClick={() => navigate('/appointments')}>
+                        <Button variant="ghost" size="sm" onClick={(e) => {
+                          e.stopPropagation();
+                          navigate('/appointments');
+                        }}>
                           View
                         </Button>
                       </div>
@@ -203,7 +353,20 @@ const ClinicalDashboard = () => {
                       <div className="flex-1">
                         <div className="font-medium">{notification.title}</div>
                         <div className="text-sm text-muted-foreground mt-1">{notification.message}</div>
-                        <div className="text-xs text-muted-foreground mt-1">{notification.time}</div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-xs text-muted-foreground">{notification.time}</span>
+                          {notification.patientId && (
+                            <Badge variant="outline" className="text-xs cursor-pointer"
+                                   onClick={() => handlePatientClick(notification.patientId!)}>
+                              {notification.patientId}
+                            </Badge>
+                          )}
+                        </div>
+                        {notification.actionable && (
+                          <Button variant="outline" size="sm" className="mt-2">
+                            Take Action
+                          </Button>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -354,12 +517,13 @@ const ClinicalDashboard = () => {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-lg">My Assigned Patients</CardTitle>
-              <CardDescription>Patients under your care</CardDescription>
+              <CardDescription>Patients under your care with quick access to their records</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
                 {Array(5).fill(0).map((_, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div key={i} className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 cursor-pointer"
+                       onClick={() => handlePatientClick(`P-100${i + 1}`)}>
                     <div className="flex items-center gap-4">
                       <Avatar className="h-10 w-10">
                         <div className="flex h-full w-full items-center justify-center bg-muted rounded-full">
@@ -369,9 +533,18 @@ const ClinicalDashboard = () => {
                       <div>
                         <div className="font-medium">{["James Wilson", "Maria Garcia", "Emily Chen", "Robert Johnson", "Sarah Lee"][i]}</div>
                         <div className="text-sm text-muted-foreground flex items-center gap-2">
-                          <span>ID: P-{1000 + i}</span>
+                          <span>ID: P-100{i + 1}</span>
                           <span>•</span>
                           <span>{["Cardiology", "Oncology", "Neurology", "Orthopedics", "General"][i]}</span>
+                        </div>
+                        <div className="text-xs text-muted-foreground flex items-center gap-2 mt-1">
+                          <span>Last visit: {["2 days ago", "1 week ago", "3 days ago", "1 day ago", "1 month ago"][i]}</span>
+                          {i < 2 && (
+                            <>
+                              <span>•</span>
+                              <span className="text-amber-600">Pending results</span>
+                            </>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -379,7 +552,12 @@ const ClinicalDashboard = () => {
                       <Badge variant={i % 2 === 0 ? "default" : "outline"} className={i % 2 === 0 ? "bg-green-100 text-green-800 hover:bg-green-100" : ""}>
                         {i % 2 === 0 ? "Active" : "Follow-up"}
                       </Badge>
-                      <Button variant="outline" size="sm" onClick={() => navigate(`/patients/${1000 + i}`)}>View</Button>
+                      <Button variant="outline" size="sm" onClick={(e) => {
+                        e.stopPropagation();
+                        handlePatientClick(`P-100${i + 1}`);
+                      }}>
+                        View
+                      </Button>
                     </div>
                   </div>
                 ))}
@@ -402,13 +580,14 @@ const ClinicalDashboard = () => {
               <CardContent className="p-0">
                 <div className="divide-y">
                   {[
-                    { patient: "James Wilson", action: "Lab results updated", time: "10 min ago" },
-                    { patient: "Maria Garcia", action: "Medication prescribed", time: "1 hour ago" },
-                    { patient: "Emily Chen", action: "Appointment scheduled", time: "2 hours ago" },
-                    { patient: "Robert Johnson", action: "Treatment plan updated", time: "Yesterday" }
+                    { patient: "James Wilson", patientId: 'P-1001', action: "Lab results updated", time: "10 min ago" },
+                    { patient: "Maria Garcia", patientId: 'P-1002', action: "Medication prescribed", time: "1 hour ago" },
+                    { patient: "Emily Chen", patientId: 'P-1004', action: "Appointment scheduled", time: "2 hours ago" },
+                    { patient: "Robert Johnson", patientId: 'P-1003', action: "Treatment plan updated", time: "Yesterday" }
                   ].map((activity, i) => (
-                    <div key={i} className="flex justify-between items-center p-4 hover:bg-muted/50">
-                      <div>
+                    <div key={i} className="flex justify-between items-center p-4 hover:bg-muted/50 cursor-pointer"
+                         onClick={() => handlePatientClick(activity.patientId)}>
+                      <div className="flex-1">
                         <div className="font-medium">{activity.patient}</div>
                         <div className="text-sm text-muted-foreground">{activity.action}</div>
                       </div>
@@ -427,7 +606,8 @@ const ClinicalDashboard = () => {
               <CardContent className="p-0">
                 <div className="divide-y">
                   {upcomingAppointments.map((appointment, i) => (
-                    <div key={i} className="flex justify-between items-center p-4 hover:bg-muted/50">
+                    <div key={i} className="flex justify-between items-center p-4 hover:bg-muted/50 cursor-pointer"
+                         onClick={() => handlePatientClick(appointment.patientId)}>
                       <div>
                         <div className="font-medium">{appointment.patientName}</div>
                         <div className="text-sm text-muted-foreground">
@@ -471,7 +651,13 @@ const ClinicalDashboard = () => {
                       <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary" />
                       <div>
                         <div className="font-medium">{task.title}</div>
-                        <div className="text-sm text-muted-foreground">Patient: {task.patient}</div>
+                        <div className="text-sm text-muted-foreground flex items-center gap-2">
+                          <span>Patient: {task.patient}</span>
+                          <Badge variant="outline" className="text-xs cursor-pointer"
+                                 onClick={() => handlePatientClick(task.patientId)}>
+                            {task.patientId}
+                          </Badge>
+                        </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
