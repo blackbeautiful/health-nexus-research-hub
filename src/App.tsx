@@ -1,15 +1,13 @@
+
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { QueryClient } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import LoginPage from '@/pages/auth/login';
-import RegisterPage from '@/pages/auth/register';
-import ForgotPasswordPage from '@/pages/auth/forgot-password';
-import DashboardPage from '@/pages/dashboards/dashboard';
-import ClinicalDashboardPage from '@/pages/dashboards/clinical-dashboard';
+import DashboardPage from '@/pages/dashboards/clinical-dashboard';
 import ResearcherDashboardPage from '@/pages/dashboards/researcher-dashboard';
 import AdminDashboardPage from '@/pages/dashboards/admin-dashboard';
-import PatientPortalSupportPage from '@/pages/patient-portal/support';
+import PatientDashboard from '@/pages/dashboards/patient-dashboard';
 import PatientsListPage from '@/pages/patients/list';
 import PatientDetailsPage from '@/pages/patients/[patientId]';
 import PatientRegistrationPage from '@/pages/patients/register';
@@ -35,6 +33,7 @@ import PatientHistoryPage from '@/pages/medical-records/history';
 import DiagnosesPage from '@/pages/medical-records/diagnoses';
 import ImagingResultsPage from '@/pages/medical-records/imaging';
 import ExternalRecordsPage from '@/pages/medical-records/external';
+import MedicalRecordsPage from '@/pages/medical-records/index';
 import AppointmentsPage from '@/pages/appointments/appointments';
 import CheckInPage from '@/pages/appointments/checkin';
 import MessagesPage from '@/pages/messages/messages';
@@ -49,6 +48,7 @@ import ProtocolDeviationsPage from '@/pages/studies/protocol-deviations';
 import SiteVisitsPage from '@/pages/studies/site-visits';
 import StudyFinancePage from '@/pages/studies/finance';
 import QuizManagementPage from '@/pages/studies/quiz-management';
+import RecruitmentPage from '@/pages/studies/recruitment';
 import DataCollectionPage from '@/pages/research-data/collection';
 import DataExportsPage from '@/pages/research-data/exports';
 import ResearchLabResultsPage from '@/pages/research-data/lab-results';
@@ -69,6 +69,7 @@ import TreatmentOutcomesPage from '@/pages/clinical-reports/outcomes';
 import PatientAnalyticsPage from '@/pages/clinical-reports/patient-analytics';
 import ProviderMetricsPage from '@/pages/clinical-reports/provider-metrics';
 import MedicationReportsPage from '@/pages/clinical-reports/medication-reports';
+import HandoffReportsPage from '@/pages/clinical-reports/handoff';
 import UsersPage from '@/pages/users/users';
 import RolesPermissionsPage from '@/pages/users/roles';
 import AccessRequestsPage from '@/pages/users/access-requests';
@@ -82,65 +83,27 @@ import AuditLogsPage from '@/pages/audit-logs/audit-logs';
 import SupportPage from '@/pages/support/support';
 import HelpPage from '@/pages/help/help';
 import NotFoundPage from '@/pages/404';
-import PatientDashboard from '@/pages/dashboards/patient-dashboard';
-import PatientPortalSupportPage from '@/pages/patient-portal/support';
-import HandoffReportsPage from '@/pages/clinical-reports/handoff';
-import ProtocolDeviationsPage from '@/pages/studies/protocol-deviations';
-import SiteVisitsPage from '@/pages/studies/site-visits';
-import StudyFinancePage from '@/pages/studies/finance';
-import QuizManagementPage from '@/pages/studies/quiz-management';
-import RecruitmentPage from '@/pages/studies/recruitment';
-import BiospecimenTrackingPage from '@/pages/research-data/biospecimen';
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <QueryClient>
+    <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Toaster />
         <Routes>
           {/* Authentication Routes */}
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          
-          {/* Onboarding Routes */}
-          <Route path="/onboarding/facility-setup" element={<FacilitySetupPage />} />
           
           {/* Main Dashboard Routes */}
           <Route path="/" element={<DashboardPage />} />
-          <Route path="/dashboard/clinical" element={<ClinicalDashboardPage />} />
+          <Route path="/dashboard/clinical" element={<DashboardPage />} />
           <Route path="/dashboard/researcher" element={<ResearcherDashboardPage />} />
-          <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+          <Route path="/dashboard/admin" element={<AdminDashboardPage />} />
           
           {/* Patient Portal Routes */}
-          <Route path="/patient-portal/dashboard" element={<PatientDashboard />} />
-          <Route path="/patient-portal/profile" element={<div>Patient Profile</div>} />
-          <Route path="/patient-portal/medical-records" element={<div>Patient Medical Records</div>} />
-          <Route path="/patient-portal/lab-results" element={<div>Patient Lab Results</div>} />
-          <Route path="/patient-portal/imaging" element={<div>Patient Imaging</div>} />
-          <Route path="/patient-portal/medications" element={<div>Patient Medications</div>} />
-          <Route path="/patient-portal/appointments" element={<div>Patient Appointments</div>} />
-          <Route path="/patient-portal/messages" element={<div>Patient Messages</div>} />
-          <Route path="/patient-portal/care-team" element={<div>Patient Care Team</div>} />
-          <Route path="/patient-portal/symptoms" element={<div>Patient Symptom Tracker</div>} />
-          <Route path="/patient-portal/education" element={<div>Patient Education</div>} />
-          <Route path="/patient-portal/treatment-plan" element={<div>Patient Treatment Plan</div>} />
-          <Route path="/patient-portal/support" element={<PatientPortalSupportPage />} />
+          <Route path="/dashboard/patient" element={<PatientDashboard />} />
           
-          {/* Participant Portal Routes */}
-          <Route path="/participant-portal/dashboard" element={<div>Participant Dashboard</div>} />
-          <Route path="/participant-portal/study" element={<div>Participant Study</div>} />
-          <Route path="/participant-portal/schedule" element={<div>Participant Schedule</div>} />
-          <Route path="/participant-portal/consent" element={<div>Participant Consent</div>} />
-          <Route path="/participant-portal/data" element={<div>Participant Data</div>} />
-          <Route path="/participant-portal/forms" element={<div>Participant Forms</div>} />
-          <Route path="/participant-portal/lab-results" element={<div>Participant Lab Results</div>} />
-          <Route path="/participant-portal/visits" element={<div>Participant Visits</div>} />
-          <Route path="/participant-portal/messages" element={<div>Participant Messages</div>} />
-          <Route path="/participant-portal/information" element={<div>Participant Information</div>} />
-          <Route path="/participant-portal/contact" element={<div>Participant Contact</div>} />
-          <Route path="/participant-portal/withdraw" element={<div>Participant Withdraw</div>} />
-
           {/* Patient Management Routes */}
           <Route path="/patients" element={<PatientsListPage />} />
           <Route path="/patients/:patientId" element={<PatientDetailsPage />} />
@@ -171,6 +134,7 @@ function App() {
           <Route path="/lab/samples" element={<SamplesPage />} />
 
           {/* Medical Records Routes */}
+          <Route path="/medical-records" element={<MedicalRecordsPage />} />
           <Route path="/medical-records/history" element={<PatientHistoryPage />} />
           <Route path="/medical-records/diagnoses" element={<DiagnosesPage />} />
           <Route path="/medical-records/imaging" element={<ImagingResultsPage />} />
@@ -226,7 +190,7 @@ function App() {
           <Route path="/clinical-reports/patient-analytics" element={<PatientAnalyticsPage />} />
           <Route path="/clinical-reports/provider-metrics" element={<ProviderMetricsPage />} />
           <Route path="/clinical-reports/medications" element={<MedicationReportsPage />} />
-          <Route path="/reports/handoff" element={<HandoffReportsPage />} />
+          <Route path="/clinical-reports/handoff" element={<HandoffReportsPage />} />
 
           {/* User Management Routes */}
           <Route path="/users" element={<UsersPage />} />
@@ -254,7 +218,7 @@ function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
-    </QueryClient>
+    </QueryClientProvider>
   );
 }
 

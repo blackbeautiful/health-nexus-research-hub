@@ -75,9 +75,9 @@ const fileIcons: Record<string, React.ElementType> = {
 };
 
 // Document status badge variants
-const statusVariants: Record<string, string> = {
-  approved: 'success',
-  review: 'warning',
+const statusVariants: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
+  approved: 'secondary',
+  review: 'outline', 
   draft: 'default',
   rejected: 'destructive'
 };
