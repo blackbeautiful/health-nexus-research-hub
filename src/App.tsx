@@ -1,13 +1,15 @@
-
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import LoginPage from '@/pages/auth/login';
+import RegisterPage from '@/pages/auth/register';
+import ForgotPasswordPage from '@/pages/auth/forgot-password';
 import DashboardPage from '@/pages/dashboards/clinical-dashboard';
 import ResearcherDashboardPage from '@/pages/dashboards/researcher-dashboard';
 import AdminDashboardPage from '@/pages/dashboards/admin-dashboard';
 import PatientDashboard from '@/pages/dashboards/patient-dashboard';
+import AllLinksPage from '@/pages/all-links';
 import PatientsListPage from '@/pages/patients/list';
 import PatientDetailsPage from '@/pages/patients/[patientId]';
 import PatientRegistrationPage from '@/pages/patients/register';
@@ -94,6 +96,8 @@ function App() {
         <Routes>
           {/* Authentication Routes */}
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           
           {/* Main Dashboard Routes */}
           <Route path="/" element={<DashboardPage />} />
@@ -103,6 +107,9 @@ function App() {
           
           {/* Patient Portal Routes */}
           <Route path="/dashboard/patient" element={<PatientDashboard />} />
+          
+          {/* Special Navigation Routes */}
+          <Route path="/all-links" element={<AllLinksPage />} />
           
           {/* Patient Management Routes */}
           <Route path="/patients" element={<PatientsListPage />} />

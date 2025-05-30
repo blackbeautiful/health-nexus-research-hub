@@ -1,4 +1,3 @@
-
 import { 
   Home, 
   Users, 
@@ -34,8 +33,8 @@ import {
   HeartPulse,
   BarChart,
   Microscope,
-  BellRing, // Fixed: Added BellRing instead of Bell
-  DatabaseZap // Fixed: Added DatabaseZap instead of DatabaseSettings
+  BellRing,
+  DatabaseZap
 } from 'lucide-react';
 import { MenuItemType } from './SidebarMenuItem';
 
@@ -62,7 +61,7 @@ export const clinicalPracticeItems: MenuItemType[] = [
   { 
     title: "Clinical Workflows", 
     icon: Stethoscope, 
-    url: "/clinical-workflows",
+    url: "/clinical-workflows/notes",
     items: [
       { title: "Clinical Notes", icon: FileText, url: "/clinical-workflows/notes" },
       { title: "New Note", icon: FileText2, url: "/clinical-workflows/notes/new" },
@@ -84,7 +83,8 @@ export const clinicalPracticeItems: MenuItemType[] = [
       { title: "Treatment Outcomes", icon: ChartBar, url: "/clinical-reports/outcomes" },
       { title: "Patient Analytics", icon: BarChart2, url: "/clinical-reports/patient-analytics" },
       { title: "Provider Metrics", icon: FileSpreadsheet, url: "/clinical-reports/provider-metrics" },
-      { title: "Medication Reports", icon: Pill, url: "/clinical-reports/medications" }
+      { title: "Medication Reports", icon: Pill, url: "/clinical-reports/medications" },
+      { title: "Handoff Reports", icon: FileText, url: "/clinical-reports/handoff" }
     ]
   },
   { 
@@ -134,7 +134,7 @@ export const researchStudyItems: MenuItemType[] = [
   { 
     title: "Research Data", 
     icon: Database, 
-    url: "/research-data",
+    url: "/research-data/collection",
     items: [
       { title: "Data Collection", icon: Clipboard, url: "/research-data/collection" },
       { title: "Data Exports", icon: FileSpreadsheet, url: "/research-data/exports" },
@@ -167,7 +167,8 @@ export const adminMenuItems: MenuItemType[] = [
     ]
   },
   { title: "Compliance", icon: ShieldAlert, url: "/compliance" },
-  { title: "Audit Logs", icon: FileLock, url: "/audit-logs" }
+  { title: "Audit Logs", icon: FileLock, url: "/audit-logs" },
+  { title: "All Links", icon: FileText, url: "/all-links" }
 ];
 
 // Legacy arrays kept for compatibility
