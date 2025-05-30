@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { DateRangePicker } from '@/components/ui/date-range-picker';
+import { DatePickerWithRange } from '@/components/ui/date-range-picker';
 import { 
   Download, FileText, Database, Calendar, Filter, Settings, 
   Clock, CheckCircle, AlertCircle, FileX 
@@ -167,7 +167,7 @@ const DataExportsPage = () => {
 
                     <div>
                       <Label>Date Range</Label>
-                      <DateRangePicker className="w-full" />
+                      <DatePickerWithRange className="w-full" />
                     </div>
                   </div>
 
