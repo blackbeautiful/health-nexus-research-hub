@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -350,7 +349,7 @@ const AllLinksPage = () => {
                             <h3 className="font-medium">{page.title}</h3>
                             <p className="text-sm text-gray-600">{page.path}</p>
                           </div>
-                          <Badge variant="outline" className="mr-3">
+                          <Badge variant="outline">
                             {page.category}
                           </Badge>
                           <Badge variant="secondary">
