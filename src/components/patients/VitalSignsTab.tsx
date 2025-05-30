@@ -59,7 +59,7 @@ const VitalSignsTab: React.FC<VitalSignsTabProps> = ({ patientId }) => {
   }));
 
   const getVitalStatus = (vital: string, value: number) => {
-    const ranges = {
+    const ranges: Record<string, { normal: number[]; high?: number[] }> = {
       systolic: { normal: [90, 120], high: [120, 140] },
       diastolic: { normal: [60, 80], high: [80, 90] },
       heartRate: { normal: [60, 100] },
@@ -68,7 +68,7 @@ const VitalSignsTab: React.FC<VitalSignsTabProps> = ({ patientId }) => {
       oxygenSaturation: { normal: [95, 100] }
     };
 
-    const range = ranges[vital as keyof typeof ranges];
+    const range = ranges[vital];
     if (!range) return 'normal';
 
     if (vital === 'oxygenSaturation') {
