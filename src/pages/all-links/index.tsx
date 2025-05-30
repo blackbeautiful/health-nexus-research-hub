@@ -257,13 +257,13 @@ const AllLinksPage = () => {
             
             <div className="flex flex-wrap gap-2">
               <Badge variant="outline">{filteredPages.length} pages found</Badge>
-              <Badge className="bg-green-100 text-green-800">
+              <Badge variant="secondary">
                 {allPages.filter(p => p.status === 'active').length} Active
               </Badge>
-              <Badge className="bg-yellow-100 text-yellow-800">
+              <Badge variant="secondary">
                 {allPages.filter(p => p.status === 'placeholder').length} Placeholder
               </Badge>
-              <Badge className="bg-red-100 text-red-800">
+              <Badge variant="destructive">
                 {allPages.filter(p => p.status === 'missing').length} Missing
               </Badge>
             </div>
@@ -300,7 +300,7 @@ const AllLinksPage = () => {
                               <IconComponent className="w-4 h-4 mr-2 text-gray-600" />
                               <h3 className="font-medium text-sm">{page.title}</h3>
                             </div>
-                            <Badge className={`text-xs ${getStatusColor(page.status)}`}>
+                            <Badge variant="secondary">
                               {page.status}
                             </Badge>
                           </div>
@@ -353,7 +353,7 @@ const AllLinksPage = () => {
                           <Badge variant="outline" className="mr-3">
                             {page.category}
                           </Badge>
-                          <Badge className={getStatusColor(page.status)}>
+                          <Badge variant="secondary">
                             {page.status}
                           </Badge>
                         </div>
