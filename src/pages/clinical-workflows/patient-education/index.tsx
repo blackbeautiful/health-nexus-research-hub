@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import PageHeader from '@/components/common/PageHeader';
@@ -300,295 +301,295 @@ const PatientEducationPage = () => {
             Patient Assignments
           </TabsTrigger>
         </TabsList>
-      </Tabs>
-      
-      <TabsContent value="resources" className="mt-0">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Total Resources</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{educationResources.length}</div>
-              <div className="text-xs text-muted-foreground mt-1">
-                Available education materials
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Total Views</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {educationResources.reduce((total, resource) => total + resource.viewCount, 0)}
-              </div>
-              <div className="text-xs text-muted-foreground mt-1">
-                Across all resources
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Total Assignments</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {educationResources.reduce((total, resource) => total + resource.assignCount, 0)}
-              </div>
-              <div className="text-xs text-muted-foreground mt-1">
-                Resources assigned to patients
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Avg. Rating</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold flex items-center">
-                {(educationResources.reduce((total, resource) => total + resource.rating, 0) / educationResources.length).toFixed(1)}
-                <Star className="h-4 w-4 text-amber-500 ml-1" />
-              </div>
-              <div className="text-xs text-muted-foreground mt-1">
-                Patient satisfaction rating
-              </div>
-            </CardContent>
-          </Card>
-        </div>
         
-        <div className="mb-6 flex flex-col sm:flex-row gap-4 justify-between">
-          <div className="flex flex-wrap gap-3">
-            <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search resources..."
-                className="pl-8 w-full sm:w-[250px]"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
+        <TabsContent value="resources" className="mt-0">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">Total Resources</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{educationResources.length}</div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  Available education materials
+                </div>
+              </CardContent>
+            </Card>
             
-            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-              <SelectTrigger className="w-[180px]">
-                <Filter className="mr-2 h-4 w-4" />
-                <SelectValue placeholder="Filter by category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="Treatment">Treatment</SelectItem>
-                <SelectItem value="Support">Support</SelectItem>
-                <SelectItem value="Lifestyle">Lifestyle</SelectItem>
-              </SelectContent>
-            </Select>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">Total Views</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {educationResources.reduce((total, resource) => total + resource.viewCount, 0)}
+                </div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  Across all resources
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">Total Assignments</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {educationResources.reduce((total, resource) => total + resource.assignCount, 0)}
+                </div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  Resources assigned to patients
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">Avg. Rating</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold flex items-center">
+                  {(educationResources.reduce((total, resource) => total + resource.rating, 0) / educationResources.length).toFixed(1)}
+                  <Star className="h-4 w-4 text-amber-500 ml-1" />
+                </div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  Patient satisfaction rating
+                </div>
+              </CardContent>
+            </Card>
           </div>
           
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm">
-              <Share2 className="mr-2 h-4 w-4" />
-              Share
-            </Button>
-            <Button variant="outline" size="sm">
-              <Download className="mr-2 h-4 w-4" />
-              Export
-            </Button>
-          </div>
-        </div>
-        
-        <Card>
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[50px]">
-                      <Checkbox />
-                    </TableHead>
-                    <TableHead className="min-w-[200px]">Title</TableHead>
-                    <TableHead className="min-w-[100px]">Type</TableHead>
-                    <TableHead className="min-w-[120px]">Category</TableHead>
-                    <TableHead className="min-w-[120px]">Topic</TableHead>
-                    <TableHead className="min-w-[80px]">Views</TableHead>
-                    <TableHead className="min-w-[80px]">Rating</TableHead>
-                    <TableHead className="min-w-[120px]">Last Updated</TableHead>
-                    <TableHead className="min-w-[100px]">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredResources.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={9} className="text-center py-10 text-muted-foreground">
-                        No resources match your criteria
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    filteredResources.map((resource) => (
-                      <TableRow key={resource.id}>
-                        <TableCell>
-                          <Checkbox />
-                        </TableCell>
-                        <TableCell>
-                          <div className="font-medium">{resource.title}</div>
-                          <div className="text-xs text-muted-foreground">{resource.id}</div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center">
-                            {getResourceTypeIcon(resource.type)}
-                            <span className="capitalize">{resource.type}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell>{resource.category}</TableCell>
-                        <TableCell>{resource.topic}</TableCell>
-                        <TableCell>{resource.viewCount.toLocaleString()}</TableCell>
-                        <TableCell>
-                          <div className="flex items-center">
-                            {resource.rating} <Star className="h-3 w-3 text-amber-500 ml-1" fill="currentColor" />
-                          </div>
-                        </TableCell>
-                        <TableCell>{resource.lastUpdated}</TableCell>
-                        <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-8 w-8">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuItem onClick={() => console.log(`View ${resource.id}`)}>
-                                <Eye className="mr-2 h-4 w-4" />
-                                View Resource
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => console.log(`Edit ${resource.id}`)}>
-                                <FileText className="mr-2 h-4 w-4" />
-                                Edit Details
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => console.log(`Assign ${resource.id}`)}>
-                                <Users className="mr-2 h-4 w-4" />
-                                Assign to Patient
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem onClick={() => console.log(`Download ${resource.id}`)}>
-                                <Download className="mr-2 h-4 w-4" />
-                                Download
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-          </CardContent>
-          <CardFooter className="border-t p-4 flex justify-between">
-            <div className="text-sm text-muted-foreground">
-              Showing {filteredResources.length} of {educationResources.length} resources
-            </div>
-            <Button variant="outline" size="sm">Load More</Button>
-          </CardFooter>
-        </Card>
-      </TabsContent>
-      
-      <TabsContent value="assignments" className="mt-0">
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle>Patient Assignments</CardTitle>
-            <CardDescription>Track educational resources assigned to patients</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col sm:flex-row gap-4 justify-between mb-6">
+          <div className="mb-6 flex flex-col sm:flex-row gap-4 justify-between">
+            <div className="flex flex-wrap gap-3">
               <div className="relative">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="search"
-                  placeholder="Search assignments..."
-                  className="pl-8 w-full sm:w-[300px]"
+                  placeholder="Search resources..."
+                  className="pl-8 w-full sm:w-[250px]"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
               
-              <Button size="sm" onClick={() => console.log('Assign new resource')}>
-                <Plus className="mr-2 h-4 w-4" />
-                Assign Resource
-              </Button>
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <SelectTrigger className="w-[180px]">
+                  <Filter className="mr-2 h-4 w-4" />
+                  <SelectValue placeholder="Filter by category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  <SelectItem value="Treatment">Treatment</SelectItem>
+                  <SelectItem value="Support">Support</SelectItem>
+                  <SelectItem value="Lifestyle">Lifestyle</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="min-w-[120px]">Assignment ID</TableHead>
-                    <TableHead className="min-w-[150px]">Patient</TableHead>
-                    <TableHead className="min-w-[200px]">Resource</TableHead>
-                    <TableHead className="min-w-[150px]">Assigned By</TableHead>
-                    <TableHead className="min-w-[120px]">Assigned Date</TableHead>
-                    <TableHead className="min-w-[120px]">Due Date</TableHead>
-                    <TableHead className="min-w-[100px]">Status</TableHead>
-                    <TableHead className="min-w-[100px]">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredAssignments.length === 0 ? (
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm">
+                <Share2 className="mr-2 h-4 w-4" />
+                Share
+              </Button>
+              <Button variant="outline" size="sm">
+                <Download className="mr-2 h-4 w-4" />
+                Export
+              </Button>
+            </div>
+          </div>
+          
+          <Card>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
                     <TableRow>
-                      <TableCell colSpan={8} className="text-center py-10 text-muted-foreground">
-                        No assignments match your criteria
-                      </TableCell>
+                      <TableHead className="w-[50px]">
+                        <Checkbox />
+                      </TableHead>
+                      <TableHead className="min-w-[200px]">Title</TableHead>
+                      <TableHead className="min-w-[100px]">Type</TableHead>
+                      <TableHead className="min-w-[120px]">Category</TableHead>
+                      <TableHead className="min-w-[120px]">Topic</TableHead>
+                      <TableHead className="min-w-[80px]">Views</TableHead>
+                      <TableHead className="min-w-[80px]">Rating</TableHead>
+                      <TableHead className="min-w-[120px]">Last Updated</TableHead>
+                      <TableHead className="min-w-[100px]">Actions</TableHead>
                     </TableRow>
-                  ) : (
-                    filteredAssignments.map((assignment) => (
-                      <TableRow key={assignment.id}>
-                        <TableCell className="font-medium">{assignment.id}</TableCell>
-                        <TableCell>
-                          <div>
-                            <div>{assignment.patientName}</div>
-                            <div className="text-xs text-muted-foreground">{assignment.patientId}</div>
-                          </div>
-                        </TableCell>
-                        <TableCell>{assignment.resource}</TableCell>
-                        <TableCell>{assignment.assignedBy}</TableCell>
-                        <TableCell>{assignment.assignDate}</TableCell>
-                        <TableCell>{assignment.dueDate || 'N/A'}</TableCell>
-                        <TableCell>
-                          <Badge variant="outline" className={getStatusColor(assignment.status)}>
-                            {assignment.status.charAt(0).toUpperCase() + assignment.status.slice(1)}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-8 w-8">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuItem onClick={() => console.log(`View ${assignment.id}`)}>
-                                <Eye className="mr-2 h-4 w-4" />
-                                View Details
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => console.log(`Remind ${assignment.id}`)}>
-                                <Mail className="mr-2 h-4 w-4" />
-                                Send Reminder
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => console.log(`Mark ${assignment.id}`)}>
-                                <Calendar className="mr-2 h-4 w-4" />
-                                {assignment.status === 'completed' ? 'Mark Incomplete' : 'Mark Completed'}
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredResources.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={9} className="text-center py-10 text-muted-foreground">
+                          No resources match your criteria
                         </TableCell>
                       </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
+                    ) : (
+                      filteredResources.map((resource) => (
+                        <TableRow key={resource.id}>
+                          <TableCell>
+                            <Checkbox />
+                          </TableCell>
+                          <TableCell>
+                            <div className="font-medium">{resource.title}</div>
+                            <div className="text-xs text-muted-foreground">{resource.id}</div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center">
+                              {getResourceTypeIcon(resource.type)}
+                              <span className="capitalize">{resource.type}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell>{resource.category}</TableCell>
+                          <TableCell>{resource.topic}</TableCell>
+                          <TableCell>{resource.viewCount.toLocaleString()}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center">
+                              {resource.rating} <Star className="h-3 w-3 text-amber-500 ml-1" fill="currentColor" />
+                            </div>
+                          </TableCell>
+                          <TableCell>{resource.lastUpdated}</TableCell>
+                          <TableCell>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-8 w-8">
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <DropdownMenuItem onClick={() => console.log(`View ${resource.id}`)}>
+                                  <Eye className="mr-2 h-4 w-4" />
+                                  View Resource
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => console.log(`Edit ${resource.id}`)}>
+                                  <FileText className="mr-2 h-4 w-4" />
+                                  Edit Details
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => console.log(`Assign ${resource.id}`)}>
+                                  <Users className="mr-2 h-4 w-4" />
+                                  Assign to Patient
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={() => console.log(`Download ${resource.id}`)}>
+                                  <Download className="mr-2 h-4 w-4" />
+                                  Download
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+            <CardFooter className="border-t p-4 flex justify-between">
+              <div className="text-sm text-muted-foreground">
+                Showing {filteredResources.length} of {educationResources.length} resources
+              </div>
+              <Button variant="outline" size="sm">Load More</Button>
+            </CardFooter>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="assignments" className="mt-0">
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle>Patient Assignments</CardTitle>
+              <CardDescription>Track educational resources assigned to patients</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col sm:flex-row gap-4 justify-between mb-6">
+                <div className="relative">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="search"
+                    placeholder="Search assignments..."
+                    className="pl-8 w-full sm:w-[300px]"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+                
+                <Button size="sm" onClick={() => console.log('Assign new resource')}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Assign Resource
+                </Button>
+              </div>
+              
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="min-w-[120px]">Assignment ID</TableHead>
+                      <TableHead className="min-w-[150px]">Patient</TableHead>
+                      <TableHead className="min-w-[200px]">Resource</TableHead>
+                      <TableHead className="min-w-[150px]">Assigned By</TableHead>
+                      <TableHead className="min-w-[120px]">Assigned Date</TableHead>
+                      <TableHead className="min-w-[120px]">Due Date</TableHead>
+                      <TableHead className="min-w-[100px]">Status</TableHead>
+                      <TableHead className="min-w-[100px]">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredAssignments.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={8} className="text-center py-10 text-muted-foreground">
+                          No assignments match your criteria
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      filteredAssignments.map((assignment) => (
+                        <TableRow key={assignment.id}>
+                          <TableCell className="font-medium">{assignment.id}</TableCell>
+                          <TableCell>
+                            <div>
+                              <div>{assignment.patientName}</div>
+                              <div className="text-xs text-muted-foreground">{assignment.patientId}</div>
+                            </div>
+                          </TableCell>
+                          <TableCell>{assignment.resource}</TableCell>
+                          <TableCell>{assignment.assignedBy}</TableCell>
+                          <TableCell>{assignment.assignDate}</TableCell>
+                          <TableCell>{assignment.dueDate || 'N/A'}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline" className={getStatusColor(assignment.status)}>
+                              {assignment.status.charAt(0).toUpperCase() + assignment.status.slice(1)}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-8 w-8">
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <DropdownMenuItem onClick={() => console.log(`View ${assignment.id}`)}>
+                                  <Eye className="mr-2 h-4 w-4" />
+                                  View Details
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => console.log(`Remind ${assignment.id}`)}>
+                                  <Mail className="mr-2 h-4 w-4" />
+                                  Send Reminder
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => console.log(`Mark ${assignment.id}`)}>
+                                  <Calendar className="mr-2 h-4 w-4" />
+                                  {assignment.status === 'completed' ? 'Mark Incomplete' : 'Mark Completed'}
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
             </CardContent>
             <CardFooter className="border-t p-4 flex justify-between">
               <div className="text-sm text-muted-foreground">
@@ -596,111 +597,111 @@ const PatientEducationPage = () => {
               </div>
               <Button variant="outline" size="sm">View All</Button>
             </CardFooter>
-          </CardContent>
-        </Card>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm font-medium">Assignment Status</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Assigned</span>
-                    <span className="font-medium">{patientAssignments.filter(a => a.status === 'assigned').length}</span>
-                  </div>
-                  <div className="h-2 bg-muted rounded-full">
-                    <div className="h-2 bg-blue-500 rounded-full" style={{ 
-                      width: `${(patientAssignments.filter(a => a.status === 'assigned').length / patientAssignments.length) * 100}%` 
-                    }} />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Viewed</span>
-                    <span className="font-medium">{patientAssignments.filter(a => a.status === 'viewed').length}</span>
-                  </div>
-                  <div className="h-2 bg-muted rounded-full">
-                    <div className="h-2 bg-amber-500 rounded-full" style={{ 
-                      width: `${(patientAssignments.filter(a => a.status === 'viewed').length / patientAssignments.length) * 100}%` 
-                    }} />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Completed</span>
-                    <span className="font-medium">{patientAssignments.filter(a => a.status === 'completed').length}</span>
-                  </div>
-                  <div className="h-2 bg-muted rounded-full">
-                    <div className="h-2 bg-green-500 rounded-full" style={{ 
-                      width: `${(patientAssignments.filter(a => a.status === 'completed').length / patientAssignments.length) * 100}%` 
-                    }} />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Expired</span>
-                    <span className="font-medium">{patientAssignments.filter(a => a.status === 'expired').length}</span>
-                  </div>
-                  <div className="h-2 bg-muted rounded-full">
-                    <div className="h-2 bg-red-500 rounded-full" style={{ 
-                      width: `${(patientAssignments.filter(a => a.status === 'expired').length / patientAssignments.length) * 100}%` 
-                    }} />
-                  </div>
-                </div>
-              </div>
-            </CardContent>
           </Card>
           
-          <Card className="md:col-span-2">
-            <CardHeader>
-              <CardTitle className="text-sm font-medium">Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Button variant="outline" className="h-auto py-4 justify-start" onClick={() => console.log('Send reminders')}>
-                  <Mail className="h-5 w-5 mr-3" />
-                  <div className="text-left">
-                    <div className="font-medium">Send Reminders</div>
-                    <div className="text-xs text-muted-foreground">
-                      Notify patients with pending assignments
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-sm font-medium">Assignment Status</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>Assigned</span>
+                      <span className="font-medium">{patientAssignments.filter(a => a.status === 'assigned').length}</span>
+                    </div>
+                    <div className="h-2 bg-muted rounded-full">
+                      <div className="h-2 bg-blue-500 rounded-full" style={{ 
+                        width: `${(patientAssignments.filter(a => a.status === 'assigned').length / patientAssignments.length) * 100}%` 
+                      }} />
                     </div>
                   </div>
-                </Button>
-                <Button variant="outline" className="h-auto py-4 justify-start" onClick={() => console.log('Group assignment')}>
-                  <Users className="h-5 w-5 mr-3" />
-                  <div className="text-left">
-                    <div className="font-medium">Group Assignment</div>
-                    <div className="text-xs text-muted-foreground">
-                      Assign resources to multiple patients
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>Viewed</span>
+                      <span className="font-medium">{patientAssignments.filter(a => a.status === 'viewed').length}</span>
+                    </div>
+                    <div className="h-2 bg-muted rounded-full">
+                      <div className="h-2 bg-amber-500 rounded-full" style={{ 
+                        width: `${(patientAssignments.filter(a => a.status === 'viewed').length / patientAssignments.length) * 100}%` 
+                      }} />
                     </div>
                   </div>
-                </Button>
-                <Button variant="outline" className="h-auto py-4 justify-start" onClick={() => console.log('Analytics')}>
-                  <FileText className="h-5 w-5 mr-3" />
-                  <div className="text-left">
-                    <div className="font-medium">Education Analytics</div>
-                    <div className="text-xs text-muted-foreground">
-                      View detailed effectiveness reports
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>Completed</span>
+                      <span className="font-medium">{patientAssignments.filter(a => a.status === 'completed').length}</span>
+                    </div>
+                    <div className="h-2 bg-muted rounded-full">
+                      <div className="h-2 bg-green-500 rounded-full" style={{ 
+                        width: `${(patientAssignments.filter(a => a.status === 'completed').length / patientAssignments.length) * 100}%` 
+                      }} />
                     </div>
                   </div>
-                </Button>
-                <Button variant="outline" className="h-auto py-4 justify-start" onClick={() => console.log('Upload new')}>
-                  <Plus className="h-5 w-5 mr-3" />
-                  <div className="text-left">
-                    <div className="font-medium">Create New Resource</div>
-                    <div className="text-xs text-muted-foreground">
-                      Upload or create educational material
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>Expired</span>
+                      <span className="font-medium">{patientAssignments.filter(a => a.status === 'expired').length}</span>
+                    </div>
+                    <div className="h-2 bg-muted rounded-full">
+                      <div className="h-2 bg-red-500 rounded-full" style={{ 
+                        width: `${(patientAssignments.filter(a => a.status === 'expired').length / patientAssignments.length) * 100}%` 
+                      }} />
                     </div>
                   </div>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </TabsContent>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="md:col-span-2">
+              <CardHeader>
+                <CardTitle className="text-sm font-medium">Quick Actions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Button variant="outline" className="h-auto py-4 justify-start" onClick={() => console.log('Send reminders')}>
+                    <Mail className="h-5 w-5 mr-3" />
+                    <div className="text-left">
+                      <div className="font-medium">Send Reminders</div>
+                      <div className="text-xs text-muted-foreground">
+                        Notify patients with pending assignments
+                      </div>
+                    </div>
+                  </Button>
+                  <Button variant="outline" className="h-auto py-4 justify-start" onClick={() => console.log('Group assignment')}>
+                    <Users className="h-5 w-5 mr-3" />
+                    <div className="text-left">
+                      <div className="font-medium">Group Assignment</div>
+                      <div className="text-xs text-muted-foreground">
+                        Assign resources to multiple patients
+                      </div>
+                    </div>
+                  </Button>
+                  <Button variant="outline" className="h-auto py-4 justify-start" onClick={() => console.log('Analytics')}>
+                    <FileText className="h-5 w-5 mr-3" />
+                    <div className="text-left">
+                      <div className="font-medium">Education Analytics</div>
+                      <div className="text-xs text-muted-foreground">
+                        View detailed effectiveness reports
+                      </div>
+                    </div>
+                  </Button>
+                  <Button variant="outline" className="h-auto py-4 justify-start" onClick={() => console.log('Upload new')}>
+                    <Plus className="h-5 w-5 mr-3" />
+                    <div className="text-left">
+                      <div className="font-medium">Create New Resource</div>
+                      <div className="text-xs text-muted-foreground">
+                        Upload or create educational material
+                      </div>
+                    </div>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+      </Tabs>
     </MainLayout>
   );
 };
