@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -60,6 +61,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import Logo from '@/components/common/Logo';
+import ThemeToggle from '@/components/ui/theme-toggle';
 import SidebarMenuGroup from './sidebar/SidebarMenuGroup';
 import { MenuItemType } from './sidebar/SidebarMenuItem';
 
@@ -71,7 +73,7 @@ const AppSidebar = () => {
   const { state } = useSidebar();
   const [openGroups, setOpenGroups] = useState<string[]>([]);
   const [appMode, setAppMode] = useState<AppMode>('clinical');
-  const [userRole, setUserRole] = useState<UserRole>('clinician'); // Default to clinician for testing
+  const [userRole, setUserRole] = useState<UserRole>('clinician');
   
   useEffect(() => {
     const savedMode = localStorage.getItem('appMode') as AppMode;
@@ -111,11 +113,9 @@ const AppSidebar = () => {
     }
   };
 
-  // Add a role switcher for testing purposes
   const handleRoleChange = (newRole: UserRole) => {
     setUserRole(newRole);
     localStorage.setItem('userRole', newRole);
-    // Reset to appropriate mode for the role
     if (newRole === 'admin') {
       setAppMode('admin');
     } else if (['researcher', 'pi', 'coordinator'].includes(newRole)) {
@@ -207,8 +207,12 @@ const AppSidebar = () => {
         { 
           title: "Clinical Workflows", 
           icon: Stethoscope, 
-          url: "/clinical-workflows/notes",
+          url: "/clinical-workflows",
           items: [
+            { title: "Patient Check-In", icon: ClipboardCheck, url: "/clinical-workflows/check-in" },
+            { title: "Clinical Queue", icon: Users, url: "/clinical-workflows/clinical-queue" },
+            { title: "Triage Assessment", icon: Activity, url: "/clinical-workflows/triage" },
+            { title: "SOAP Notes", icon: FileText, url: "/clinical-workflows/soap-notes" },
             { title: "Clinical Notes", icon: FileText, url: "/clinical-workflows/notes" },
             { title: "Prescriptions", icon: Pill, url: "/clinical-workflows/prescriptions" },
             { title: "Treatment Plans", icon: HeartPulse, url: "/clinical-workflows/treatment-plans" },
@@ -240,6 +244,9 @@ const AppSidebar = () => {
       title: 'Patient Care',
       items: [
         { title: "Dashboard", icon: LayoutDashboard, url: "/dashboard/clinical", onClick: handleDashboardClick },
+        { title: "Clinical Queue", icon: Users, url: "/clinical-workflows/clinical-queue" },
+        { title: "Patient Check-In", icon: ClipboardCheck, url: "/clinical-workflows/check-in" },
+        { title: "Triage Assessment", icon: Activity, url: "/clinical-workflows/triage" },
         { title: "My Patients", icon: Users, url: "/patients" },
         { title: "Vital Signs", icon: Activity, url: "/clinical-data/vitals" },
         { title: "Medication Admin", icon: Pill, url: "/clinical-workflows/medications" }
@@ -286,6 +293,8 @@ const AppSidebar = () => {
       title: 'Front Office',
       items: [
         { title: "Dashboard", icon: LayoutDashboard, url: "/dashboard/clinical", onClick: handleDashboardClick },
+        { title: "Patient Check-In", icon: ClipboardCheck, url: "/clinical-workflows/check-in" },
+        { title: "Clinical Queue", icon: Users, url: "/clinical-workflows/clinical-queue" },
         { title: "Patient Registration", icon: PlusCircle, url: "/patients/register" },
         { title: "Appointment Scheduling", icon: Calendar, url: "/appointments" },
         { title: "Check-in/Check-out", icon: ClipboardCheck, url: "/appointments/checkin" }
@@ -497,7 +506,10 @@ const AppSidebar = () => {
   return (
     <Sidebar collapsible="icon" className="border-r">
       <SidebarHeader className="flex flex-col justify-center items-center p-4 border-b space-y-4">
-        <Logo />
+        <div className="flex items-center justify-between w-full">
+          <Logo />
+          {state !== "collapsed" && <ThemeToggle />}
+        </div>
         
         {/* Role Switcher for Testing */}
         {state !== "collapsed" && (

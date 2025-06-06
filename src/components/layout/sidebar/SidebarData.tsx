@@ -1,3 +1,4 @@
+
 import { 
   Home, 
   Users, 
@@ -19,7 +20,7 @@ import {
   Building2,
   Clipboard,
   AlertTriangle,
-  FileText as FileText2,
+  FileText2,
   BookOpen,
   Briefcase,
   FlaskRound,
@@ -34,7 +35,24 @@ import {
   BarChart,
   Microscope,
   BellRing,
-  DatabaseZap
+  DatabaseZap,
+  Activity,
+  UserCheck,
+  MonitorSpeaker,
+  ClipboardCheck,
+  Thermometer,
+  Syringe,
+  Brain,
+  Eye,
+  Heart,
+  Zap,
+  Scan,
+  PlusCircle,
+  Shield,
+  Archive,
+  DollarSign,
+  Mail,
+  Users2
 } from 'lucide-react';
 import { MenuItemType } from './SidebarMenuItem';
 
@@ -47,9 +65,9 @@ export const sharedMenuItems: MenuItemType[] = [
     url: "/patients",
     items: [
       { title: "Patient List", icon: Users, url: "/patients" },
-      { title: "Register Patient", icon: User, url: "/patients/register" },
+      { title: "Register Patient", icon: PlusCircle, url: "/patients/register" },
       { title: "Clinical Information", icon: FileText, url: "/patients/clinical-information" },
-      { title: "Insurance Information", icon: FileText2, url: "/patients/insurance-information" }
+      { title: "Insurance Information", icon: Shield, url: "/patients/insurance-information" }
     ]
   },
   { title: "Messages", icon: MessageSquare, url: "/messages" },
@@ -61,20 +79,39 @@ export const clinicalPracticeItems: MenuItemType[] = [
   { 
     title: "Clinical Workflows", 
     icon: Stethoscope, 
-    url: "/clinical-workflows/notes",
+    url: "/clinical-workflows",
     items: [
-      { title: "Clinical Notes", icon: FileText, url: "/clinical-workflows/notes" },
-      { title: "New Note", icon: FileText2, url: "/clinical-workflows/notes/new" },
+      { title: "Patient Check-In", icon: CheckCircle, url: "/clinical-workflows/check-in" },
+      { title: "Clinical Queue", icon: Users2, url: "/clinical-workflows/clinical-queue" },
+      { title: "Triage Assessment", icon: Activity, url: "/clinical-workflows/triage" },
+      { title: "SOAP Notes", icon: FileText, url: "/clinical-workflows/soap-notes" },
+      { title: "Clinical Notes", icon: FileText2, url: "/clinical-workflows/notes" },
       { title: "Prescriptions", icon: Pill, url: "/clinical-workflows/prescriptions" },
-      { title: "New Prescription", icon: Pill, url: "/clinical-workflows/prescriptions/new" },
-      { title: "Treatment Plans", icon: Clipboard, url: "/clinical-workflows/treatment-plans" },
-      { title: "Medical Orders", icon: ScrollText, url: "/clinical-workflows/medical-orders" },
+      { title: "Treatment Plans", icon: HeartPulse, url: "/clinical-workflows/treatment-plans" },
+      { title: "Medical Orders", icon: ClipboardCheck, url: "/clinical-workflows/medical-orders" },
       { title: "Patient Education", icon: BookOpen, url: "/clinical-workflows/patient-education" }
     ]
   },
-  { title: "Lab Results", icon: TestTube, url: "/lab-results" },
-  { title: "Clinical Data", icon: Database, url: "/clinical-data" },
-  { title: "Patient Portal", icon: LayoutIcon, url: "/patient-portal/dashboard" },
+  { 
+    title: "Diagnostics & Results", 
+    icon: TestTube, 
+    url: "/lab-results",
+    items: [
+      { title: "Lab Results", icon: TestTube, url: "/lab-results" },
+      { title: "Imaging Results", icon: Scan, url: "/medical-records/imaging" },
+      { title: "Vital Signs", icon: Activity, url: "/clinical-data/vitals" }
+    ]
+  },
+  { 
+    title: "Medical Records", 
+    icon: FileText, 
+    url: "/medical-records",
+    items: [
+      { title: "Patient History", icon: Clock, url: "/medical-records/history" },
+      { title: "Diagnoses", icon: HeartPulse, url: "/medical-records/diagnoses" },
+      { title: "External Records", icon: Folder, url: "/medical-records/external" }
+    ]
+  },
   { 
     title: "Clinical Reports", 
     icon: BarChart, 
@@ -85,17 +122,6 @@ export const clinicalPracticeItems: MenuItemType[] = [
       { title: "Provider Metrics", icon: FileSpreadsheet, url: "/clinical-reports/provider-metrics" },
       { title: "Medication Reports", icon: Pill, url: "/clinical-reports/medications" },
       { title: "Handoff Reports", icon: FileText, url: "/clinical-reports/handoff" }
-    ]
-  },
-  { 
-    title: "Medical Records", 
-    icon: FileText, 
-    url: "/medical-records",
-    items: [
-      { title: "Patient History", icon: Clock, url: "/medical-records/history" },
-      { title: "Diagnoses", icon: HeartPulse, url: "/medical-records/diagnoses" },
-      { title: "Imaging Results", icon: FileSpreadsheet, url: "/medical-records/imaging" },
-      { title: "External Records", icon: Folder, url: "/medical-records/external" }
     ]
   }
 ];
@@ -108,6 +134,7 @@ export const researchStudyItems: MenuItemType[] = [
     url: "/studies",
     items: [
       { title: "Studies Overview", icon: BookOpen, url: "/studies" },
+      { title: "Create Study", icon: PlusCircle, url: "/studies/create" },
       { title: "Protocol Setup", icon: FileSearch, url: "/studies/protocol-setup" },
       { title: "Study Sites", icon: Building2, url: "/studies/sites" },
       { title: "Protocol Documents", icon: Folder, url: "/studies/protocol-documents" },
@@ -115,8 +142,19 @@ export const researchStudyItems: MenuItemType[] = [
       { title: "Patient Randomization", icon: Users, url: "/studies/patient-randomization" },
       { title: "Protocol Deviations", icon: AlertTriangle, url: "/studies/protocol-deviations" },
       { title: "Site Visits", icon: Building2, url: "/studies/site-visits" },
-      { title: "Finance", icon: FileText2, url: "/studies/finance" },
+      { title: "Finance", icon: DollarSign, url: "/studies/finance" },
       { title: "Quiz Management", icon: Clipboard, url: "/studies/quiz-management" }
+    ]
+  },
+  { 
+    title: "Research Data", 
+    icon: Database, 
+    url: "/research-data",
+    items: [
+      { title: "Data Collection", icon: Clipboard, url: "/research-data/collection" },
+      { title: "Data Exports", icon: FileSpreadsheet, url: "/research-data/exports" },
+      { title: "Laboratory Results", icon: TestTube, url: "/research-data/lab-results" },
+      { title: "Biospecimen Tracking", icon: Microscope, url: "/research-data/biospecimen" },
     ]
   },
   { 
@@ -130,17 +168,6 @@ export const researchStudyItems: MenuItemType[] = [
       { title: "Data Quality", icon: Database, url: "/analytics/data-quality" },
       { title: "Geographical Distribution", icon: Map, url: "/analytics/geographic" }
     ]
-  },
-  { 
-    title: "Research Data", 
-    icon: Database, 
-    url: "/research-data/collection",
-    items: [
-      { title: "Data Collection", icon: Clipboard, url: "/research-data/collection" },
-      { title: "Data Exports", icon: FileSpreadsheet, url: "/research-data/exports" },
-      { title: "Laboratory Results", icon: TestTube, url: "/research-data/lab-results" },
-      { title: "Biospecimen Tracking", icon: Microscope, url: "/research-data/biospecimen" },
-    ]
   }
 ];
 
@@ -153,7 +180,7 @@ export const adminMenuItems: MenuItemType[] = [
     items: [
       { title: "Users List", icon: Users, url: "/users" },
       { title: "Roles & Permissions", icon: ShieldAlert, url: "/users/roles" },
-      { title: "Access Requests", icon: User, url: "/users/access-requests" }
+      { title: "Access Requests", icon: UserCheck, url: "/users/access-requests" }
     ]
   },
   { 

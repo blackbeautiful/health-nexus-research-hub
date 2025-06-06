@@ -1,29 +1,37 @@
-import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import PageHeader from '@/components/common/PageHeader';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Search, 
   ExternalLink, 
   FileText, 
   Users, 
+  Calendar, 
   Settings, 
-  BarChart2,
-  Database,
-  Calendar,
-  Shield,
-  Building2,
-  TestTube,
-  MessageSquare,
-  Home,
-  User,
-  FlaskRound,
-  Stethoscope
+  Database, 
+  BarChart2, 
+  TestTube, 
+  FlaskRound, 
+  Building2, 
+  UserCog, 
+  ShieldAlert, 
+  MessageSquare, 
+  Stethoscope, 
+  Activity, 
+  CheckCircle, 
+  HeartPulse, 
+  Pill, 
+  BookOpen, 
+  Microscope, 
+  Folder, 
+  Mail, 
+  User, 
+  PlusCircle 
 } from 'lucide-react';
 
 interface PageLink {
@@ -32,16 +40,16 @@ interface PageLink {
   category: string;
   description?: string;
   icon: React.ComponentType;
+  roles?: string[];
   status: 'active' | 'placeholder' | 'missing';
 }
 
 const AllLinksPage = () => {
-  const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
   // Comprehensive list of all pages and their information
-  const allPages: PageLink[] = [
+  const allLinks: PageLink[] = [
     // Authentication
     { title: "Login", path: "/login", category: "Authentication", icon: User, status: 'active' },
     { title: "Register", path: "/register", category: "Authentication", icon: User, status: 'active' },
@@ -169,51 +177,33 @@ const AllLinksPage = () => {
     { title: "404 Not Found", path: "/404", category: "Error Pages", icon: FileText, status: 'active' }
   ];
 
-  const categories = useMemo(() => {
-    const cats = [...new Set(allPages.map(page => page.category))].sort();
-    return ['all', ...cats];
-  }, []);
-
-  const filteredPages = useMemo(() => {
-    return allPages.filter(page => {
-      const matchesSearch = page.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           page.path.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           page.category.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = selectedCategory === 'all' || page.category === selectedCategory;
-      return matchesSearch && matchesCategory;
-    });
-  }, [searchTerm, selectedCategory]);
-
-  const pagesByCategory = useMemo(() => {
-    const grouped = filteredPages.reduce((acc, page) => {
-      if (!acc[page.category]) {
-        acc[page.category] = [];
-      }
-      acc[page.category].push(page);
-      return acc;
-    }, {} as Record<string, PageLink[]>);
+  const filteredLinks = allLinks.filter(link => {
+    const matchesSearch = link.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         link.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         link.category.toLowerCase().includes(searchQuery.toLowerCase());
     
-    return grouped;
-  }, [filteredPages]);
+    const matchesCategory = selectedCategory === 'all' || link.category === selectedCategory;
+    
+    return matchesSearch && matchesCategory;
+  });
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active': return 'bg-green-100 text-green-800';
-      case 'placeholder': return 'bg-yellow-100 text-yellow-800';
-      case 'missing': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+  const categories = [...new Set(allLinks.map(link => link.category))];
+
+  const getCategoryBadgeVariant = (category: string) => {
+    switch (category) {
+      case 'clinical': return 'default';
+      case 'research': return 'secondary';
+      case 'admin': return 'destructive';
+      case 'patient': return 'outline';
+      default: return 'default';
     }
-  };
-
-  const handlePageVisit = (path: string) => {
-    navigate(path);
   };
 
   return (
     <MainLayout>
       <PageHeader
-        title="All Links"
-        description="Complete directory of all pages and components in the application"
+        title="All Application Links"
+        description="Complete directory of all pages and features in the HealthNexus platform"
         breadcrumbs={[
           { label: 'Home', link: '/' },
           { label: 'All Links' }
@@ -221,159 +211,108 @@ const AllLinksPage = () => {
       />
 
       <div className="space-y-6">
-        {/* Search and Filters */}
+        {/* Search and Filter Controls */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center">
-              <Search className="w-5 h-5 mr-2" />
-              Search & Filter
-            </CardTitle>
+            <CardTitle>Search & Filter</CardTitle>
+            <CardDescription>Find specific pages or browse by category</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent>
             <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1">
+              <div className="relative flex-1">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search pages by title, path, or category..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full"
+                  placeholder="Search pages, features, or descriptions..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-8"
                 />
               </div>
-              <div className="w-full md:w-64">
-                <select 
-                  value={selectedCategory} 
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  {categories.map(category => (
-                    <option key={category} value={category}>
-                      {category === 'all' ? 'All Categories' : category}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="outline">{filteredPages.length} pages found</Badge>
-              <Badge variant="secondary">
-                {allPages.filter(p => p.status === 'active').length} Active
-              </Badge>
-              <Badge variant="secondary">
-                {allPages.filter(p => p.status === 'placeholder').length} Placeholder
-              </Badge>
-              <Badge variant="destructive">
-                {allPages.filter(p => p.status === 'missing').length} Missing
-              </Badge>
+              <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full md:w-auto">
+                <TabsList className="grid grid-cols-5 w-full md:w-auto">
+                  <TabsTrigger value="all">All</TabsTrigger>
+                  <TabsTrigger value="clinical">Clinical</TabsTrigger>
+                  <TabsTrigger value="research">Research</TabsTrigger>
+                  <TabsTrigger value="admin">Admin</TabsTrigger>
+                  <TabsTrigger value="patient">Patient</TabsTrigger>
+                </TabsList>
+              </Tabs>
             </div>
           </CardContent>
         </Card>
 
-        {/* Results */}
-        <Tabs defaultValue="grouped" className="w-full">
-          <TabsList>
-            <TabsTrigger value="grouped">Grouped by Category</TabsTrigger>
-            <TabsTrigger value="list">All Pages List</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="grouped" className="space-y-6">
-            {Object.entries(pagesByCategory).map(([category, pages]) => (
-              <Card key={category}>
-                <CardHeader>
-                  <CardTitle className="text-lg">
-                    {category} ({pages.length} pages)
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {pages.map((page) => {
-                      const IconComponent = page.icon;
-                      return (
-                        <div
-                          key={page.path}
-                          className="p-4 border rounded-lg hover:shadow-md transition-shadow cursor-pointer"
-                          onClick={() => handlePageVisit(page.path)}
-                        >
-                          <div className="flex items-start justify-between mb-2">
-                            <div className="flex items-center">
-                              <IconComponent className="w-4 h-4 mr-2 text-gray-600" />
-                              <h3 className="font-medium text-sm">{page.title}</h3>
-                            </div>
-                            <Badge variant="secondary">
-                              {page.status}
-                            </Badge>
-                          </div>
-                          <p className="text-xs text-gray-600 mb-2">{page.path}</p>
-                          {page.description && (
-                            <p className="text-xs text-gray-500">{page.description}</p>
-                          )}
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="mt-2 w-full"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handlePageVisit(page.path);
-                            }}
-                          >
-                            <ExternalLink className="w-3 h-3 mr-1" />
-                            Visit
-                          </Button>
-                        </div>
-                      );
-                    })}
+        {/* Links Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredLinks.map((link, index) => (
+            <Card key={index} className="hover:shadow-md transition-shadow cursor-pointer group">
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-2">
+                    <link.icon className="h-5 w-5 text-primary" />
+                    <CardTitle className="text-base">{link.title}</CardTitle>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </TabsContent>
-
-          <TabsContent value="list">
-            <Card>
-              <CardHeader>
-                <CardTitle>All Pages ({filteredPages.length})</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {filteredPages.map((page) => {
-                    const IconComponent = page.icon;
-                    return (
-                      <div
-                        key={page.path}
-                        className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
-                        onClick={() => handlePageVisit(page.path)}
-                      >
-                        <div className="flex items-center flex-1">
-                          <IconComponent className="w-4 h-4 mr-3 text-gray-600" />
-                          <div className="flex-1">
-                            <h3 className="font-medium">{page.title}</h3>
-                            <p className="text-sm text-gray-600">{page.path}</p>
-                          </div>
-                          <Badge variant="outline">
-                            {page.category}
-                          </Badge>
-                          <Badge variant="secondary">
-                            {page.status}
-                          </Badge>
-                        </div>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handlePageVisit(page.path);
-                          }}
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    );
-                  })}
+                  <Badge variant={getCategoryBadgeVariant(link.category)}>
+                    {link.category}
+                  </Badge>
                 </div>
+                <CardDescription className="text-sm">{link.description}</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="flex items-center justify-between">
+                  <code className="text-xs bg-muted px-2 py-1 rounded">{link.path}</code>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => window.open(link.path, '_blank')}
+                    className="opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                  </Button>
+                </div>
+                {link.roles && (
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {link.roles.map((role, roleIndex) => (
+                      <Badge key={roleIndex} variant="outline" className="text-xs">
+                        {role}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
+          ))}
+        </div>
+
+        {filteredLinks.length === 0 && (
+          <Card>
+            <CardContent className="text-center py-8">
+              <p className="text-muted-foreground">No links found matching your search criteria.</p>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Summary Statistics */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Platform Statistics</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-primary">{allLinks.length}</div>
+                <div className="text-sm text-muted-foreground">Total Pages</div>
+              </div>
+              {categories.map(category => (
+                <div key={category} className="text-center">
+                  <div className="text-2xl font-bold">
+                    {allLinks.filter(link => link.category === category).length}
+                  </div>
+                  <div className="text-sm text-muted-foreground capitalize">{category} Pages</div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </MainLayout>
   );
