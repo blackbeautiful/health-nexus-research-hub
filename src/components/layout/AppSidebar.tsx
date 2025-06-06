@@ -13,10 +13,6 @@ import {
   Briefcase,
   FlaskRound,
   Settings,
-  Building2,
-  UserCog,
-  ShieldAlert,
-  LayoutIcon,
   User
 } from 'lucide-react';
 import { Avatar } from '@/components/ui/avatar';
@@ -85,30 +81,72 @@ const AppSidebar = () => {
     console.log('User role changed to:', newRole);
   };
 
+  const getFilteredMenuItems = (items: any[], role: UserRole) => {
+    return items.filter(item => {
+      // Admin sees everything
+      if (role === 'admin') return true;
+      
+      // Role-specific filtering
+      switch (role) {
+        case 'patient':
+          return ['Appointments', 'Messages'].includes(item.title);
+        case 'participant':
+          return ['Appointments', 'Messages'].includes(item.title);
+        case 'receptionist':
+          return ['Patients', 'Appointments', 'Messages', 'Patient Check-In'].includes(item.title);
+        case 'nurse':
+          return !['Research Studies', 'Analytics', 'User Management', 'HR Management'].includes(item.title);
+        case 'lab_tech':
+          return ['Patients', 'Diagnostics & Results', 'Laboratory', 'Messages'].includes(item.title);
+        case 'researcher':
+        case 'pi':
+        case 'coordinator':
+          return !['Clinical Workflows', 'Facility Management', 'Staff Management', 'HR Management'].includes(item.title);
+        case 'facility_admin':
+          return true; // Facility admin sees most things
+        default:
+          return true;
+      }
+    });
+  };
+
   const getMenuItems = () => {
-    // Remove Dashboard from shared items since we'll handle it separately
-    const baseItems = sharedMenuItems.filter(item => item.title !== "Dashboard");
+    const baseItems = getFilteredMenuItems(sharedMenuItems, userRole);
     
     if (userRole === 'admin') {
       return [
         { title: 'Main Navigation', items: baseItems },
+        { title: 'Clinical Operations', items: getFilteredMenuItems(clinicalPracticeItems, userRole) },
+        { title: 'Research Operations', items: getFilteredMenuItems(researchStudyItems, userRole) },
         { title: 'Administration', items: adminMenuItems }
       ];
     }
     
+    if (userRole === 'patient' || userRole === 'participant') {
+      return [
+        { title: 'Main Navigation', items: baseItems }
+      ];
+    }
+    
     if (appMode === 'clinical') {
+      const clinicalItems = getFilteredMenuItems(clinicalPracticeItems, userRole);
+      const adminItems = ['admin', 'facility_admin'].includes(userRole) ? adminMenuItems : [];
+      
       return [
         { title: 'Main Navigation', items: baseItems },
-        { title: 'Clinical Operations', items: clinicalPracticeItems },
-        ...(userRole === 'facility_admin' ? [{ title: 'Administration', items: adminMenuItems }] : [])
+        ...(clinicalItems.length > 0 ? [{ title: 'Clinical Operations', items: clinicalItems }] : []),
+        ...(adminItems.length > 0 ? [{ title: 'Administration', items: adminItems }] : [])
       ];
     }
     
     if (appMode === 'research') {
+      const researchItems = getFilteredMenuItems(researchStudyItems, userRole);
+      const adminItems = ['admin', 'facility_admin'].includes(userRole) ? adminMenuItems : [];
+      
       return [
         { title: 'Main Navigation', items: baseItems },
-        { title: 'Research Operations', items: researchStudyItems },
-        ...(userRole === 'facility_admin' ? [{ title: 'Administration', items: adminMenuItems }] : [])
+        ...(researchItems.length > 0 ? [{ title: 'Research Operations', items: researchItems }] : []),
+        ...(adminItems.length > 0 ? [{ title: 'Administration', items: adminItems }] : [])
       ];
     }
     
@@ -153,6 +191,10 @@ const AppSidebar = () => {
     };
   };
 
+  const canSwitchModes = () => {
+    return !['admin', 'patient', 'participant', 'receptionist', 'lab_tech'].includes(userRole);
+  };
+
   const menuGroups = getMenuItems();
   const userInfo = getUserDisplayInfo();
 
@@ -187,7 +229,7 @@ const AppSidebar = () => {
           </div>
         )}
         
-        {state !== "collapsed" && !['admin', 'patient', 'participant'].includes(userRole) && (
+        {state !== "collapsed" && canSwitchModes() && (
           <Tabs 
             value={appMode}
             className="w-full" 

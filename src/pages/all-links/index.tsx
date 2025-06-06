@@ -87,23 +87,23 @@ const AllLinksPage = () => {
     { title: "New Clinical Note", path: "/clinical-workflows/notes/new", category: "Clinical Workflows", description: "Create new clinical note", icon: FileText, status: 'active' },
     { title: "Nursing Notes", path: "/clinical-workflows/nursing-notes", category: "Clinical Workflows", description: "Nursing documentation", icon: FileText, status: 'active' },
     { title: "New Nursing Note", path: "/clinical-workflows/nursing-notes/new", category: "Clinical Workflows", description: "Create new nursing note", icon: FileText, status: 'active' },
-    { title: "Prescriptions", path: "/clinical-workflows/prescriptions", category: "Clinical Workflows", description: "Manage prescriptions", icon: FileText, status: 'active' },
-    { title: "New Prescription", path: "/clinical-workflows/prescriptions/new", category: "Clinical Workflows", description: "Create new prescription", icon: FileText, status: 'active' },
-    { title: "Treatment Plans", path: "/clinical-workflows/treatment-plans", category: "Clinical Workflows", description: "Patient treatment plans", icon: FileText, status: 'active' },
+    { title: "Prescriptions", path: "/clinical-workflows/prescriptions", category: "Clinical Workflows", description: "Manage prescriptions", icon: Pill, status: 'active' },
+    { title: "New Prescription", path: "/clinical-workflows/prescriptions/new", category: "Clinical Workflows", description: "Create new prescription", icon: Pill, status: 'active' },
+    { title: "Treatment Plans", path: "/clinical-workflows/treatment-plans", category: "Clinical Workflows", description: "Patient treatment plans", icon: HeartPulse, status: 'active' },
     { title: "Medical Orders", path: "/clinical-workflows/medical-orders", category: "Clinical Workflows", description: "Medical orders management", icon: FileText, status: 'active' },
-    { title: "Patient Education", path: "/clinical-workflows/patient-education", category: "Clinical Workflows", description: "Patient education materials", icon: FileText, status: 'active' },
-    { title: "Medications", path: "/clinical-workflows/medications", category: "Clinical Workflows", description: "Medication management", icon: FileText, status: 'active' },
+    { title: "Patient Education", path: "/clinical-workflows/patient-education", category: "Clinical Workflows", description: "Patient education materials", icon: BookOpen, status: 'active' },
+    { title: "Medications", path: "/clinical-workflows/medications", category: "Clinical Workflows", description: "Medication management", icon: Pill, status: 'active' },
     { title: "Discharge", path: "/clinical-workflows/discharge", category: "Clinical Workflows", description: "Patient discharge process", icon: FileText, status: 'active' },
 
     // Facility Management
-    { title: "Bed Management", path: "/facility-management/beds", category: "Facility Management", description: "Hospital bed allocation and tracking", icon: Bed, status: 'placeholder' },
-    { title: "Room Allocation", path: "/facility-management/rooms", category: "Facility Management", description: "Room assignment and management", icon: Building2, status: 'placeholder' },
-    { title: "Equipment Tracking", path: "/facility-management/equipment", category: "Facility Management", description: "Medical equipment management", icon: MonitorSpeaker, status: 'placeholder' },
-    { title: "Maintenance", path: "/facility-management/maintenance", category: "Facility Management", description: "Facility maintenance scheduling", icon: Settings, status: 'placeholder' },
+    { title: "Bed Management", path: "/facility-management/beds", category: "Facility Management", description: "Hospital bed allocation and tracking", icon: Bed, status: 'active' },
+    { title: "Room Allocation", path: "/facility-management/rooms", category: "Facility Management", description: "Room assignment and management", icon: Building2, status: 'active' },
+    { title: "Equipment Tracking", path: "/facility-management/equipment", category: "Facility Management", description: "Medical equipment management", icon: MonitorSpeaker, status: 'active' },
+    { title: "Maintenance", path: "/facility-management/maintenance", category: "Facility Management", description: "Facility maintenance scheduling", icon: Settings, status: 'active' },
 
     // Staff Management
-    { title: "Staff Directory", path: "/staff-management/directory", category: "Staff Management", description: "Hospital staff directory", icon: Users, status: 'placeholder' },
-    { title: "Duty Schedules", path: "/staff-management/schedules", category: "Staff Management", description: "Staff duty scheduling", icon: Calendar, status: 'placeholder' },
+    { title: "Staff Directory", path: "/staff-management/directory", category: "Staff Management", description: "Hospital staff directory", icon: Users, status: 'active' },
+    { title: "Duty Schedules", path: "/staff-management/schedules", category: "Staff Management", description: "Staff duty scheduling", icon: Calendar, status: 'active' },
     { title: "Shift Management", path: "/staff-management/shifts", category: "Staff Management", description: "Shift planning and management", icon: CalendarCheck, status: 'placeholder' },
     { title: "Time Tracking", path: "/staff-management/time-tracking", category: "Staff Management", description: "Staff time and attendance", icon: Clock, status: 'placeholder' },
     { title: "Leave Management", path: "/staff-management/leave", category: "Staff Management", description: "Staff leave requests and approval", icon: UserX, status: 'placeholder' },
@@ -117,7 +117,7 @@ const AllLinksPage = () => {
 
     // Clinical Data
     { title: "Clinical Data", path: "/clinical-data", category: "Clinical Data", description: "Clinical data overview", icon: Database, status: 'active' },
-    { title: "Vital Signs", path: "/clinical-data/vitals", category: "Clinical Data", description: "Patient vital signs", icon: BarChart2, status: 'active' },
+    { title: "Vital Signs", path: "/clinical-data/vitals", category: "Clinical Data", description: "Patient vital signs", icon: Activity, status: 'active' },
 
     // Laboratory
     { title: "Lab Results", path: "/lab-results", category: "Laboratory", description: "Laboratory test results", icon: TestTube, status: 'active' },
@@ -148,7 +148,7 @@ const AllLinksPage = () => {
     { title: "Patient Randomization", path: "/studies/patient-randomization", category: "Research", description: "Study randomization", icon: Users, status: 'active' },
     { title: "Protocol Deviations", path: "/studies/protocol-deviations", category: "Research", description: "Protocol deviation tracking", icon: FileText, status: 'active' },
     { title: "Site Visits", path: "/studies/site-visits", category: "Research", description: "Study site visits", icon: Building2, status: 'active' },
-    { title: "Study Finance", path: "/studies/finance", category: "Research", description: "Study financial management", icon: FileText, status: 'active' },
+    { title: "Study Finance", path: "/studies/finance", category: "Research", description: "Study financial management", icon: DollarSign, status: 'active' },
     { title: "Quiz Management", path: "/studies/quiz-management", category: "Research", description: "Study quiz management", icon: FileText, status: 'active' },
     { title: "Recruitment", path: "/studies/recruitment", category: "Research", description: "Patient recruitment", icon: Users, status: 'active' },
 
@@ -156,7 +156,7 @@ const AllLinksPage = () => {
     { title: "Data Collection", path: "/research-data/collection", category: "Research Data", description: "Research data collection", icon: Database, status: 'active' },
     { title: "Data Exports", path: "/research-data/exports", category: "Research Data", description: "Data export tools", icon: Database, status: 'active' },
     { title: "Research Lab Results", path: "/research-data/lab-results", category: "Research Data", description: "Research laboratory results", icon: TestTube, status: 'active' },
-    { title: "Biospecimen Tracking", path: "/research-data/biospecimen", category: "Research Data", description: "Biospecimen management", icon: TestTube, status: 'active' },
+    { title: "Biospecimen Tracking", path: "/research-data/biospecimen", category: "Research Data", description: "Biospecimen management", icon: Microscope, status: 'active' },
 
     // Forms
     { title: "Form Builder", path: "/forms/builder", category: "Forms", description: "Form building tool", icon: FileText, status: 'active' },
@@ -180,7 +180,7 @@ const AllLinksPage = () => {
     { title: "Treatment Outcomes", path: "/clinical-reports/outcomes", category: "Reports", description: "Treatment outcome reports", icon: FileText, status: 'active' },
     { title: "Patient Analytics", path: "/clinical-reports/patient-analytics", category: "Reports", description: "Patient analytics reports", icon: FileText, status: 'active' },
     { title: "Provider Metrics", path: "/clinical-reports/provider-metrics", category: "Reports", description: "Provider performance metrics", icon: FileText, status: 'active' },
-    { title: "Medication Reports", path: "/clinical-reports/medications", category: "Reports", description: "Medication reports", icon: FileText, status: 'active' },
+    { title: "Medication Reports", path: "/clinical-reports/medications", category: "Reports", description: "Medication reports", icon: Pill, status: 'active' },
     { title: "Handoff Reports", path: "/clinical-reports/handoff", category: "Reports", description: "Patient handoff reports", icon: FileText, status: 'active' },
 
     // User Management
@@ -193,17 +193,17 @@ const AllLinksPage = () => {
 
     // Settings
     { title: "Settings", path: "/settings", category: "Settings", description: "Application settings", icon: Settings, status: 'active' },
-    { title: "Billing", path: "/settings/billing", category: "Settings", description: "Billing settings", icon: Settings, status: 'active' },
+    { title: "Billing", path: "/settings/billing", category: "Settings", description: "Billing settings", icon: DollarSign, status: 'active' },
     { title: "Notifications", path: "/settings/notifications", category: "Settings", description: "Notification settings", icon: Settings, status: 'active' },
     { title: "System Configuration", path: "/settings/system", category: "Settings", description: "System configuration", icon: Settings, status: 'active' },
 
     // Compliance & Audit
-    { title: "Compliance", path: "/compliance", category: "Compliance", description: "Compliance management", icon: Shield, status: 'active' },
+    { title: "Compliance", path: "/compliance", category: "Compliance", description: "Compliance management", icon: ShieldAlert, status: 'active' },
     { title: "Audit Logs", path: "/audit-logs", category: "Compliance", description: "System audit logs", icon: Shield, status: 'active' },
 
     // Support
     { title: "Support", path: "/support", category: "Support", description: "Support resources", icon: MessageSquare, status: 'active' },
-    { title: "Help", path: "/help", category: "Support", description: "Help documentation", icon: MessageSquare, status: 'active' },
+    { title: "Help", path: "/help", category: "Support", description: "Help documentation", icon: BookOpen, status: 'active' },
 
     // Special Pages
     { title: "All Links", path: "/all-links", category: "Navigation", description: "Complete page directory", icon: FileText, status: 'active' },

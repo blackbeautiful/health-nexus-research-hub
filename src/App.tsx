@@ -89,11 +89,20 @@ import AuditLogsPage from '@/pages/audit-logs/audit-logs';
 import SupportPage from '@/pages/support/support';
 import HelpPage from '@/pages/help/help';
 import NotFoundPage from '@/pages/404';
-// Clinical workflow pages
 import ClinicalQueuePage from '@/pages/clinical-workflows/clinical-queue';
 import TriagePage from '@/pages/clinical-workflows/triage';
 import SOAPNotesPage from '@/pages/clinical-workflows/soap-notes';
 import ClinicalCheckInPage from '@/pages/clinical-workflows/check-in';
+
+// New facility management imports
+import BedManagementPage from '@/pages/facility-management/beds';
+import RoomAllocationPage from '@/pages/facility-management/rooms';
+import EquipmentTrackingPage from '@/pages/facility-management/equipment';
+import MaintenancePage from '@/pages/facility-management/maintenance';
+
+// New staff management imports
+import StaffDirectoryPage from '@/pages/staff-management/directory';
+import DutySchedulesPage from '@/pages/staff-management/schedules';
 
 const queryClient = new QueryClient();
 
@@ -144,24 +153,24 @@ function App() {
               <Route path="/clinical-workflows/discharge" element={<DischargePage />} />
 
               {/* Facility Management Routes */}
-              <Route path="/facility-management/beds" element={<div>Bed Management - Coming Soon</div>} />
-              <Route path="/facility-management/rooms" element={<div>Room Allocation - Coming Soon</div>} />
-              <Route path="/facility-management/equipment" element={<div>Equipment Tracking - Coming Soon</div>} />
-              <Route path="/facility-management/maintenance" element={<div>Maintenance - Coming Soon</div>} />
+              <Route path="/facility-management/beds" element={<BedManagementPage />} />
+              <Route path="/facility-management/rooms" element={<RoomAllocationPage />} />
+              <Route path="/facility-management/equipment" element={<EquipmentTrackingPage />} />
+              <Route path="/facility-management/maintenance" element={<MaintenancePage />} />
 
               {/* Staff Management Routes */}
-              <Route path="/staff-management/directory" element={<div>Staff Directory - Coming Soon</div>} />
-              <Route path="/staff-management/schedules" element={<div>Duty Schedules - Coming Soon</div>} />
-              <Route path="/staff-management/shifts" element={<div>Shift Management - Coming Soon</div>} />
-              <Route path="/staff-management/time-tracking" element={<div>Time Tracking - Coming Soon</div>} />
-              <Route path="/staff-management/leave" element={<div>Leave Management - Coming Soon</div>} />
+              <Route path="/staff-management/directory" element={<StaffDirectoryPage />} />
+              <Route path="/staff-management/schedules" element={<DutySchedulesPage />} />
+              <Route path="/staff-management/shifts" element={<div className="p-8 text-center">Shift Management - Coming Soon</div>} />
+              <Route path="/staff-management/time-tracking" element={<div className="p-8 text-center">Time Tracking - Coming Soon</div>} />
+              <Route path="/staff-management/leave" element={<div className="p-8 text-center">Leave Management - Coming Soon</div>} />
 
               {/* HR Management Routes */}
-              <Route path="/hr-management/employees" element={<div>Employee Records - Coming Soon</div>} />
-              <Route path="/hr-management/payroll" element={<div>Payroll - Coming Soon</div>} />
-              <Route path="/hr-management/benefits" element={<div>Benefits - Coming Soon</div>} />
-              <Route path="/hr-management/training" element={<div>Training & Certification - Coming Soon</div>} />
-              <Route path="/hr-management/performance" element={<div>Performance Reviews - Coming Soon</div>} />
+              <Route path="/hr-management/employees" element={<div className="p-8 text-center">Employee Records - Coming Soon</div>} />
+              <Route path="/hr-management/payroll" element={<div className="p-8 text-center">Payroll - Coming Soon</div>} />
+              <Route path="/hr-management/benefits" element={<div className="p-8 text-center">Benefits - Coming Soon</div>} />
+              <Route path="/hr-management/training" element={<div className="p-8 text-center">Training & Certification - Coming Soon</div>} />
+              <Route path="/hr-management/performance" element={<div className="p-8 text-center">Performance Reviews - Coming Soon</div>} />
 
               {/* Clinical Data Routes */}
               <Route path="/clinical-data" element={<ClinicalDataPage />} />
