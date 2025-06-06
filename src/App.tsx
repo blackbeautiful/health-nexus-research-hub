@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'next-themes';
@@ -88,7 +89,7 @@ import AuditLogsPage from '@/pages/audit-logs/audit-logs';
 import SupportPage from '@/pages/support/support';
 import HelpPage from '@/pages/help/help';
 import NotFoundPage from '@/pages/404';
-// New clinical workflow pages
+// Clinical workflow pages
 import ClinicalQueuePage from '@/pages/clinical-workflows/clinical-queue';
 import TriagePage from '@/pages/clinical-workflows/triage';
 import SOAPNotesPage from '@/pages/clinical-workflows/soap-notes';
@@ -108,13 +109,11 @@ function App() {
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               
-              {/* Main Dashboard Routes */}
+              {/* Role-based Dashboard Routes */}
               <Route path="/" element={<DashboardPage />} />
               <Route path="/dashboard/clinical" element={<DashboardPage />} />
               <Route path="/dashboard/researcher" element={<ResearcherDashboardPage />} />
               <Route path="/dashboard/admin" element={<AdminDashboardPage />} />
-              
-              {/* Patient Portal Routes */}
               <Route path="/dashboard/patient" element={<PatientDashboard />} />
               
               {/* Special Navigation Routes */}
@@ -143,6 +142,26 @@ function App() {
               <Route path="/clinical-workflows/patient-education" element={<PatientEducationPage />} />
               <Route path="/clinical-workflows/medications" element={<MedicationsPage />} />
               <Route path="/clinical-workflows/discharge" element={<DischargePage />} />
+
+              {/* Facility Management Routes */}
+              <Route path="/facility-management/beds" element={<div>Bed Management - Coming Soon</div>} />
+              <Route path="/facility-management/rooms" element={<div>Room Allocation - Coming Soon</div>} />
+              <Route path="/facility-management/equipment" element={<div>Equipment Tracking - Coming Soon</div>} />
+              <Route path="/facility-management/maintenance" element={<div>Maintenance - Coming Soon</div>} />
+
+              {/* Staff Management Routes */}
+              <Route path="/staff-management/directory" element={<div>Staff Directory - Coming Soon</div>} />
+              <Route path="/staff-management/schedules" element={<div>Duty Schedules - Coming Soon</div>} />
+              <Route path="/staff-management/shifts" element={<div>Shift Management - Coming Soon</div>} />
+              <Route path="/staff-management/time-tracking" element={<div>Time Tracking - Coming Soon</div>} />
+              <Route path="/staff-management/leave" element={<div>Leave Management - Coming Soon</div>} />
+
+              {/* HR Management Routes */}
+              <Route path="/hr-management/employees" element={<div>Employee Records - Coming Soon</div>} />
+              <Route path="/hr-management/payroll" element={<div>Payroll - Coming Soon</div>} />
+              <Route path="/hr-management/benefits" element={<div>Benefits - Coming Soon</div>} />
+              <Route path="/hr-management/training" element={<div>Training & Certification - Coming Soon</div>} />
+              <Route path="/hr-management/performance" element={<div>Performance Reviews - Coming Soon</div>} />
 
               {/* Clinical Data Routes */}
               <Route path="/clinical-data" element={<ClinicalDataPage />} />

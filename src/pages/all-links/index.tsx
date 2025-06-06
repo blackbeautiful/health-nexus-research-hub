@@ -34,7 +34,14 @@ import {
   User, 
   PlusCircle,
   Home,
-  Shield
+  Shield,
+  Bed,
+  CalendarCheck,
+  DollarSign,
+  Heart,
+  UserX,
+  MonitorSpeaker,
+  Clock
 } from 'lucide-react';
 
 interface PageLink {
@@ -59,18 +66,17 @@ const AllLinksPage = () => {
     { title: "Forgot Password", path: "/forgot-password", category: "Authentication", description: "Password recovery", icon: User, status: 'active' },
 
     // Dashboards
-    { title: "Main Dashboard", path: "/", category: "Dashboards", description: "Main application dashboard", icon: Home, status: 'active' },
     { title: "Clinical Dashboard", path: "/dashboard/clinical", category: "Dashboards", description: "Clinical practice overview", icon: Stethoscope, status: 'active' },
     { title: "Researcher Dashboard", path: "/dashboard/researcher", category: "Dashboards", description: "Research activities overview", icon: FlaskRound, status: 'active' },
     { title: "Admin Dashboard", path: "/dashboard/admin", category: "Dashboards", description: "Administrative controls", icon: Settings, status: 'active' },
     { title: "Patient Dashboard", path: "/dashboard/patient", category: "Dashboards", description: "Patient portal", icon: User, status: 'active' },
 
     // Patient Management
-    { title: "Patient List", path: "/patients", category: "Patients", description: "View all patients", icon: Users, status: 'active' },
-    { title: "Patient Details", path: "/patients/patient-123", category: "Patients", description: "Individual patient information", icon: User, status: 'active' },
-    { title: "Patient Registration", path: "/patients/register", category: "Patients", description: "Register new patient", icon: User, status: 'active' },
-    { title: "Clinical Information", path: "/patients/clinical-information", category: "Patients", description: "Patient clinical data", icon: FileText, status: 'active' },
-    { title: "Insurance Information", path: "/patients/insurance-information", category: "Patients", description: "Patient insurance details", icon: FileText, status: 'active' },
+    { title: "Patient List", path: "/patients", category: "Patient Management", description: "View all patients", icon: Users, status: 'active' },
+    { title: "Patient Details", path: "/patients/patient-123", category: "Patient Management", description: "Individual patient information", icon: User, status: 'active' },
+    { title: "Patient Registration", path: "/patients/register", category: "Patient Management", description: "Register new patient", icon: User, status: 'active' },
+    { title: "Clinical Information", path: "/patients/clinical-information", category: "Patient Management", description: "Patient clinical data", icon: FileText, status: 'active' },
+    { title: "Insurance Information", path: "/patients/insurance-information", category: "Patient Management", description: "Patient insurance details", icon: FileText, status: 'active' },
 
     // Clinical Workflows
     { title: "Patient Check-In", path: "/clinical-workflows/check-in", category: "Clinical Workflows", description: "Patient check-in process", icon: CheckCircle, status: 'active' },
@@ -88,6 +94,26 @@ const AllLinksPage = () => {
     { title: "Patient Education", path: "/clinical-workflows/patient-education", category: "Clinical Workflows", description: "Patient education materials", icon: FileText, status: 'active' },
     { title: "Medications", path: "/clinical-workflows/medications", category: "Clinical Workflows", description: "Medication management", icon: FileText, status: 'active' },
     { title: "Discharge", path: "/clinical-workflows/discharge", category: "Clinical Workflows", description: "Patient discharge process", icon: FileText, status: 'active' },
+
+    // Facility Management
+    { title: "Bed Management", path: "/facility-management/beds", category: "Facility Management", description: "Hospital bed allocation and tracking", icon: Bed, status: 'placeholder' },
+    { title: "Room Allocation", path: "/facility-management/rooms", category: "Facility Management", description: "Room assignment and management", icon: Building2, status: 'placeholder' },
+    { title: "Equipment Tracking", path: "/facility-management/equipment", category: "Facility Management", description: "Medical equipment management", icon: MonitorSpeaker, status: 'placeholder' },
+    { title: "Maintenance", path: "/facility-management/maintenance", category: "Facility Management", description: "Facility maintenance scheduling", icon: Settings, status: 'placeholder' },
+
+    // Staff Management
+    { title: "Staff Directory", path: "/staff-management/directory", category: "Staff Management", description: "Hospital staff directory", icon: Users, status: 'placeholder' },
+    { title: "Duty Schedules", path: "/staff-management/schedules", category: "Staff Management", description: "Staff duty scheduling", icon: Calendar, status: 'placeholder' },
+    { title: "Shift Management", path: "/staff-management/shifts", category: "Staff Management", description: "Shift planning and management", icon: CalendarCheck, status: 'placeholder' },
+    { title: "Time Tracking", path: "/staff-management/time-tracking", category: "Staff Management", description: "Staff time and attendance", icon: Clock, status: 'placeholder' },
+    { title: "Leave Management", path: "/staff-management/leave", category: "Staff Management", description: "Staff leave requests and approval", icon: UserX, status: 'placeholder' },
+
+    // HR Management
+    { title: "Employee Records", path: "/hr-management/employees", category: "HR Management", description: "Employee personal and professional records", icon: FileText, status: 'placeholder' },
+    { title: "Payroll", path: "/hr-management/payroll", category: "HR Management", description: "Payroll processing and management", icon: DollarSign, status: 'placeholder' },
+    { title: "Benefits", path: "/hr-management/benefits", category: "HR Management", description: "Employee benefits administration", icon: Heart, status: 'placeholder' },
+    { title: "Training & Certification", path: "/hr-management/training", category: "HR Management", description: "Staff training and certification tracking", icon: BookOpen, status: 'placeholder' },
+    { title: "Performance Reviews", path: "/hr-management/performance", category: "HR Management", description: "Employee performance evaluations", icon: BarChart2, status: 'placeholder' },
 
     // Clinical Data
     { title: "Clinical Data", path: "/clinical-data", category: "Clinical Data", description: "Clinical data overview", icon: Database, status: 'active' },
@@ -196,13 +222,12 @@ const AllLinksPage = () => {
 
   const categories = [...new Set(allLinks.map(link => link.category))];
 
-  const getCategoryBadgeVariant = (category: string): "default" | "secondary" | "destructive" | "outline" => {
-    switch (category) {
-      case 'clinical': return 'default';
-      case 'research': return 'secondary';
-      case 'admin': return 'destructive';
-      case 'patient': return 'outline';
-      default: return 'default';
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'active': return 'default';
+      case 'placeholder': return 'secondary';
+      case 'missing': return 'destructive';
+      default: return 'outline';
     }
   };
 
@@ -238,10 +263,10 @@ const AllLinksPage = () => {
               <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full md:w-auto">
                 <TabsList className="grid grid-cols-5 w-full md:w-auto">
                   <TabsTrigger value="all">All</TabsTrigger>
-                  <TabsTrigger value="clinical">Clinical</TabsTrigger>
-                  <TabsTrigger value="research">Research</TabsTrigger>
-                  <TabsTrigger value="admin">Admin</TabsTrigger>
-                  <TabsTrigger value="patient">Patient</TabsTrigger>
+                  <TabsTrigger value="Clinical Workflows">Clinical</TabsTrigger>
+                  <TabsTrigger value="Research">Research</TabsTrigger>
+                  <TabsTrigger value="Administration">Admin</TabsTrigger>
+                  <TabsTrigger value="Patient Management">Patients</TabsTrigger>
                 </TabsList>
               </Tabs>
             </div>
@@ -260,7 +285,7 @@ const AllLinksPage = () => {
                       <IconComponent size={20} className="text-primary" />
                       <CardTitle className="text-base">{link.title}</CardTitle>
                     </div>
-                    <Badge variant={getCategoryBadgeVariant(link.category)}>
+                    <Badge variant={getStatusColor(link.status)}>
                       {link.category}
                     </Badge>
                   </div>
@@ -269,14 +294,19 @@ const AllLinksPage = () => {
                 <CardContent className="pt-0">
                   <div className="flex items-center justify-between">
                     <code className="text-xs bg-muted px-2 py-1 rounded">{link.path}</code>
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      onClick={() => window.open(link.path, '_blank')}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <ExternalLink size={16} />
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      {link.status === 'placeholder' && (
+                        <Badge variant="secondary" className="text-xs">Coming Soon</Badge>
+                      )}
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => window.open(link.path, '_blank')}
+                        className="opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <ExternalLink size={16} />
+                      </Button>
+                    </div>
                   </div>
                   {link.roles && (
                     <div className="mt-2 flex flex-wrap gap-1">
@@ -312,14 +342,22 @@ const AllLinksPage = () => {
                 <div className="text-2xl font-bold text-primary">{allLinks.length}</div>
                 <div className="text-sm text-muted-foreground">Total Pages</div>
               </div>
-              {categories.slice(0, 3).map(category => (
-                <div key={category} className="text-center">
-                  <div className="text-2xl font-bold">
-                    {allLinks.filter(link => link.category === category).length}
-                  </div>
-                  <div className="text-sm text-muted-foreground capitalize">{category} Pages</div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-green-600">
+                  {allLinks.filter(link => link.status === 'active').length}
                 </div>
-              ))}
+                <div className="text-sm text-muted-foreground">Active Pages</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-amber-600">
+                  {allLinks.filter(link => link.status === 'placeholder').length}
+                </div>
+                <div className="text-sm text-muted-foreground">Coming Soon</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold">{categories.length}</div>
+                <div className="text-sm text-muted-foreground">Categories</div>
+              </div>
             </div>
           </CardContent>
         </Card>

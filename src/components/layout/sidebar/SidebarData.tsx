@@ -51,13 +51,16 @@ import {
   Archive,
   DollarSign,
   Mail,
-  Users2
+  Users2,
+  Bed,
+  CalendarCheck,
+  UserX,
+  Calendar
 } from 'lucide-react';
 import { MenuItemType } from './SidebarMenuItem';
 
 // Shared items for both clinical practice and research
 export const sharedMenuItems: MenuItemType[] = [
-  { title: "Dashboard", icon: Home, url: "/" },
   { 
     title: "Patients", 
     icon: Users, 
@@ -89,6 +92,41 @@ export const clinicalPracticeItems: MenuItemType[] = [
       { title: "Treatment Plans", icon: HeartPulse, url: "/clinical-workflows/treatment-plans" },
       { title: "Medical Orders", icon: ClipboardCheck, url: "/clinical-workflows/medical-orders" },
       { title: "Patient Education", icon: BookOpen, url: "/clinical-workflows/patient-education" }
+    ]
+  },
+  { 
+    title: "Facility Management", 
+    icon: Building2, 
+    url: "/facility-management",
+    items: [
+      { title: "Bed Management", icon: Bed, url: "/facility-management/beds" },
+      { title: "Room Allocation", icon: Building2, url: "/facility-management/rooms" },
+      { title: "Equipment Tracking", icon: MonitorSpeaker, url: "/facility-management/equipment" },
+      { title: "Maintenance", icon: Settings, url: "/facility-management/maintenance" }
+    ]
+  },
+  { 
+    title: "Staff Management", 
+    icon: Users2, 
+    url: "/staff-management",
+    items: [
+      { title: "Staff Directory", icon: Users, url: "/staff-management/directory" },
+      { title: "Duty Schedules", icon: Calendar, url: "/staff-management/schedules" },
+      { title: "Shift Management", icon: CalendarCheck, url: "/staff-management/shifts" },
+      { title: "Time Tracking", icon: Clock, url: "/staff-management/time-tracking" },
+      { title: "Leave Management", icon: UserX, url: "/staff-management/leave" }
+    ]
+  },
+  { 
+    title: "HR Management", 
+    icon: UserCog, 
+    url: "/hr-management",
+    items: [
+      { title: "Employee Records", icon: FileText, url: "/hr-management/employees" },
+      { title: "Payroll", icon: DollarSign, url: "/hr-management/payroll" },
+      { title: "Benefits", icon: Heart, url: "/hr-management/benefits" },
+      { title: "Training & Certification", icon: BookOpen, url: "/hr-management/training" },
+      { title: "Performance Reviews", icon: BarChart, url: "/hr-management/performance" }
     ]
   },
   { 

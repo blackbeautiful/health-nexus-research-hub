@@ -12,7 +12,6 @@ import {
   LogOut,
   Briefcase,
   FlaskRound,
-  LayoutDashboard,
   Settings,
   Building2,
   UserCog,
@@ -70,18 +69,6 @@ const AppSidebar = () => {
     console.log('App mode changed to:', newMode);
   };
 
-  const handleDashboardClick = () => {
-    if (userRole === 'admin') {
-      navigate('/dashboard/admin');
-    } else if (appMode === 'clinical') {
-      navigate('/dashboard/clinical');
-    } else if (appMode === 'research') {
-      navigate('/dashboard/researcher');
-    } else {
-      navigate('/');
-    }
-  };
-
   const handleRoleChange = (newRole: UserRole) => {
     setUserRole(newRole);
     localStorage.setItem('userRole', newRole);
@@ -99,26 +86,19 @@ const AppSidebar = () => {
   };
 
   const getMenuItems = () => {
-    const baseItems = [...sharedMenuItems];
-    
-    // Add dashboard with proper routing
-    const dashboardItem = { 
-      title: "Dashboard", 
-      icon: LayoutDashboard, 
-      url: "/",
-      onClick: handleDashboardClick 
-    };
+    // Remove Dashboard from shared items since we'll handle it separately
+    const baseItems = sharedMenuItems.filter(item => item.title !== "Dashboard");
     
     if (userRole === 'admin') {
       return [
-        { title: 'Main Navigation', items: [dashboardItem, ...baseItems] },
+        { title: 'Main Navigation', items: baseItems },
         { title: 'Administration', items: adminMenuItems }
       ];
     }
     
     if (appMode === 'clinical') {
       return [
-        { title: 'Main Navigation', items: [dashboardItem, ...baseItems] },
+        { title: 'Main Navigation', items: baseItems },
         { title: 'Clinical Operations', items: clinicalPracticeItems },
         ...(userRole === 'facility_admin' ? [{ title: 'Administration', items: adminMenuItems }] : [])
       ];
@@ -126,14 +106,14 @@ const AppSidebar = () => {
     
     if (appMode === 'research') {
       return [
-        { title: 'Main Navigation', items: [dashboardItem, ...baseItems] },
+        { title: 'Main Navigation', items: baseItems },
         { title: 'Research Operations', items: researchStudyItems },
         ...(userRole === 'facility_admin' ? [{ title: 'Administration', items: adminMenuItems }] : [])
       ];
     }
     
     return [
-      { title: 'Main Navigation', items: [dashboardItem, ...baseItems] }
+      { title: 'Main Navigation', items: baseItems }
     ];
   };
 
