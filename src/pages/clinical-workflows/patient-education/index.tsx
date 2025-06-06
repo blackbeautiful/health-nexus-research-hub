@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import PageHeader from '@/components/common/PageHeader';
@@ -402,88 +401,90 @@ const PatientEducationPage = () => {
         
         <Card>
           <CardContent className="p-0">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[50px]">
-                    <Checkbox />
-                  </TableHead>
-                  <TableHead>Title</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead>Topic</TableHead>
-                  <TableHead>Views</TableHead>
-                  <TableHead>Rating</TableHead>
-                  <TableHead>Last Updated</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredResources.length === 0 ? (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center py-10 text-muted-foreground">
-                      No resources match your criteria
-                    </TableCell>
+                    <TableHead className="w-[50px]">
+                      <Checkbox />
+                    </TableHead>
+                    <TableHead className="min-w-[200px]">Title</TableHead>
+                    <TableHead className="min-w-[100px]">Type</TableHead>
+                    <TableHead className="min-w-[120px]">Category</TableHead>
+                    <TableHead className="min-w-[120px]">Topic</TableHead>
+                    <TableHead className="min-w-[80px]">Views</TableHead>
+                    <TableHead className="min-w-[80px]">Rating</TableHead>
+                    <TableHead className="min-w-[120px]">Last Updated</TableHead>
+                    <TableHead className="min-w-[100px]">Actions</TableHead>
                   </TableRow>
-                ) : (
-                  filteredResources.map((resource) => (
-                    <TableRow key={resource.id}>
-                      <TableCell>
-                        <Checkbox />
-                      </TableCell>
-                      <TableCell>
-                        <div className="font-medium">{resource.title}</div>
-                        <div className="text-xs text-muted-foreground">{resource.id}</div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center">
-                          {getResourceTypeIcon(resource.type)}
-                          <span className="capitalize">{resource.type}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>{resource.category}</TableCell>
-                      <TableCell>{resource.topic}</TableCell>
-                      <TableCell>{resource.viewCount.toLocaleString()}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center">
-                          {resource.rating} <Star className="h-3 w-3 text-amber-500 ml-1" fill="currentColor" />
-                        </div>
-                      </TableCell>
-                      <TableCell>{resource.lastUpdated}</TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem onClick={() => console.log(`View ${resource.id}`)}>
-                              <Eye className="mr-2 h-4 w-4" />
-                              View Resource
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => console.log(`Edit ${resource.id}`)}>
-                              <FileText className="mr-2 h-4 w-4" />
-                              Edit Details
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => console.log(`Assign ${resource.id}`)}>
-                              <Users className="mr-2 h-4 w-4" />
-                              Assign to Patient
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => console.log(`Download ${resource.id}`)}>
-                              <Download className="mr-2 h-4 w-4" />
-                              Download
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                </TableHeader>
+                <TableBody>
+                  {filteredResources.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={9} className="text-center py-10 text-muted-foreground">
+                        No resources match your criteria
                       </TableCell>
                     </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
+                  ) : (
+                    filteredResources.map((resource) => (
+                      <TableRow key={resource.id}>
+                        <TableCell>
+                          <Checkbox />
+                        </TableCell>
+                        <TableCell>
+                          <div className="font-medium">{resource.title}</div>
+                          <div className="text-xs text-muted-foreground">{resource.id}</div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center">
+                            {getResourceTypeIcon(resource.type)}
+                            <span className="capitalize">{resource.type}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell>{resource.category}</TableCell>
+                        <TableCell>{resource.topic}</TableCell>
+                        <TableCell>{resource.viewCount.toLocaleString()}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center">
+                            {resource.rating} <Star className="h-3 w-3 text-amber-500 ml-1" fill="currentColor" />
+                          </div>
+                        </TableCell>
+                        <TableCell>{resource.lastUpdated}</TableCell>
+                        <TableCell>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                              <DropdownMenuItem onClick={() => console.log(`View ${resource.id}`)}>
+                                <Eye className="mr-2 h-4 w-4" />
+                                View Resource
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => console.log(`Edit ${resource.id}`)}>
+                                <FileText className="mr-2 h-4 w-4" />
+                                Edit Details
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => console.log(`Assign ${resource.id}`)}>
+                                <Users className="mr-2 h-4 w-4" />
+                                Assign to Patient
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem onClick={() => console.log(`Download ${resource.id}`)}>
+                                <Download className="mr-2 h-4 w-4" />
+                                Download
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </div>
           </CardContent>
           <CardFooter className="border-t p-4 flex justify-between">
             <div className="text-sm text-muted-foreground">
@@ -519,81 +520,83 @@ const PatientEducationPage = () => {
               </Button>
             </div>
             
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Assignment ID</TableHead>
-                  <TableHead>Patient</TableHead>
-                  <TableHead>Resource</TableHead>
-                  <TableHead>Assigned By</TableHead>
-                  <TableHead>Assigned Date</TableHead>
-                  <TableHead>Due Date</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredAssignments.length === 0 ? (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center py-10 text-muted-foreground">
-                      No assignments match your criteria
-                    </TableCell>
+                    <TableHead className="min-w-[120px]">Assignment ID</TableHead>
+                    <TableHead className="min-w-[150px]">Patient</TableHead>
+                    <TableHead className="min-w-[200px]">Resource</TableHead>
+                    <TableHead className="min-w-[150px]">Assigned By</TableHead>
+                    <TableHead className="min-w-[120px]">Assigned Date</TableHead>
+                    <TableHead className="min-w-[120px]">Due Date</TableHead>
+                    <TableHead className="min-w-[100px]">Status</TableHead>
+                    <TableHead className="min-w-[100px]">Actions</TableHead>
                   </TableRow>
-                ) : (
-                  filteredAssignments.map((assignment) => (
-                    <TableRow key={assignment.id}>
-                      <TableCell className="font-medium">{assignment.id}</TableCell>
-                      <TableCell>
-                        <div>
-                          <div>{assignment.patientName}</div>
-                          <div className="text-xs text-muted-foreground">{assignment.patientId}</div>
-                        </div>
-                      </TableCell>
-                      <TableCell>{assignment.resource}</TableCell>
-                      <TableCell>{assignment.assignedBy}</TableCell>
-                      <TableCell>{assignment.assignDate}</TableCell>
-                      <TableCell>{assignment.dueDate || 'N/A'}</TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className={getStatusColor(assignment.status)}>
-                          {assignment.status.charAt(0).toUpperCase() + assignment.status.slice(1)}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem onClick={() => console.log(`View ${assignment.id}`)}>
-                              <Eye className="mr-2 h-4 w-4" />
-                              View Details
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => console.log(`Remind ${assignment.id}`)}>
-                              <Mail className="mr-2 h-4 w-4" />
-                              Send Reminder
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => console.log(`Mark ${assignment.id}`)}>
-                              <Calendar className="mr-2 h-4 w-4" />
-                              {assignment.status === 'completed' ? 'Mark Incomplete' : 'Mark Completed'}
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                </TableHeader>
+                <TableBody>
+                  {filteredAssignments.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={8} className="text-center py-10 text-muted-foreground">
+                        No assignments match your criteria
                       </TableCell>
                     </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
+                  ) : (
+                    filteredAssignments.map((assignment) => (
+                      <TableRow key={assignment.id}>
+                        <TableCell className="font-medium">{assignment.id}</TableCell>
+                        <TableCell>
+                          <div>
+                            <div>{assignment.patientName}</div>
+                            <div className="text-xs text-muted-foreground">{assignment.patientId}</div>
+                          </div>
+                        </TableCell>
+                        <TableCell>{assignment.resource}</TableCell>
+                        <TableCell>{assignment.assignedBy}</TableCell>
+                        <TableCell>{assignment.assignDate}</TableCell>
+                        <TableCell>{assignment.dueDate || 'N/A'}</TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className={getStatusColor(assignment.status)}>
+                            {assignment.status.charAt(0).toUpperCase() + assignment.status.slice(1)}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                              <DropdownMenuItem onClick={() => console.log(`View ${assignment.id}`)}>
+                                <Eye className="mr-2 h-4 w-4" />
+                                View Details
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => console.log(`Remind ${assignment.id}`)}>
+                                <Mail className="mr-2 h-4 w-4" />
+                                Send Reminder
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => console.log(`Mark ${assignment.id}`)}>
+                                <Calendar className="mr-2 h-4 w-4" />
+                                {assignment.status === 'completed' ? 'Mark Incomplete' : 'Mark Completed'}
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+            <CardFooter className="border-t p-4 flex justify-between">
+              <div className="text-sm text-muted-foreground">
+                Showing {filteredAssignments.length} of {patientAssignments.length} assignments
+              </div>
+              <Button variant="outline" size="sm">View All</Button>
+            </CardFooter>
           </CardContent>
-          <CardFooter className="border-t p-4 flex justify-between">
-            <div className="text-sm text-muted-foreground">
-              Showing {filteredAssignments.length} of {patientAssignments.length} assignments
-            </div>
-            <Button variant="outline" size="sm">View All</Button>
-          </CardFooter>
         </Card>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
