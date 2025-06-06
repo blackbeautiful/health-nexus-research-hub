@@ -15,6 +15,7 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
 import NotificationOffcanvas from '@/components/notifications/NotificationOffcanvas';
+import ThemeToggle from '@/components/ui/theme-toggle';
 import { useNavigate } from 'react-router-dom';
 import { useSidebar } from '@/components/ui/sidebar';
 
@@ -108,6 +109,9 @@ const Header = ({ title }: HeaderProps) => {
 
           {/* Notifications */}
           <NotificationOffcanvas />
+
+          {/* Theme Toggle */}
+          <ThemeToggle />
 
           {/* Profile Dropdown */}
           <DropdownMenu>

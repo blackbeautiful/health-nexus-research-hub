@@ -128,6 +128,10 @@ function App() {
               <Route path="/patients/insurance-information" element={<InsuranceInformationPage />} />
 
               {/* Clinical Workflow Routes */}
+              <Route path="/clinical-workflows/check-in" element={<ClinicalCheckInPage />} />
+              <Route path="/clinical-workflows/clinical-queue" element={<ClinicalQueuePage />} />
+              <Route path="/clinical-workflows/triage" element={<TriagePage />} />
+              <Route path="/clinical-workflows/soap-notes" element={<SOAPNotesPage />} />
               <Route path="/clinical-workflows/notes" element={<ClinicalNotesPage />} />
               <Route path="/clinical-workflows/notes/new" element={<NewClinicalNotePage />} />
               <Route path="/clinical-workflows/nursing-notes" element={<NursingNotesPage />} />
@@ -139,11 +143,6 @@ function App() {
               <Route path="/clinical-workflows/patient-education" element={<PatientEducationPage />} />
               <Route path="/clinical-workflows/medications" element={<MedicationsPage />} />
               <Route path="/clinical-workflows/discharge" element={<DischargePage />} />
-              {/* New Clinical Workflow Routes */}
-              <Route path="/clinical-workflows/queue" element={<ClinicalQueuePage />} />
-              <Route path="/clinical-workflows/triage" element={<TriagePage />} />
-              <Route path="/clinical-workflows/soap-notes" element={<SOAPNotesPage />} />
-              <Route path="/clinical-workflows/check-in" element={<ClinicalCheckInPage />} />
 
               {/* Clinical Data Routes */}
               <Route path="/clinical-data" element={<ClinicalDataPage />} />
@@ -170,6 +169,7 @@ function App() {
 
               {/* Studies Routes */}
               <Route path="/studies" element={<StudiesPage />} />
+              <Route path="/studies/create" element={<StudiesPage />} />
               <Route path="/studies/:studyId" element={<StudyDetailsPage />} />
               <Route path="/studies/protocol-setup" element={<ProtocolSetupPage />} />
               <Route path="/studies/sites" element={<StudySitesPage />} />
