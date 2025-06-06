@@ -42,7 +42,7 @@ interface PageLink {
   path: string;
   category: string;
   description?: string;
-  icon: React.ComponentType;
+  icon: React.ComponentType<any>;
   roles?: string[];
   status: 'active' | 'placeholder' | 'missing';
 }
@@ -196,7 +196,7 @@ const AllLinksPage = () => {
 
   const categories = [...new Set(allLinks.map(link => link.category))];
 
-  const getCategoryBadgeVariant = (category: string) => {
+  const getCategoryBadgeVariant = (category: string): "default" | "secondary" | "destructive" | "outline" => {
     switch (category) {
       case 'clinical': return 'default';
       case 'research': return 'secondary';
@@ -250,44 +250,47 @@ const AllLinksPage = () => {
 
         {/* Links Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredLinks.map((link, index) => (
-            <Card key={index} className="hover:shadow-md transition-shadow cursor-pointer group">
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-2">
-                    <link.icon className="h-5 w-5 text-primary" />
-                    <CardTitle className="text-base">{link.title}</CardTitle>
+          {filteredLinks.map((link, index) => {
+            const IconComponent = link.icon;
+            return (
+              <Card key={index} className="hover:shadow-md transition-shadow cursor-pointer group">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-2">
+                      <IconComponent size={20} className="text-primary" />
+                      <CardTitle className="text-base">{link.title}</CardTitle>
+                    </div>
+                    <Badge variant={getCategoryBadgeVariant(link.category)}>
+                      {link.category}
+                    </Badge>
                   </div>
-                  <Badge variant={getCategoryBadgeVariant(link.category)}>
-                    {link.category}
-                  </Badge>
-                </div>
-                <CardDescription className="text-sm">{link.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <div className="flex items-center justify-between">
-                  <code className="text-xs bg-muted px-2 py-1 rounded">{link.path}</code>
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={() => window.open(link.path, '_blank')}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                  </Button>
-                </div>
-                {link.roles && (
-                  <div className="mt-2 flex flex-wrap gap-1">
-                    {link.roles.map((role, roleIndex) => (
-                      <Badge key={roleIndex} variant="outline" className="text-xs">
-                        {role}
-                      </Badge>
-                    ))}
+                  <CardDescription className="text-sm">{link.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="flex items-center justify-between">
+                    <code className="text-xs bg-muted px-2 py-1 rounded">{link.path}</code>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => window.open(link.path, '_blank')}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <ExternalLink size={16} />
+                    </Button>
                   </div>
-                )}
-              </CardContent>
-            </Card>
-          ))}
+                  {link.roles && (
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {link.roles.map((role, roleIndex) => (
+                        <Badge key={roleIndex} variant="outline" className="text-xs">
+                          {role}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
 
         {filteredLinks.length === 0 && (
