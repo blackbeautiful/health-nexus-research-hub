@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -85,6 +86,11 @@ import AuditLogsPage from '@/pages/audit-logs/audit-logs';
 import SupportPage from '@/pages/support/support';
 import HelpPage from '@/pages/help/help';
 import NotFoundPage from '@/pages/404';
+// New clinical workflow pages
+import ClinicalQueuePage from '@/pages/clinical-workflows/clinical-queue';
+import TriagePage from '@/pages/clinical-workflows/triage';
+import SOAPNotesPage from '@/pages/clinical-workflows/soap-notes';
+import ClinicalCheckInPage from '@/pages/clinical-workflows/check-in';
 
 const queryClient = new QueryClient();
 
@@ -130,6 +136,11 @@ function App() {
           <Route path="/clinical-workflows/patient-education" element={<PatientEducationPage />} />
           <Route path="/clinical-workflows/medications" element={<MedicationsPage />} />
           <Route path="/clinical-workflows/discharge" element={<DischargePage />} />
+          {/* New Clinical Workflow Routes */}
+          <Route path="/clinical-workflows/queue" element={<ClinicalQueuePage />} />
+          <Route path="/clinical-workflows/triage" element={<TriagePage />} />
+          <Route path="/clinical-workflows/soap-notes" element={<SOAPNotesPage />} />
+          <Route path="/clinical-workflows/check-in" element={<ClinicalCheckInPage />} />
 
           {/* Clinical Data Routes */}
           <Route path="/clinical-data" element={<ClinicalDataPage />} />
