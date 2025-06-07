@@ -1,4 +1,3 @@
-
 import React from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -84,12 +83,10 @@ const CoordinatorDashboard = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'recruiting': return 'bg-blue-100 text-blue-800';
-      case 'active': return 'bg-green-100 text-green-800';
-      case 'completed': return 'bg-gray-100 text-gray-800';
-      case 'paused': return 'bg-yellow-100 text-yellow-800';
-      case 'confirmed': return 'secondary';
-      case 'pending': return 'default';
+      case 'active': return 'default';
+      case 'screening': return 'secondary';
+      case 'completed': return 'outline';
+      case 'paused': return 'destructive';
       default: return 'outline';
     }
   };
