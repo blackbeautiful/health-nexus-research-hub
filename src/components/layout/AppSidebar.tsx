@@ -84,20 +84,50 @@ const AppSidebar = () => {
     localStorage.setItem('userRole', newRole);
     
     // Auto-switch mode and navigate to appropriate dashboard based on role
-    if (newRole === 'admin') {
-      setAppMode('admin');
-      localStorage.setItem('appMode', 'admin');
-      navigate('/dashboard/admin');
-    } else if (['researcher', 'pi', 'coordinator'].includes(newRole)) {
-      setAppMode('research');
-      localStorage.setItem('appMode', 'research');
-      navigate('/dashboard/researcher');
-    } else if (newRole === 'patient') {
-      navigate('/dashboard/patient');
-    } else {
-      setAppMode('clinical');
-      localStorage.setItem('appMode', 'clinical');
-      navigate('/dashboard/clinical');
+    switch (newRole) {
+      case 'admin':
+        setAppMode('admin');
+        localStorage.setItem('appMode', 'admin');
+        navigate('/dashboard/admin');
+        break;
+      case 'nurse':
+        setAppMode('clinical');
+        localStorage.setItem('appMode', 'clinical');
+        navigate('/dashboard/nurse');
+        break;
+      case 'lab_tech':
+        setAppMode('clinical');
+        localStorage.setItem('appMode', 'clinical');
+        navigate('/dashboard/lab-tech');
+        break;
+      case 'receptionist':
+        setAppMode('clinical');
+        localStorage.setItem('appMode', 'clinical');
+        navigate('/dashboard/receptionist');
+        break;
+      case 'researcher':
+      case 'pi':
+      case 'coordinator':
+        setAppMode('research');
+        localStorage.setItem('appMode', 'research');
+        navigate('/dashboard/researcher');
+        break;
+      case 'patient':
+        navigate('/dashboard/patient');
+        break;
+      case 'participant':
+        navigate('/dashboard/patient');
+        break;
+      case 'facility_admin':
+        setAppMode('clinical');
+        localStorage.setItem('appMode', 'clinical');
+        navigate('/dashboard/clinical');
+        break;
+      default:
+        setAppMode('clinical');
+        localStorage.setItem('appMode', 'clinical');
+        navigate('/dashboard/clinical');
+        break;
     }
     
     console.log('User role changed to:', newRole);

@@ -11,7 +11,11 @@ import {
   Video,
   ArrowLeft,
   Check,
-  CheckCheck
+  CheckCheck,
+  Camera,
+  Mic,
+  Plus,
+  X
 } from 'lucide-react';
 import MainLayout from '@/components/layout/MainLayout';
 import PageHeader from '@/components/common/PageHeader';
@@ -21,6 +25,7 @@ import { Avatar } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 
 type Message = {
@@ -32,6 +37,7 @@ type Message = {
   isRead: boolean;
   isCurrentUser: boolean;
   status: 'sent' | 'delivered' | 'read';
+  type: 'text' | 'image' | 'document' | 'voice';
 };
 
 type Contact = {
@@ -103,7 +109,8 @@ const MessagingPage = () => {
       timestamp: new Date('2025-01-10T09:15:00'),
       isRead: true,
       isCurrentUser: false,
-      status: 'read'
+      status: 'read',
+      type: 'text'
     },
     {
       id: '2',
@@ -113,7 +120,8 @@ const MessagingPage = () => {
       timestamp: new Date('2025-01-10T09:20:00'),
       isRead: true,
       isCurrentUser: true,
-      status: 'read'
+      status: 'read',
+      type: 'text'
     },
     {
       id: '3',
@@ -123,7 +131,8 @@ const MessagingPage = () => {
       timestamp: new Date('2025-01-10T09:25:00'),
       isRead: true,
       isCurrentUser: false,
-      status: 'read'
+      status: 'read',
+      type: 'text'
     },
     {
       id: '4',
@@ -133,12 +142,15 @@ const MessagingPage = () => {
       timestamp: new Date('2025-01-10T10:23:00'),
       isRead: false,
       isCurrentUser: false,
-      status: 'delivered'
+      status: 'delivered',
+      type: 'text'
     }
   ]);
 
   const [newMessage, setNewMessage] = useState('');
   const [showMobileChat, setShowMobileChat] = useState(false);
+  const [showAttachMenu, setShowAttachMenu] = useState(false);
+  const [showNewMessageDialog, setShowNewMessageDialog] = useState(false);
   const { toast } = useToast();
 
   const handleContactClick = (contact: Contact) => {
@@ -164,7 +176,8 @@ const MessagingPage = () => {
       timestamp: new Date(),
       isRead: true,
       isCurrentUser: true,
-      status: 'sent'
+      status: 'sent',
+      type: 'text'
     };
     
     setMessages([...messages, newMsg]);
@@ -182,6 +195,14 @@ const MessagingPage = () => {
         msg.id === newMsg.id ? { ...msg, status: 'read' } : msg
       ));
     }, 3000);
+  };
+
+  const handleAttachment = (type: string) => {
+    setShowAttachMenu(false);
+    toast({
+      title: "Feature Available",
+      description: `${type} sharing feature is available for secure medical communication.`,
+    });
   };
 
   const formatTime = (date: Date) => {
@@ -205,9 +226,9 @@ const MessagingPage = () => {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'sent':
-        return <Check className="h-3 w-3" />;
+        return <Check className="h-3 w-3 text-gray-400" />;
       case 'delivered':
-        return <CheckCheck className="h-3 w-3" />;
+        return <CheckCheck className="h-3 w-3 text-gray-400" />;
       case 'read':
         return <CheckCheck className="h-3 w-3 text-blue-500" />;
       default:
@@ -232,19 +253,24 @@ const MessagingPage = () => {
       <PageHeader 
         title="Messages" 
         description="Secure messaging with your care team"
+        action={{
+          label: 'New Message',
+          icon: Plus,
+          onClick: () => setShowNewMessageDialog(true)
+        }}
       />
       
-      <div className="flex h-[calc(100vh-12rem)] bg-background rounded-lg overflow-hidden border">
+      <div className="flex h-[calc(100vh-12rem)] bg-background rounded-lg overflow-hidden border shadow-sm">
         {/* Contacts List */}
-        <div className={`w-full md:w-1/3 border-r bg-card ${showMobileChat ? 'hidden md:block' : 'block'}`}>
-          {/* Header */}
-          <div className="p-4 border-b bg-card">
+        <div className={`w-full md:w-1/3 border-r bg-white ${showMobileChat ? 'hidden md:block' : 'block'}`}>
+          {/* Search Header */}
+          <div className="p-3 border-b bg-gray-50">
             <div className="relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
                 type="search"
-                placeholder="Search or start new chat"
-                className="pl-10 bg-background"
+                placeholder="Search conversations"
+                className="pl-10 bg-white border-gray-200 rounded-full h-10"
               />
             </div>
           </div>
@@ -254,34 +280,36 @@ const MessagingPage = () => {
             {contacts.map(contact => (
               <div
                 key={contact.id}
-                className={`flex items-center gap-3 p-4 cursor-pointer hover:bg-muted/50 transition-colors ${
-                  activeContact.id === contact.id ? 'bg-muted' : ''
+                className={`flex items-center gap-3 p-3 cursor-pointer hover:bg-gray-50 transition-colors border-b border-gray-100 ${
+                  activeContact.id === contact.id ? 'bg-blue-50 border-blue-200' : ''
                 }`}
                 onClick={() => handleContactClick(contact)}
               >
                 <div className="relative">
                   <Avatar className="h-12 w-12">
-                    <div className="flex h-full w-full items-center justify-center bg-primary text-primary-foreground">
+                    <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 text-white font-medium">
                       {contact.avatar}
                     </div>
                   </Avatar>
                   {contact.status === 'online' && (
-                    <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-card"></span>
+                    <span className="absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full bg-green-500 border-2 border-white"></span>
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex justify-between items-start">
-                    <h4 className="font-medium text-sm truncate">{contact.name}</h4>
-                    <span className="text-xs text-muted-foreground ml-2">{formatDate(contact.lastMessageTime)}</span>
+                  <div className="flex justify-between items-start mb-1">
+                    <h4 className="font-semibold text-sm truncate text-gray-900">{contact.name}</h4>
+                    <span className="text-xs text-gray-500 ml-2">{formatDate(contact.lastMessageTime)}</span>
                   </div>
-                  <p className="text-xs text-muted-foreground mb-1">{contact.role}</p>
-                  <p className="text-sm text-muted-foreground truncate">{contact.lastMessage}</p>
+                  <p className="text-xs text-blue-600 mb-1 font-medium">{contact.role}</p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-gray-600 truncate flex-1">{contact.lastMessage}</p>
+                    {contact.unreadCount > 0 && (
+                      <Badge className="h-5 w-5 flex items-center justify-center p-0 bg-green-500 text-white rounded-full text-xs ml-2">
+                        {contact.unreadCount}
+                      </Badge>
+                    )}
+                  </div>
                 </div>
-                {contact.unreadCount > 0 && (
-                  <Badge className="h-5 w-5 flex items-center justify-center p-0 bg-green-500 text-white rounded-full text-xs">
-                    {contact.unreadCount}
-                  </Badge>
-                )}
               </div>
             ))}
           </ScrollArea>
@@ -290,7 +318,7 @@ const MessagingPage = () => {
         {/* Chat Area */}
         <div className={`flex-1 flex flex-col ${showMobileChat ? 'flex' : 'hidden md:flex'}`}>
           {/* Chat Header */}
-          <div className="p-4 border-b bg-card flex items-center justify-between">
+          <div className="p-4 border-b bg-white flex items-center justify-between shadow-sm">
             <div className="flex items-center gap-3">
               <Button 
                 variant="ghost" 
@@ -301,30 +329,31 @@ const MessagingPage = () => {
                 <ArrowLeft className="h-4 w-4" />
               </Button>
               <Avatar className="h-10 w-10">
-                <div className="flex h-full w-full items-center justify-center bg-primary text-primary-foreground">
+                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 text-white font-medium">
                   {activeContact?.avatar}
                 </div>
               </Avatar>
               <div>
-                <h3 className="font-medium">{activeContact?.name}</h3>
-                <p className="text-xs text-muted-foreground">{getLastSeenText(activeContact)}</p>
+                <h3 className="font-semibold text-gray-900">{activeContact?.name}</h3>
+                <p className="text-xs text-blue-600 font-medium">{activeContact?.role}</p>
+                <p className="text-xs text-gray-500">{getLastSeenText(activeContact)}</p>
               </div>
             </div>
             <div className="flex items-center gap-1">
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="text-gray-500 hover:bg-gray-100">
                 <Phone className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="text-gray-500 hover:bg-gray-100">
                 <Video className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="text-gray-500 hover:bg-gray-100">
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </div>
           </div>
           
-          {/* Messages */}
-          <ScrollArea className="flex-1 p-4 bg-muted/20">
+          {/* Messages Area */}
+          <ScrollArea className="flex-1 p-4 bg-gray-50">
             <div className="space-y-4">
               {messages.map((message, i) => {
                 const showDateHeader = i === 0 || 
@@ -334,7 +363,7 @@ const MessagingPage = () => {
                   <React.Fragment key={message.id}>
                     {showDateHeader && (
                       <div className="flex justify-center my-4">
-                        <Badge variant="secondary" className="bg-background text-xs px-3 py-1">
+                        <Badge variant="secondary" className="bg-white shadow-sm text-xs px-3 py-1 border">
                           {new Date(message.timestamp).toLocaleDateString(undefined, { 
                             weekday: 'long', 
                             month: 'short', 
@@ -345,15 +374,15 @@ const MessagingPage = () => {
                     )}
                     
                     <div className={`flex ${message.isCurrentUser ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`max-w-[85%] ${message.isCurrentUser ? 'flex flex-col items-end' : 'flex flex-col items-start'}`}>
-                        <div className={`rounded-2xl py-2 px-4 max-w-full break-words ${
+                      <div className={`max-w-[75%] ${message.isCurrentUser ? 'flex flex-col items-end' : 'flex flex-col items-start'}`}>
+                        <div className={`rounded-2xl py-3 px-4 max-w-full break-words shadow-sm ${
                           message.isCurrentUser 
-                            ? 'bg-primary text-primary-foreground rounded-br-md' 
-                            : 'bg-card border rounded-bl-md'
+                            ? 'bg-blue-500 text-white rounded-br-md' 
+                            : 'bg-white border rounded-bl-md text-gray-900'
                         }`}>
                           {message.content}
                         </div>
-                        <div className={`flex items-center gap-1 mt-1 text-xs text-muted-foreground ${
+                        <div className={`flex items-center gap-1 mt-1 text-xs text-gray-400 ${
                           message.isCurrentUser ? 'flex-row-reverse' : 'flex-row'
                         }`}>
                           <span>{formatTime(new Date(message.timestamp))}</span>
@@ -368,15 +397,75 @@ const MessagingPage = () => {
           </ScrollArea>
           
           {/* Message Input */}
-          <div className="p-4 border-t bg-card">
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" className="text-muted-foreground">
-                <Paperclip className="h-4 w-4" />
-              </Button>
+          <div className="p-4 border-t bg-white">
+            <div className="flex items-end gap-2">
+              <div className="relative">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="text-gray-500 hover:bg-gray-100"
+                  onClick={() => setShowAttachMenu(!showAttachMenu)}
+                >
+                  <Paperclip className="h-4 w-4" />
+                </Button>
+                
+                {/* Attachment Menu */}
+                {showAttachMenu && (
+                  <div className="absolute bottom-12 left-0 bg-white border rounded-lg shadow-lg p-2 z-10">
+                    <div className="grid grid-cols-2 gap-2 w-48">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="flex items-center gap-2 h-12"
+                        onClick={() => handleAttachment('Document')}
+                      >
+                        <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
+                          <Paperclip className="h-4 w-4 text-blue-600" />
+                        </div>
+                        <span className="text-sm">Document</span>
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="flex items-center gap-2 h-12"
+                        onClick={() => handleAttachment('Camera')}
+                      >
+                        <div className="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
+                          <Camera className="h-4 w-4 text-green-600" />
+                        </div>
+                        <span className="text-sm">Camera</span>
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="flex items-center gap-2 h-12"
+                        onClick={() => handleAttachment('Gallery')}
+                      >
+                        <div className="h-8 w-8 bg-purple-100 rounded-full flex items-center justify-center">
+                          <Image className="h-4 w-4 text-purple-600" />
+                        </div>
+                        <span className="text-sm">Gallery</span>
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="flex items-center gap-2 h-12"
+                        onClick={() => handleAttachment('Voice Note')}
+                      >
+                        <div className="h-8 w-8 bg-red-100 rounded-full flex items-center justify-center">
+                          <Mic className="h-4 w-4 text-red-600" />
+                        </div>
+                        <span className="text-sm">Voice</span>
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
               <div className="flex-1 relative">
                 <Input 
                   placeholder="Type a message..." 
-                  className="pr-20 rounded-full"
+                  className="pr-20 rounded-full border-gray-200 bg-gray-50 focus:bg-white h-12"
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   onKeyDown={(e) => {
@@ -386,20 +475,20 @@ const MessagingPage = () => {
                     }
                   }}
                 />
-                <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
-                    <Image className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
-                    <Smile className="h-4 w-4" />
-                  </Button>
-                </div>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 text-gray-400 hover:bg-gray-100"
+                >
+                  <Smile className="h-4 w-4" />
+                </Button>
               </div>
+              
               <Button 
                 onClick={handleSendMessage} 
                 disabled={!newMessage.trim()}
                 size="icon"
-                className="rounded-full"
+                className="rounded-full h-12 w-12 bg-blue-500 hover:bg-blue-600"
               >
                 <Send className="h-4 w-4" />
               </Button>
@@ -407,6 +496,55 @@ const MessagingPage = () => {
           </div>
         </div>
       </div>
+
+      {/* New Message Dialog */}
+      <Dialog open={showNewMessageDialog} onOpenChange={setShowNewMessageDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Start New Conversation</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium">Search medical staff</label>
+              <div className="relative mt-1">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input placeholder="Search by name or role..." className="pl-10" />
+              </div>
+            </div>
+            <div className="space-y-2 max-h-60 overflow-y-auto">
+              {contacts.map(contact => (
+                <div 
+                  key={contact.id} 
+                  className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer"
+                  onClick={() => {
+                    setActiveContact(contact);
+                    setShowNewMessageDialog(false);
+                    setShowMobileChat(true);
+                  }}
+                >
+                  <Avatar className="h-8 w-8">
+                    <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 text-white text-sm">
+                      {contact.avatar}
+                    </div>
+                  </Avatar>
+                  <div>
+                    <p className="font-medium text-sm">{contact.name}</p>
+                    <p className="text-xs text-blue-600">{contact.role}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Click outside to close attachment menu */}
+      {showAttachMenu && (
+        <div 
+          className="fixed inset-0 z-0" 
+          onClick={() => setShowAttachMenu(false)}
+        />
+      )}
     </MainLayout>
   );
 };

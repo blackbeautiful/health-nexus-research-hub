@@ -12,6 +12,9 @@ import DashboardPage from '@/pages/dashboards/clinical-dashboard';
 import ResearcherDashboardPage from '@/pages/dashboards/researcher-dashboard';
 import AdminDashboardPage from '@/pages/dashboards/admin-dashboard';
 import PatientDashboard from '@/pages/dashboards/patient-dashboard';
+import NurseDashboard from '@/pages/dashboards/nurse-dashboard';
+import LabTechDashboard from '@/pages/dashboards/lab-tech-dashboard';
+import ReceptionistDashboard from '@/pages/dashboards/receptionist-dashboard';
 import AllLinksPage from '@/pages/all-links';
 import PatientsListPage from '@/pages/patients/list';
 import PatientDetailsPage from '@/pages/patients/[patientId]';
@@ -135,6 +138,9 @@ function App() {
               <Route path="/dashboard/researcher" element={<ResearcherDashboardPage />} />
               <Route path="/dashboard/admin" element={<AdminDashboardPage />} />
               <Route path="/dashboard/patient" element={<PatientDashboard />} />
+              <Route path="/dashboard/nurse" element={<NurseDashboard />} />
+              <Route path="/dashboard/lab-tech" element={<LabTechDashboard />} />
+              <Route path="/dashboard/receptionist" element={<ReceptionistDashboard />} />
               
               {/* Special Navigation Routes */}
               <Route path="/all-links" element={<AllLinksPage />} />
