@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import PageHeader from '@/components/common/PageHeader';
@@ -55,160 +54,675 @@ interface PageLink {
 }
 
 const AllLinksPage = () => {
+  const allPages = [
+    // Dashboard Pages
+    {
+      title: 'Clinical Dashboard',
+      path: '/dashboard/clinical',
+      category: 'Dashboards',
+      description: 'Main clinical operations dashboard',
+      status: 'active'
+    },
+    {
+      title: 'Researcher Dashboard',
+      path: '/dashboard/researcher',
+      category: 'Dashboards',
+      description: 'Research operations dashboard',
+      status: 'active'
+    },
+    {
+      title: 'Admin Dashboard',
+      path: '/dashboard/admin',
+      category: 'Dashboards',
+      description: 'Administrative dashboard',
+      status: 'active'
+    },
+    {
+      title: 'Patient Dashboard',
+      path: '/dashboard/patient',
+      category: 'Dashboards',
+      description: 'Patient portal dashboard',
+      status: 'active'
+    },
+
+    // Patient Management
+    {
+      title: 'Patient List',
+      path: '/patients',
+      category: 'Patient Management',
+      description: 'Browse and manage patients',
+      status: 'active'
+    },
+    {
+      title: 'Patient Registration',
+      path: '/patients/register',
+      category: 'Patient Management',
+      description: 'Register new patients',
+      status: 'active'
+    },
+    {
+      title: 'Clinical Information',
+      path: '/patients/clinical-information',
+      category: 'Patient Management',
+      description: 'Patient clinical details',
+      status: 'active'
+    },
+    {
+      title: 'Insurance Information',
+      path: '/patients/insurance-information',
+      category: 'Patient Management',
+      description: 'Patient insurance details',
+      status: 'active'
+    },
+
+    // Clinical Workflows
+    {
+      title: 'Patient Check-In',
+      path: '/clinical-workflows/check-in',
+      category: 'Clinical Workflows',
+      description: 'Patient check-in process',
+      status: 'active'
+    },
+    {
+      title: 'Clinical Queue',
+      path: '/clinical-workflows/clinical-queue',
+      category: 'Clinical Workflows',
+      description: 'Patient queue management',
+      status: 'active'
+    },
+    {
+      title: 'Triage Assessment',
+      path: '/clinical-workflows/triage',
+      category: 'Clinical Workflows',
+      description: 'Patient triage and prioritization',
+      status: 'active'
+    },
+    {
+      title: 'SOAP Notes',
+      path: '/clinical-workflows/soap-notes',
+      category: 'Clinical Workflows',
+      description: 'Structured clinical notes',
+      status: 'active'
+    },
+    {
+      title: 'Clinical Notes',
+      path: '/clinical-workflows/notes',
+      category: 'Clinical Workflows',
+      description: 'Clinical documentation',
+      status: 'active'
+    },
+    {
+      title: 'Prescriptions',
+      path: '/clinical-workflows/prescriptions',
+      category: 'Clinical Workflows',
+      description: 'Medication prescriptions',
+      status: 'active'
+    },
+    {
+      title: 'Treatment Plans',
+      path: '/clinical-workflows/treatment-plans',
+      category: 'Clinical Workflows',
+      description: 'Patient treatment planning',
+      status: 'active'
+    },
+    {
+      title: 'Medical Orders',
+      path: '/clinical-workflows/medical-orders',
+      category: 'Clinical Workflows',
+      description: 'Medical order management',
+      status: 'active'
+    },
+    {
+      title: 'Patient Education',
+      path: '/clinical-workflows/patient-education',
+      category: 'Clinical Workflows',
+      description: 'Educational materials and quizzes',
+      status: 'active'
+    },
+    {
+      title: 'Medications',
+      path: '/clinical-workflows/medications',
+      category: 'Clinical Workflows',
+      description: 'Medication management',
+      status: 'active'
+    },
+    {
+      title: 'Discharge Planning',
+      path: '/clinical-workflows/discharge',
+      category: 'Clinical Workflows',
+      description: 'Patient discharge process',
+      status: 'active'
+    },
+
+    // Facility Management
+    {
+      title: 'Bed Management',
+      path: '/facility-management/beds',
+      category: 'Facility Management',
+      description: 'Hospital bed allocation and tracking',
+      status: 'active'
+    },
+    {
+      title: 'Room Allocation',
+      path: '/facility-management/rooms',
+      category: 'Facility Management',
+      description: 'Room assignment and capacity management',
+      status: 'active'
+    },
+    {
+      title: 'Equipment Tracking',
+      path: '/facility-management/equipment',
+      category: 'Facility Management',
+      description: 'Medical equipment management',
+      status: 'active'
+    },
+    {
+      title: 'Maintenance',
+      path: '/facility-management/maintenance',
+      category: 'Facility Management',
+      description: 'Facility maintenance scheduling',
+      status: 'active'
+    },
+
+    // Staff Management
+    {
+      title: 'Staff Directory',
+      path: '/staff-management/directory',
+      category: 'Staff Management',
+      description: 'Employee directory and contacts',
+      status: 'active'
+    },
+    {
+      title: 'Duty Schedules',
+      path: '/staff-management/schedules',
+      category: 'Staff Management',
+      description: 'Staff scheduling and assignments',
+      status: 'active'
+    },
+    {
+      title: 'Shift Management',
+      path: '/staff-management/shifts',
+      category: 'Staff Management',
+      description: 'Shift planning and coverage',
+      status: 'active'
+    },
+    {
+      title: 'Time Tracking',
+      path: '/staff-management/time-tracking',
+      category: 'Staff Management',
+      description: 'Employee time and attendance',
+      status: 'active'
+    },
+    {
+      title: 'Leave Management',
+      path: '/staff-management/leave',
+      category: 'Staff Management',
+      description: 'Employee leave requests and approval',
+      status: 'active'
+    },
+
+    // HR Management
+    {
+      title: 'Employee Records',
+      path: '/hr-management/employees',
+      category: 'HR Management',
+      description: 'Comprehensive employee information',
+      status: 'active'
+    },
+    {
+      title: 'Payroll',
+      path: '/hr-management/payroll',
+      category: 'HR Management',
+      description: 'Payroll processing and management',
+      status: 'active'
+    },
+    {
+      title: 'Benefits',
+      path: '/hr-management/benefits',
+      category: 'HR Management',
+      description: 'Employee benefits administration',
+      status: 'active'
+    },
+    {
+      title: 'Training & Certification',
+      path: '/hr-management/training',
+      category: 'HR Management',
+      description: 'Employee training and certifications',
+      status: 'active'
+    },
+    {
+      title: 'Performance Reviews',
+      path: '/hr-management/performance',
+      category: 'HR Management',
+      description: 'Employee performance evaluations',
+      status: 'active'
+    },
+
+    // Medical Records
+    {
+      title: 'Medical Records',
+      path: '/medical-records',
+      category: 'Medical Records',
+      description: 'Patient medical records overview',
+      status: 'active'
+    },
+    {
+      title: 'Patient History',
+      path: '/medical-records/history',
+      category: 'Medical Records',
+      description: 'Patient medical history',
+      status: 'active'
+    },
+    {
+      title: 'Diagnoses',
+      path: '/medical-records/diagnoses',
+      category: 'Medical Records',
+      description: 'Patient diagnoses and conditions',
+      status: 'active'
+    },
+    {
+      title: 'Imaging Results',
+      path: '/medical-records/imaging',
+      category: 'Medical Records',
+      description: 'Medical imaging and scans',
+      status: 'active'
+    },
+    {
+      title: 'External Records',
+      path: '/medical-records/external',
+      category: 'Medical Records',
+      description: 'External provider records',
+      status: 'active'
+    },
+
+    // Clinical Data & Lab
+    {
+      title: 'Clinical Data',
+      path: '/clinical-data',
+      category: 'Clinical Data & Lab',
+      description: 'Clinical data overview',
+      status: 'active'
+    },
+    {
+      title: 'Vital Signs',
+      path: '/clinical-data/vitals',
+      category: 'Clinical Data & Lab',
+      description: 'Patient vital signs monitoring',
+      status: 'active'
+    },
+    {
+      title: 'Lab Results',
+      path: '/lab-results',
+      category: 'Clinical Data & Lab',
+      description: 'Laboratory test results',
+      status: 'active'
+    },
+    {
+      title: 'Quality Control',
+      path: '/lab/quality-control',
+      category: 'Clinical Data & Lab',
+      description: 'Lab quality control measures',
+      status: 'active'
+    },
+    {
+      title: 'Sample Management',
+      path: '/lab/samples',
+      category: 'Clinical Data & Lab',
+      description: 'Laboratory sample tracking',
+      status: 'active'
+    },
+
+    // Appointments & Communication
+    {
+      title: 'Appointments',
+      path: '/appointments',
+      category: 'Appointments & Communication',
+      description: 'Appointment scheduling and management',
+      status: 'active'
+    },
+    {
+      title: 'Appointment Check-In',
+      path: '/appointments/checkin',
+      category: 'Appointments & Communication',
+      description: 'Patient appointment check-in',
+      status: 'active'
+    },
+    {
+      title: 'Messages',
+      path: '/messages',
+      category: 'Appointments & Communication',
+      description: 'Internal messaging system',
+      status: 'active'
+    },
+
+    // Research Studies
+    {
+      title: 'Research Studies',
+      path: '/studies',
+      category: 'Research Studies',
+      description: 'Research study management',
+      status: 'active'
+    },
+    {
+      title: 'Protocol Setup',
+      path: '/studies/protocol-setup',
+      category: 'Research Studies',
+      description: 'Study protocol configuration',
+      status: 'active'
+    },
+    {
+      title: 'Study Sites',
+      path: '/studies/sites',
+      category: 'Research Studies',
+      description: 'Multi-site study management',
+      status: 'active'
+    },
+    {
+      title: 'Protocol Documents',
+      path: '/studies/protocol-documents',
+      category: 'Research Studies',
+      description: 'Study documentation',
+      status: 'active'
+    },
+    {
+      title: 'Consent Tracking',
+      path: '/studies/consent-tracking',
+      category: 'Research Studies',
+      description: 'Patient consent management',
+      status: 'active'
+    },
+    {
+      title: 'Patient Randomization',
+      path: '/studies/patient-randomization',
+      category: 'Research Studies',
+      description: 'Study randomization process',
+      status: 'active'
+    },
+    {
+      title: 'Protocol Deviations',
+      path: '/studies/protocol-deviations',
+      category: 'Research Studies',
+      description: 'Track protocol deviations',
+      status: 'active'
+    },
+    {
+      title: 'Site Visits',
+      path: '/studies/site-visits',
+      category: 'Research Studies',
+      description: 'Site monitoring visits',
+      status: 'active'
+    },
+    {
+      title: 'Study Finance',
+      path: '/studies/finance',
+      category: 'Research Studies',
+      description: 'Study financial management',
+      status: 'active'
+    },
+    {
+      title: 'Quiz Management',
+      path: '/studies/quiz-management',
+      category: 'Research Studies',
+      description: 'Patient education quizzes',
+      status: 'active'
+    },
+    {
+      title: 'Recruitment',
+      path: '/studies/recruitment',
+      category: 'Research Studies',
+      description: 'Patient recruitment tools',
+      status: 'active'
+    },
+
+    // Research Data
+    {
+      title: 'Data Collection',
+      path: '/research-data/collection',
+      category: 'Research Data',
+      description: 'Research data collection',
+      status: 'active'
+    },
+    {
+      title: 'Data Exports',
+      path: '/research-data/exports',
+      category: 'Research Data',
+      description: 'Export research data',
+      status: 'active'
+    },
+    {
+      title: 'Research Lab Results',
+      path: '/research-data/lab-results',
+      category: 'Research Data',
+      description: 'Research laboratory results',
+      status: 'active'
+    },
+    {
+      title: 'Biospecimen Tracking',
+      path: '/research-data/biospecimen',
+      category: 'Research Data',
+      description: 'Biospecimen management',
+      status: 'active'
+    },
+
+    // Forms & Data
+    {
+      title: 'Form Builder',
+      path: '/forms/builder',
+      category: 'Forms & Data',
+      description: 'Create custom forms',
+      status: 'active'
+    },
+    {
+      title: 'Case Report Forms',
+      path: '/forms/crfs',
+      category: 'Forms & Data',
+      description: 'Clinical research forms',
+      status: 'active'
+    },
+    {
+      title: 'Data Queries',
+      path: '/data/queries',
+      category: 'Forms & Data',
+      description: 'Data quality queries',
+      status: 'active'
+    },
+
+    // Analytics & Reports
+    {
+      title: 'Analytics Overview',
+      path: '/analytics',
+      category: 'Analytics & Reports',
+      description: 'Main analytics dashboard',
+      status: 'active'
+    },
+    {
+      title: 'Enrollment Analytics',
+      path: '/analytics/enrollment',
+      category: 'Analytics & Reports',
+      description: 'Study enrollment metrics',
+      status: 'active'
+    },
+    {
+      title: 'Study Outcomes',
+      path: '/analytics/outcomes',
+      category: 'Analytics & Reports',
+      description: 'Study outcome analysis',
+      status: 'active'
+    },
+    {
+      title: 'Site Performance',
+      path: '/analytics/site-performance',
+      category: 'Analytics & Reports',
+      description: 'Site performance metrics',
+      status: 'active'
+    },
+    {
+      title: 'Data Quality',
+      path: '/analytics/data-quality',
+      category: 'Analytics & Reports',
+      description: 'Data quality assessment',
+      status: 'active'
+    },
+    {
+      title: 'Geographic Distribution',
+      path: '/analytics/geographic',
+      category: 'Analytics & Reports',
+      description: 'Geographic analytics',
+      status: 'active'
+    },
+    {
+      title: 'Usage Analytics',
+      path: '/analytics/usage',
+      category: 'Analytics & Reports',
+      description: 'System usage statistics',
+      status: 'active'
+    },
+    {
+      title: 'Revenue Reports',
+      path: '/analytics/revenue',
+      category: 'Analytics & Reports',
+      description: 'Financial reporting',
+      status: 'active'
+    },
+
+    // Clinical Reports
+    {
+      title: 'Clinical Reports',
+      path: '/clinical-reports',
+      category: 'Clinical Reports',
+      description: 'Clinical reporting overview',
+      status: 'active'
+    },
+    {
+      title: 'Treatment Outcomes',
+      path: '/clinical-reports/outcomes',
+      category: 'Clinical Reports',
+      description: 'Patient treatment outcomes',
+      status: 'active'
+    },
+    {
+      title: 'Patient Analytics',
+      path: '/clinical-reports/patient-analytics',
+      category: 'Clinical Reports',
+      description: 'Patient population analytics',
+      status: 'active'
+    },
+    {
+      title: 'Provider Metrics',
+      path: '/clinical-reports/provider-metrics',
+      category: 'Clinical Reports',
+      description: 'Healthcare provider performance',
+      status: 'active'
+    },
+    {
+      title: 'Medication Reports',
+      path: '/clinical-reports/medications',
+      category: 'Clinical Reports',
+      description: 'Medication usage reports',
+      status: 'active'
+    },
+    {
+      title: 'Handoff Reports',
+      path: '/clinical-reports/handoff',
+      category: 'Clinical Reports',
+      description: 'Care transition reports',
+      status: 'active'
+    },
+
+    // Administration
+    {
+      title: 'User Management',
+      path: '/users',
+      category: 'Administration',
+      description: 'Manage system users',
+      status: 'active'
+    },
+    {
+      title: 'Roles & Permissions',
+      path: '/users/roles',
+      category: 'Administration',
+      description: 'Configure user roles',
+      status: 'active'
+    },
+    {
+      title: 'Access Requests',
+      path: '/users/access-requests',
+      category: 'Administration',
+      description: 'User access requests',
+      status: 'active'
+    },
+    {
+      title: 'Facilities',
+      path: '/facilities',
+      category: 'Administration',
+      description: 'Facility management',
+      status: 'active'
+    },
+    {
+      title: 'Settings',
+      path: '/settings',
+      category: 'Administration',
+      description: 'System settings',
+      status: 'active'
+    },
+    {
+      title: 'Billing',
+      path: '/settings/billing',
+      category: 'Administration',
+      description: 'Billing configuration',
+      status: 'active'
+    },
+    {
+      title: 'Notifications',
+      path: '/settings/notifications',
+      category: 'Administration',
+      description: 'Notification settings',
+      status: 'active'
+    },
+    {
+      title: 'System Configuration',
+      path: '/settings/system',
+      category: 'Administration',
+      description: 'System configuration',
+      status: 'active'
+    },
+    {
+      title: 'Compliance',
+      path: '/compliance',
+      category: 'Administration',
+      description: 'Compliance monitoring',
+      status: 'active'
+    },
+    {
+      title: 'Audit Logs',
+      path: '/audit-logs',
+      category: 'Administration',
+      description: 'System audit trails',
+      status: 'active'
+    },
+
+    // Support
+    {
+      title: 'Support',
+      path: '/support',
+      category: 'Support',
+      description: 'Help and support center',
+      status: 'active'
+    },
+    {
+      title: 'Help Documentation',
+      path: '/help',
+      category: 'Support',
+      description: 'User help documentation',
+      status: 'active'
+    }
+  ];
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
   // Comprehensive list of all pages and their information
-  const allLinks: PageLink[] = [
-    // Authentication
-    { title: "Login", path: "/login", category: "Authentication", description: "User authentication", icon: User, status: 'active' },
-    { title: "Register", path: "/register", category: "Authentication", description: "User registration", icon: User, status: 'active' },
-    { title: "Forgot Password", path: "/forgot-password", category: "Authentication", description: "Password recovery", icon: User, status: 'active' },
-
-    // Dashboards
-    { title: "Clinical Dashboard", path: "/dashboard/clinical", category: "Dashboards", description: "Clinical practice overview", icon: Stethoscope, status: 'active' },
-    { title: "Researcher Dashboard", path: "/dashboard/researcher", category: "Dashboards", description: "Research activities overview", icon: FlaskRound, status: 'active' },
-    { title: "Admin Dashboard", path: "/dashboard/admin", category: "Dashboards", description: "Administrative controls", icon: Settings, status: 'active' },
-    { title: "Patient Dashboard", path: "/dashboard/patient", category: "Dashboards", description: "Patient portal", icon: User, status: 'active' },
-
-    // Patient Management
-    { title: "Patient List", path: "/patients", category: "Patient Management", description: "View all patients", icon: Users, status: 'active' },
-    { title: "Patient Details", path: "/patients/patient-123", category: "Patient Management", description: "Individual patient information", icon: User, status: 'active' },
-    { title: "Patient Registration", path: "/patients/register", category: "Patient Management", description: "Register new patient", icon: User, status: 'active' },
-    { title: "Clinical Information", path: "/patients/clinical-information", category: "Patient Management", description: "Patient clinical data", icon: FileText, status: 'active' },
-    { title: "Insurance Information", path: "/patients/insurance-information", category: "Patient Management", description: "Patient insurance details", icon: FileText, status: 'active' },
-
-    // Clinical Workflows
-    { title: "Patient Check-In", path: "/clinical-workflows/check-in", category: "Clinical Workflows", description: "Patient check-in process", icon: CheckCircle, status: 'active' },
-    { title: "Clinical Queue", path: "/clinical-workflows/clinical-queue", category: "Clinical Workflows", description: "View clinical queue", icon: Users, status: 'active' },
-    { title: "Triage Assessment", path: "/clinical-workflows/triage", category: "Clinical Workflows", description: "Patient triage", icon: Activity, status: 'active' },
-    { title: "SOAP Notes", path: "/clinical-workflows/soap-notes", category: "Clinical Workflows", description: "Clinical documentation", icon: FileText, status: 'active' },
-    { title: "Clinical Notes", path: "/clinical-workflows/notes", category: "Clinical Workflows", description: "General clinical notes", icon: FileText, status: 'active' },
-    { title: "New Clinical Note", path: "/clinical-workflows/notes/new", category: "Clinical Workflows", description: "Create new clinical note", icon: FileText, status: 'active' },
-    { title: "Nursing Notes", path: "/clinical-workflows/nursing-notes", category: "Clinical Workflows", description: "Nursing documentation", icon: FileText, status: 'active' },
-    { title: "New Nursing Note", path: "/clinical-workflows/nursing-notes/new", category: "Clinical Workflows", description: "Create new nursing note", icon: FileText, status: 'active' },
-    { title: "Prescriptions", path: "/clinical-workflows/prescriptions", category: "Clinical Workflows", description: "Manage prescriptions", icon: Pill, status: 'active' },
-    { title: "New Prescription", path: "/clinical-workflows/prescriptions/new", category: "Clinical Workflows", description: "Create new prescription", icon: Pill, status: 'active' },
-    { title: "Treatment Plans", path: "/clinical-workflows/treatment-plans", category: "Clinical Workflows", description: "Patient treatment plans", icon: HeartPulse, status: 'active' },
-    { title: "Medical Orders", path: "/clinical-workflows/medical-orders", category: "Clinical Workflows", description: "Medical orders management", icon: FileText, status: 'active' },
-    { title: "Patient Education", path: "/clinical-workflows/patient-education", category: "Clinical Workflows", description: "Patient education materials", icon: BookOpen, status: 'active' },
-    { title: "Medications", path: "/clinical-workflows/medications", category: "Clinical Workflows", description: "Medication management", icon: Pill, status: 'active' },
-    { title: "Discharge", path: "/clinical-workflows/discharge", category: "Clinical Workflows", description: "Patient discharge process", icon: FileText, status: 'active' },
-
-    // Facility Management
-    { title: "Bed Management", path: "/facility-management/beds", category: "Facility Management", description: "Hospital bed allocation and tracking", icon: Bed, status: 'active' },
-    { title: "Room Allocation", path: "/facility-management/rooms", category: "Facility Management", description: "Room assignment and management", icon: Building2, status: 'active' },
-    { title: "Equipment Tracking", path: "/facility-management/equipment", category: "Facility Management", description: "Medical equipment management", icon: MonitorSpeaker, status: 'active' },
-    { title: "Maintenance", path: "/facility-management/maintenance", category: "Facility Management", description: "Facility maintenance scheduling", icon: Settings, status: 'active' },
-
-    // Staff Management
-    { title: "Staff Directory", path: "/staff-management/directory", category: "Staff Management", description: "Hospital staff directory", icon: Users, status: 'active' },
-    { title: "Duty Schedules", path: "/staff-management/schedules", category: "Staff Management", description: "Staff duty scheduling", icon: Calendar, status: 'active' },
-    { title: "Shift Management", path: "/staff-management/shifts", category: "Staff Management", description: "Shift planning and management", icon: CalendarCheck, status: 'placeholder' },
-    { title: "Time Tracking", path: "/staff-management/time-tracking", category: "Staff Management", description: "Staff time and attendance", icon: Clock, status: 'placeholder' },
-    { title: "Leave Management", path: "/staff-management/leave", category: "Staff Management", description: "Staff leave requests and approval", icon: UserX, status: 'placeholder' },
-
-    // HR Management
-    { title: "Employee Records", path: "/hr-management/employees", category: "HR Management", description: "Employee personal and professional records", icon: FileText, status: 'placeholder' },
-    { title: "Payroll", path: "/hr-management/payroll", category: "HR Management", description: "Payroll processing and management", icon: DollarSign, status: 'placeholder' },
-    { title: "Benefits", path: "/hr-management/benefits", category: "HR Management", description: "Employee benefits administration", icon: Heart, status: 'placeholder' },
-    { title: "Training & Certification", path: "/hr-management/training", category: "HR Management", description: "Staff training and certification tracking", icon: BookOpen, status: 'placeholder' },
-    { title: "Performance Reviews", path: "/hr-management/performance", category: "HR Management", description: "Employee performance evaluations", icon: BarChart2, status: 'placeholder' },
-
-    // Clinical Data
-    { title: "Clinical Data", path: "/clinical-data", category: "Clinical Data", description: "Clinical data overview", icon: Database, status: 'active' },
-    { title: "Vital Signs", path: "/clinical-data/vitals", category: "Clinical Data", description: "Patient vital signs", icon: Activity, status: 'active' },
-
-    // Laboratory
-    { title: "Lab Results", path: "/lab-results", category: "Laboratory", description: "Laboratory test results", icon: TestTube, status: 'active' },
-    { title: "Quality Control", path: "/lab/quality-control", category: "Laboratory", description: "Lab quality control", icon: TestTube, status: 'active' },
-    { title: "Samples", path: "/lab/samples", category: "Laboratory", description: "Sample management", icon: TestTube, status: 'active' },
-
-    // Medical Records
-    { title: "Medical Records", path: "/medical-records", category: "Medical Records", description: "Patient medical records", icon: FileText, status: 'active' },
-    { title: "Patient History", path: "/medical-records/history", category: "Medical Records", description: "Patient medical history", icon: FileText, status: 'active' },
-    { title: "Diagnoses", path: "/medical-records/diagnoses", category: "Medical Records", description: "Patient diagnoses", icon: FileText, status: 'active' },
-    { title: "Imaging Results", path: "/medical-records/imaging", category: "Medical Records", description: "Medical imaging results", icon: FileText, status: 'active' },
-    { title: "External Records", path: "/medical-records/external", category: "Medical Records", description: "External medical records", icon: FileText, status: 'active' },
-
-    // Appointments
-    { title: "Appointments", path: "/appointments", category: "Scheduling", description: "Appointment management", icon: Calendar, status: 'active' },
-    { title: "Check-in", path: "/appointments/checkin", category: "Scheduling", description: "Appointment check-in", icon: Calendar, status: 'active' },
-
-    // Messages
-    { title: "Messages", path: "/messages", category: "Communication", description: "Messaging system", icon: MessageSquare, status: 'active' },
-
-    // Studies
-    { title: "Studies", path: "/studies", category: "Research", description: "Research studies", icon: FlaskRound, status: 'active' },
-    { title: "Study Details", path: "/studies/study-123", category: "Research", description: "Individual study details", icon: FlaskRound, status: 'active' },
-    { title: "Protocol Setup", path: "/studies/protocol-setup", category: "Research", description: "Study protocol setup", icon: FlaskRound, status: 'active' },
-    { title: "Study Sites", path: "/studies/sites", category: "Research", description: "Research study sites", icon: Building2, status: 'active' },
-    { title: "Protocol Documents", path: "/studies/protocol-documents", category: "Research", description: "Study protocol documents", icon: FileText, status: 'active' },
-    { title: "Consent Tracking", path: "/studies/consent-tracking", category: "Research", description: "Patient consent tracking", icon: FileText, status: 'active' },
-    { title: "Patient Randomization", path: "/studies/patient-randomization", category: "Research", description: "Study randomization", icon: Users, status: 'active' },
-    { title: "Protocol Deviations", path: "/studies/protocol-deviations", category: "Research", description: "Protocol deviation tracking", icon: FileText, status: 'active' },
-    { title: "Site Visits", path: "/studies/site-visits", category: "Research", description: "Study site visits", icon: Building2, status: 'active' },
-    { title: "Study Finance", path: "/studies/finance", category: "Research", description: "Study financial management", icon: DollarSign, status: 'active' },
-    { title: "Quiz Management", path: "/studies/quiz-management", category: "Research", description: "Study quiz management", icon: FileText, status: 'active' },
-    { title: "Recruitment", path: "/studies/recruitment", category: "Research", description: "Patient recruitment", icon: Users, status: 'active' },
-
-    // Research Data
-    { title: "Data Collection", path: "/research-data/collection", category: "Research Data", description: "Research data collection", icon: Database, status: 'active' },
-    { title: "Data Exports", path: "/research-data/exports", category: "Research Data", description: "Data export tools", icon: Database, status: 'active' },
-    { title: "Research Lab Results", path: "/research-data/lab-results", category: "Research Data", description: "Research laboratory results", icon: TestTube, status: 'active' },
-    { title: "Biospecimen Tracking", path: "/research-data/biospecimen", category: "Research Data", description: "Biospecimen management", icon: Microscope, status: 'active' },
-
-    // Forms
-    { title: "Form Builder", path: "/forms/builder", category: "Forms", description: "Form building tool", icon: FileText, status: 'active' },
-    { title: "CRFs", path: "/forms/crfs", category: "Forms", description: "Case Report Forms", icon: FileText, status: 'active' },
-
-    // Data Management
-    { title: "Data Queries", path: "/data/queries", category: "Data Management", description: "Data query management", icon: Database, status: 'active' },
-
-    // Analytics
-    { title: "Analytics", path: "/analytics", category: "Analytics", description: "Analytics overview", icon: BarChart2, status: 'active' },
-    { title: "Enrollment Analytics", path: "/analytics/enrollment", category: "Analytics", description: "Enrollment analytics", icon: BarChart2, status: 'active' },
-    { title: "Study Outcomes", path: "/analytics/outcomes", category: "Analytics", description: "Study outcome analytics", icon: BarChart2, status: 'active' },
-    { title: "Site Performance", path: "/analytics/site-performance", category: "Analytics", description: "Site performance metrics", icon: BarChart2, status: 'active' },
-    { title: "Data Quality", path: "/analytics/data-quality", category: "Analytics", description: "Data quality metrics", icon: BarChart2, status: 'active' },
-    { title: "Geographic Distribution", path: "/analytics/geographic", category: "Analytics", description: "Geographic analytics", icon: BarChart2, status: 'active' },
-    { title: "Usage Analytics", path: "/analytics/usage", category: "Analytics", description: "Usage analytics", icon: BarChart2, status: 'active' },
-    { title: "Revenue Reports", path: "/analytics/revenue", category: "Analytics", description: "Revenue reports", icon: BarChart2, status: 'active' },
-
-    // Clinical Reports
-    { title: "Clinical Reports", path: "/clinical-reports", category: "Reports", description: "Clinical reporting", icon: FileText, status: 'active' },
-    { title: "Treatment Outcomes", path: "/clinical-reports/outcomes", category: "Reports", description: "Treatment outcome reports", icon: FileText, status: 'active' },
-    { title: "Patient Analytics", path: "/clinical-reports/patient-analytics", category: "Reports", description: "Patient analytics reports", icon: FileText, status: 'active' },
-    { title: "Provider Metrics", path: "/clinical-reports/provider-metrics", category: "Reports", description: "Provider performance metrics", icon: FileText, status: 'active' },
-    { title: "Medication Reports", path: "/clinical-reports/medications", category: "Reports", description: "Medication reports", icon: Pill, status: 'active' },
-    { title: "Handoff Reports", path: "/clinical-reports/handoff", category: "Reports", description: "Patient handoff reports", icon: FileText, status: 'active' },
-
-    // User Management
-    { title: "Users", path: "/users", category: "Administration", description: "User management", icon: Users, status: 'active' },
-    { title: "Roles & Permissions", path: "/users/roles", category: "Administration", description: "Role and permission management", icon: Shield, status: 'active' },
-    { title: "Access Requests", path: "/users/access-requests", category: "Administration", description: "Access request management", icon: Users, status: 'active' },
-
-    // Facilities
-    { title: "Facilities", path: "/facilities", category: "Administration", description: "Facility management", icon: Building2, status: 'active' },
-
-    // Settings
-    { title: "Settings", path: "/settings", category: "Settings", description: "Application settings", icon: Settings, status: 'active' },
-    { title: "Billing", path: "/settings/billing", category: "Settings", description: "Billing settings", icon: DollarSign, status: 'active' },
-    { title: "Notifications", path: "/settings/notifications", category: "Settings", description: "Notification settings", icon: Settings, status: 'active' },
-    { title: "System Configuration", path: "/settings/system", category: "Settings", description: "System configuration", icon: Settings, status: 'active' },
-
-    // Compliance & Audit
-    { title: "Compliance", path: "/compliance", category: "Compliance", description: "Compliance management", icon: ShieldAlert, status: 'active' },
-    { title: "Audit Logs", path: "/audit-logs", category: "Compliance", description: "System audit logs", icon: Shield, status: 'active' },
-
-    // Support
-    { title: "Support", path: "/support", category: "Support", description: "Support resources", icon: MessageSquare, status: 'active' },
-    { title: "Help", path: "/help", category: "Support", description: "Help documentation", icon: BookOpen, status: 'active' },
-
-    // Special Pages
-    { title: "All Links", path: "/all-links", category: "Navigation", description: "Complete page directory", icon: FileText, status: 'active' },
-    { title: "404 Not Found", path: "/404", category: "Error Pages", description: "Page not found", icon: FileText, status: 'active' }
-  ];
+  const allLinks: PageLink[] = allPages;
 
   const filteredLinks = allLinks.filter(link => {
     const matchesSearch = link.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
