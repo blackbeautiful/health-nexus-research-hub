@@ -61,6 +61,7 @@ const AllLinksPage = () => {
       path: '/dashboard/clinical',
       category: 'Dashboards',
       description: 'Main clinical operations dashboard',
+      icon: Activity,
       status: 'active'
     },
     {
@@ -68,6 +69,7 @@ const AllLinksPage = () => {
       path: '/dashboard/researcher',
       category: 'Dashboards',
       description: 'Research operations dashboard',
+      icon: TestTube,
       status: 'active'
     },
     {
@@ -75,6 +77,7 @@ const AllLinksPage = () => {
       path: '/dashboard/admin',
       category: 'Dashboards',
       description: 'Administrative dashboard',
+      icon: Settings,
       status: 'active'
     },
     {
@@ -82,6 +85,7 @@ const AllLinksPage = () => {
       path: '/dashboard/patient',
       category: 'Dashboards',
       description: 'Patient portal dashboard',
+      icon: User,
       status: 'active'
     },
 
@@ -91,6 +95,7 @@ const AllLinksPage = () => {
       path: '/patients',
       category: 'Patient Management',
       description: 'Browse and manage patients',
+      icon: Users,
       status: 'active'
     },
     {
@@ -98,6 +103,7 @@ const AllLinksPage = () => {
       path: '/patients/register',
       category: 'Patient Management',
       description: 'Register new patients',
+      icon: PlusCircle,
       status: 'active'
     },
     {
@@ -105,6 +111,7 @@ const AllLinksPage = () => {
       path: '/patients/clinical-information',
       category: 'Patient Management',
       description: 'Patient clinical details',
+      icon: Stethoscope,
       status: 'active'
     },
     {
@@ -112,6 +119,7 @@ const AllLinksPage = () => {
       path: '/patients/insurance-information',
       category: 'Patient Management',
       description: 'Patient insurance details',
+      icon: Shield,
       status: 'active'
     },
 
@@ -121,6 +129,7 @@ const AllLinksPage = () => {
       path: '/clinical-workflows/check-in',
       category: 'Clinical Workflows',
       description: 'Patient check-in process',
+      icon: CheckCircle,
       status: 'active'
     },
     {
@@ -128,6 +137,7 @@ const AllLinksPage = () => {
       path: '/clinical-workflows/clinical-queue',
       category: 'Clinical Workflows',
       description: 'Patient queue management',
+      icon: Users,
       status: 'active'
     },
     {
@@ -135,6 +145,7 @@ const AllLinksPage = () => {
       path: '/clinical-workflows/triage',
       category: 'Clinical Workflows',
       description: 'Patient triage and prioritization',
+      icon: HeartPulse,
       status: 'active'
     },
     {
@@ -142,6 +153,7 @@ const AllLinksPage = () => {
       path: '/clinical-workflows/soap-notes',
       category: 'Clinical Workflows',
       description: 'Structured clinical notes',
+      icon: FileText,
       status: 'active'
     },
     {
@@ -149,6 +161,7 @@ const AllLinksPage = () => {
       path: '/clinical-workflows/notes',
       category: 'Clinical Workflows',
       description: 'Clinical documentation',
+      icon: FileText,
       status: 'active'
     },
     {
@@ -156,6 +169,7 @@ const AllLinksPage = () => {
       path: '/clinical-workflows/prescriptions',
       category: 'Clinical Workflows',
       description: 'Medication prescriptions',
+      icon: Pill,
       status: 'active'
     },
     {
@@ -163,6 +177,7 @@ const AllLinksPage = () => {
       path: '/clinical-workflows/treatment-plans',
       category: 'Clinical Workflows',
       description: 'Patient treatment planning',
+      icon: Heart,
       status: 'active'
     },
     {
@@ -170,6 +185,7 @@ const AllLinksPage = () => {
       path: '/clinical-workflows/medical-orders',
       category: 'Clinical Workflows',
       description: 'Medical order management',
+      icon: FileText,
       status: 'active'
     },
     {
@@ -177,6 +193,7 @@ const AllLinksPage = () => {
       path: '/clinical-workflows/patient-education',
       category: 'Clinical Workflows',
       description: 'Educational materials and quizzes',
+      icon: BookOpen,
       status: 'active'
     },
     {
@@ -184,6 +201,7 @@ const AllLinksPage = () => {
       path: '/clinical-workflows/medications',
       category: 'Clinical Workflows',
       description: 'Medication management',
+      icon: Pill,
       status: 'active'
     },
     {
@@ -191,6 +209,7 @@ const AllLinksPage = () => {
       path: '/clinical-workflows/discharge',
       category: 'Clinical Workflows',
       description: 'Patient discharge process',
+      icon: UserX,
       status: 'active'
     },
 
@@ -200,6 +219,7 @@ const AllLinksPage = () => {
       path: '/facility-management/beds',
       category: 'Facility Management',
       description: 'Hospital bed allocation and tracking',
+      icon: Bed,
       status: 'active'
     },
     {
@@ -207,6 +227,7 @@ const AllLinksPage = () => {
       path: '/facility-management/rooms',
       category: 'Facility Management',
       description: 'Room assignment and capacity management',
+      icon: Building2,
       status: 'active'
     },
     {
@@ -214,6 +235,7 @@ const AllLinksPage = () => {
       path: '/facility-management/equipment',
       category: 'Facility Management',
       description: 'Medical equipment management',
+      icon: MonitorSpeaker,
       status: 'active'
     },
     {
@@ -221,6 +243,7 @@ const AllLinksPage = () => {
       path: '/facility-management/maintenance',
       category: 'Facility Management',
       description: 'Facility maintenance scheduling',
+      icon: Settings,
       status: 'active'
     },
 
@@ -230,6 +253,7 @@ const AllLinksPage = () => {
       path: '/staff-management/directory',
       category: 'Staff Management',
       description: 'Employee directory and contacts',
+      icon: Users,
       status: 'active'
     },
     {
@@ -237,6 +261,7 @@ const AllLinksPage = () => {
       path: '/staff-management/schedules',
       category: 'Staff Management',
       description: 'Staff scheduling and assignments',
+      icon: Calendar,
       status: 'active'
     },
     {
@@ -244,6 +269,7 @@ const AllLinksPage = () => {
       path: '/staff-management/shifts',
       category: 'Staff Management',
       description: 'Shift planning and coverage',
+      icon: Clock,
       status: 'active'
     },
     {
@@ -251,6 +277,7 @@ const AllLinksPage = () => {
       path: '/staff-management/time-tracking',
       category: 'Staff Management',
       description: 'Employee time and attendance',
+      icon: Clock,
       status: 'active'
     },
     {
@@ -258,6 +285,7 @@ const AllLinksPage = () => {
       path: '/staff-management/leave',
       category: 'Staff Management',
       description: 'Employee leave requests and approval',
+      icon: CalendarCheck,
       status: 'active'
     },
 
@@ -267,6 +295,7 @@ const AllLinksPage = () => {
       path: '/hr-management/employees',
       category: 'HR Management',
       description: 'Comprehensive employee information',
+      icon: UserCog,
       status: 'active'
     },
     {
@@ -274,6 +303,7 @@ const AllLinksPage = () => {
       path: '/hr-management/payroll',
       category: 'HR Management',
       description: 'Payroll processing and management',
+      icon: DollarSign,
       status: 'active'
     },
     {
@@ -281,6 +311,7 @@ const AllLinksPage = () => {
       path: '/hr-management/benefits',
       category: 'HR Management',
       description: 'Employee benefits administration',
+      icon: Shield,
       status: 'active'
     },
     {
@@ -288,6 +319,7 @@ const AllLinksPage = () => {
       path: '/hr-management/training',
       category: 'HR Management',
       description: 'Employee training and certifications',
+      icon: BookOpen,
       status: 'active'
     },
     {
@@ -295,6 +327,7 @@ const AllLinksPage = () => {
       path: '/hr-management/performance',
       category: 'HR Management',
       description: 'Employee performance evaluations',
+      icon: BarChart2,
       status: 'active'
     },
 
@@ -304,6 +337,7 @@ const AllLinksPage = () => {
       path: '/medical-records',
       category: 'Medical Records',
       description: 'Patient medical records overview',
+      icon: Folder,
       status: 'active'
     },
     {
@@ -311,6 +345,7 @@ const AllLinksPage = () => {
       path: '/medical-records/history',
       category: 'Medical Records',
       description: 'Patient medical history',
+      icon: FileText,
       status: 'active'
     },
     {
@@ -318,6 +353,7 @@ const AllLinksPage = () => {
       path: '/medical-records/diagnoses',
       category: 'Medical Records',
       description: 'Patient diagnoses and conditions',
+      icon: Stethoscope,
       status: 'active'
     },
     {
@@ -325,6 +361,7 @@ const AllLinksPage = () => {
       path: '/medical-records/imaging',
       category: 'Medical Records',
       description: 'Medical imaging and scans',
+      icon: MonitorSpeaker,
       status: 'active'
     },
     {
@@ -332,6 +369,7 @@ const AllLinksPage = () => {
       path: '/medical-records/external',
       category: 'Medical Records',
       description: 'External provider records',
+      icon: ExternalLink,
       status: 'active'
     },
 
@@ -341,6 +379,7 @@ const AllLinksPage = () => {
       path: '/clinical-data',
       category: 'Clinical Data & Lab',
       description: 'Clinical data overview',
+      icon: Database,
       status: 'active'
     },
     {
@@ -348,6 +387,7 @@ const AllLinksPage = () => {
       path: '/clinical-data/vitals',
       category: 'Clinical Data & Lab',
       description: 'Patient vital signs monitoring',
+      icon: Activity,
       status: 'active'
     },
     {
@@ -355,6 +395,7 @@ const AllLinksPage = () => {
       path: '/lab-results',
       category: 'Clinical Data & Lab',
       description: 'Laboratory test results',
+      icon: TestTube,
       status: 'active'
     },
     {
@@ -362,6 +403,7 @@ const AllLinksPage = () => {
       path: '/lab/quality-control',
       category: 'Clinical Data & Lab',
       description: 'Lab quality control measures',
+      icon: CheckCircle,
       status: 'active'
     },
     {
@@ -369,6 +411,7 @@ const AllLinksPage = () => {
       path: '/lab/samples',
       category: 'Clinical Data & Lab',
       description: 'Laboratory sample tracking',
+      icon: FlaskRound,
       status: 'active'
     },
 
@@ -378,6 +421,7 @@ const AllLinksPage = () => {
       path: '/appointments',
       category: 'Appointments & Communication',
       description: 'Appointment scheduling and management',
+      icon: Calendar,
       status: 'active'
     },
     {
@@ -385,6 +429,7 @@ const AllLinksPage = () => {
       path: '/appointments/checkin',
       category: 'Appointments & Communication',
       description: 'Patient appointment check-in',
+      icon: CheckCircle,
       status: 'active'
     },
     {
@@ -392,6 +437,7 @@ const AllLinksPage = () => {
       path: '/messages',
       category: 'Appointments & Communication',
       description: 'Internal messaging system',
+      icon: MessageSquare,
       status: 'active'
     },
 
@@ -401,6 +447,7 @@ const AllLinksPage = () => {
       path: '/studies',
       category: 'Research Studies',
       description: 'Research study management',
+      icon: TestTube,
       status: 'active'
     },
     {
@@ -408,6 +455,7 @@ const AllLinksPage = () => {
       path: '/studies/protocol-setup',
       category: 'Research Studies',
       description: 'Study protocol configuration',
+      icon: Settings,
       status: 'active'
     },
     {
@@ -415,6 +463,7 @@ const AllLinksPage = () => {
       path: '/studies/sites',
       category: 'Research Studies',
       description: 'Multi-site study management',
+      icon: Building2,
       status: 'active'
     },
     {
@@ -422,6 +471,7 @@ const AllLinksPage = () => {
       path: '/studies/protocol-documents',
       category: 'Research Studies',
       description: 'Study documentation',
+      icon: FileText,
       status: 'active'
     },
     {
@@ -429,6 +479,7 @@ const AllLinksPage = () => {
       path: '/studies/consent-tracking',
       category: 'Research Studies',
       description: 'Patient consent management',
+      icon: Shield,
       status: 'active'
     },
     {
@@ -436,6 +487,7 @@ const AllLinksPage = () => {
       path: '/studies/patient-randomization',
       category: 'Research Studies',
       description: 'Study randomization process',
+      icon: Users,
       status: 'active'
     },
     {
@@ -443,6 +495,7 @@ const AllLinksPage = () => {
       path: '/studies/protocol-deviations',
       category: 'Research Studies',
       description: 'Track protocol deviations',
+      icon: ShieldAlert,
       status: 'active'
     },
     {
@@ -450,6 +503,7 @@ const AllLinksPage = () => {
       path: '/studies/site-visits',
       category: 'Research Studies',
       description: 'Site monitoring visits',
+      icon: Calendar,
       status: 'active'
     },
     {
@@ -457,6 +511,7 @@ const AllLinksPage = () => {
       path: '/studies/finance',
       category: 'Research Studies',
       description: 'Study financial management',
+      icon: DollarSign,
       status: 'active'
     },
     {
@@ -464,6 +519,7 @@ const AllLinksPage = () => {
       path: '/studies/quiz-management',
       category: 'Research Studies',
       description: 'Patient education quizzes',
+      icon: BookOpen,
       status: 'active'
     },
     {
@@ -471,6 +527,7 @@ const AllLinksPage = () => {
       path: '/studies/recruitment',
       category: 'Research Studies',
       description: 'Patient recruitment tools',
+      icon: Users,
       status: 'active'
     },
 
@@ -480,6 +537,7 @@ const AllLinksPage = () => {
       path: '/research-data/collection',
       category: 'Research Data',
       description: 'Research data collection',
+      icon: Database,
       status: 'active'
     },
     {
@@ -487,6 +545,7 @@ const AllLinksPage = () => {
       path: '/research-data/exports',
       category: 'Research Data',
       description: 'Export research data',
+      icon: ExternalLink,
       status: 'active'
     },
     {
@@ -494,6 +553,7 @@ const AllLinksPage = () => {
       path: '/research-data/lab-results',
       category: 'Research Data',
       description: 'Research laboratory results',
+      icon: Microscope,
       status: 'active'
     },
     {
@@ -501,6 +561,7 @@ const AllLinksPage = () => {
       path: '/research-data/biospecimen',
       category: 'Research Data',
       description: 'Biospecimen management',
+      icon: FlaskRound,
       status: 'active'
     },
 
@@ -510,6 +571,7 @@ const AllLinksPage = () => {
       path: '/forms/builder',
       category: 'Forms & Data',
       description: 'Create custom forms',
+      icon: PlusCircle,
       status: 'active'
     },
     {
@@ -517,6 +579,7 @@ const AllLinksPage = () => {
       path: '/forms/crfs',
       category: 'Forms & Data',
       description: 'Clinical research forms',
+      icon: FileText,
       status: 'active'
     },
     {
@@ -524,6 +587,7 @@ const AllLinksPage = () => {
       path: '/data/queries',
       category: 'Forms & Data',
       description: 'Data quality queries',
+      icon: Search,
       status: 'active'
     },
 
@@ -533,6 +597,7 @@ const AllLinksPage = () => {
       path: '/analytics',
       category: 'Analytics & Reports',
       description: 'Main analytics dashboard',
+      icon: BarChart2,
       status: 'active'
     },
     {
@@ -540,6 +605,7 @@ const AllLinksPage = () => {
       path: '/analytics/enrollment',
       category: 'Analytics & Reports',
       description: 'Study enrollment metrics',
+      icon: Users,
       status: 'active'
     },
     {
@@ -547,6 +613,7 @@ const AllLinksPage = () => {
       path: '/analytics/outcomes',
       category: 'Analytics & Reports',
       description: 'Study outcome analysis',
+      icon: BarChart2,
       status: 'active'
     },
     {
@@ -554,6 +621,7 @@ const AllLinksPage = () => {
       path: '/analytics/site-performance',
       category: 'Analytics & Reports',
       description: 'Site performance metrics',
+      icon: Activity,
       status: 'active'
     },
     {
@@ -561,6 +629,7 @@ const AllLinksPage = () => {
       path: '/analytics/data-quality',
       category: 'Analytics & Reports',
       description: 'Data quality assessment',
+      icon: CheckCircle,
       status: 'active'
     },
     {
@@ -568,6 +637,7 @@ const AllLinksPage = () => {
       path: '/analytics/geographic',
       category: 'Analytics & Reports',
       description: 'Geographic analytics',
+      icon: BarChart2,
       status: 'active'
     },
     {
@@ -575,6 +645,7 @@ const AllLinksPage = () => {
       path: '/analytics/usage',
       category: 'Analytics & Reports',
       description: 'System usage statistics',
+      icon: Activity,
       status: 'active'
     },
     {
@@ -582,6 +653,7 @@ const AllLinksPage = () => {
       path: '/analytics/revenue',
       category: 'Analytics & Reports',
       description: 'Financial reporting',
+      icon: DollarSign,
       status: 'active'
     },
 
@@ -591,6 +663,7 @@ const AllLinksPage = () => {
       path: '/clinical-reports',
       category: 'Clinical Reports',
       description: 'Clinical reporting overview',
+      icon: FileText,
       status: 'active'
     },
     {
@@ -598,6 +671,7 @@ const AllLinksPage = () => {
       path: '/clinical-reports/outcomes',
       category: 'Clinical Reports',
       description: 'Patient treatment outcomes',
+      icon: BarChart2,
       status: 'active'
     },
     {
@@ -605,6 +679,7 @@ const AllLinksPage = () => {
       path: '/clinical-reports/patient-analytics',
       category: 'Clinical Reports',
       description: 'Patient population analytics',
+      icon: Users,
       status: 'active'
     },
     {
@@ -612,6 +687,7 @@ const AllLinksPage = () => {
       path: '/clinical-reports/provider-metrics',
       category: 'Clinical Reports',
       description: 'Healthcare provider performance',
+      icon: UserCog,
       status: 'active'
     },
     {
@@ -619,6 +695,7 @@ const AllLinksPage = () => {
       path: '/clinical-reports/medications',
       category: 'Clinical Reports',
       description: 'Medication usage reports',
+      icon: Pill,
       status: 'active'
     },
     {
@@ -626,6 +703,7 @@ const AllLinksPage = () => {
       path: '/clinical-reports/handoff',
       category: 'Clinical Reports',
       description: 'Care transition reports',
+      icon: Users,
       status: 'active'
     },
 
@@ -635,6 +713,7 @@ const AllLinksPage = () => {
       path: '/users',
       category: 'Administration',
       description: 'Manage system users',
+      icon: Users,
       status: 'active'
     },
     {
@@ -642,6 +721,7 @@ const AllLinksPage = () => {
       path: '/users/roles',
       category: 'Administration',
       description: 'Configure user roles',
+      icon: UserCog,
       status: 'active'
     },
     {
@@ -649,6 +729,7 @@ const AllLinksPage = () => {
       path: '/users/access-requests',
       category: 'Administration',
       description: 'User access requests',
+      icon: Shield,
       status: 'active'
     },
     {
@@ -656,6 +737,7 @@ const AllLinksPage = () => {
       path: '/facilities',
       category: 'Administration',
       description: 'Facility management',
+      icon: Building2,
       status: 'active'
     },
     {
@@ -663,6 +745,7 @@ const AllLinksPage = () => {
       path: '/settings',
       category: 'Administration',
       description: 'System settings',
+      icon: Settings,
       status: 'active'
     },
     {
@@ -670,6 +753,7 @@ const AllLinksPage = () => {
       path: '/settings/billing',
       category: 'Administration',
       description: 'Billing configuration',
+      icon: DollarSign,
       status: 'active'
     },
     {
@@ -677,6 +761,7 @@ const AllLinksPage = () => {
       path: '/settings/notifications',
       category: 'Administration',
       description: 'Notification settings',
+      icon: MessageSquare,
       status: 'active'
     },
     {
@@ -684,6 +769,7 @@ const AllLinksPage = () => {
       path: '/settings/system',
       category: 'Administration',
       description: 'System configuration',
+      icon: Settings,
       status: 'active'
     },
     {
@@ -691,6 +777,7 @@ const AllLinksPage = () => {
       path: '/compliance',
       category: 'Administration',
       description: 'Compliance monitoring',
+      icon: ShieldAlert,
       status: 'active'
     },
     {
@@ -698,6 +785,7 @@ const AllLinksPage = () => {
       path: '/audit-logs',
       category: 'Administration',
       description: 'System audit trails',
+      icon: FileText,
       status: 'active'
     },
 
@@ -707,6 +795,7 @@ const AllLinksPage = () => {
       path: '/support',
       category: 'Support',
       description: 'Help and support center',
+      icon: MessageSquare,
       status: 'active'
     },
     {
@@ -714,6 +803,7 @@ const AllLinksPage = () => {
       path: '/help',
       category: 'Support',
       description: 'User help documentation',
+      icon: BookOpen,
       status: 'active'
     }
   ];
