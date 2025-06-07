@@ -89,128 +89,146 @@ const LoginPage = () => {
   };
   
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <div className="w-full max-w-md">
-        <div className="mb-8 text-center">
-          <Logo />
-          <h1 className="mt-6 text-2xl font-semibold">HealthNexus Research Hub</h1>
-          <p className="text-sm text-muted-foreground mt-1">Advancing Clinical Research</p>
+    <div className="min-h-screen flex">
+      {/* Left side - Image */}
+      <div 
+        className="hidden lg:flex lg:w-1/2 bg-cover bg-center bg-no-repeat relative"
+        style={{
+          backgroundImage: 'url(https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80)'
+        }}
+      >
+        <div className="absolute inset-0 bg-blue-900/20"></div>
+        <div className="relative z-10 flex flex-col justify-end p-12 text-white">
+          <h1 className="text-4xl font-bold mb-4">HealthNexus Research Hub</h1>
+          <p className="text-xl opacity-90">Advancing Clinical Research Through Innovation</p>
+          <p className="mt-4 opacity-80">Secure, compliant, and intuitive platform for medical research professionals</p>
         </div>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Login to your account</CardTitle>
-            <CardDescription>
-              Enter your credentials to access the research portal
-            </CardDescription>
-          </CardHeader>
-          <form onSubmit={handleSubmit}>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="email"
-                    placeholder="name@example.com"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => handleChange('email', e.target.value)}
-                    className={`pl-10 ${errors.email ? 'border-destructive' : ''}`}
+      </div>
+
+      {/* Right side - Login Form */}
+      <div className="flex-1 flex items-center justify-center p-8 bg-gradient-to-br from-slate-50 to-blue-50">
+        <div className="w-full max-w-md">
+          <div className="mb-8 text-center">
+            <Logo />
+            <h2 className="mt-6 text-2xl font-semibold text-gray-900">Welcome back</h2>
+            <p className="text-sm text-muted-foreground mt-2">Sign in to your account to continue</p>
+          </div>
+          
+          <Card className="shadow-xl border-0">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-center">Sign In</CardTitle>
+              <CardDescription className="text-center">
+                Enter your credentials to access the platform
+              </CardDescription>
+            </CardHeader>
+            <form onSubmit={handleSubmit}>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="email"
+                      placeholder="name@example.com"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => handleChange('email', e.target.value)}
+                      className={`pl-10 ${errors.email ? 'border-destructive' : ''}`}
+                      disabled={isLoading}
+                    />
+                  </div>
+                  {errors.email && (
+                    <p className="text-sm text-destructive flex items-center mt-1">
+                      <AlertCircle className="h-4 w-4 mr-1" />
+                      {errors.email}
+                    </p>
+                  )}
+                  <p className="text-xs text-muted-foreground">
+                    Try: patient@example.com, researcher@example.com, or admin@example.com
+                  </p>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <Label htmlFor="password">Password</Label>
+                    <Link 
+                      to="/forgot-password" 
+                      className="text-xs text-primary hover:underline"
+                    >
+                      Forgot password?
+                    </Link>
+                  </div>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter your password"
+                      value={formData.password}
+                      onChange={(e) => handleChange('password', e.target.value)}
+                      className={`pl-10 ${errors.password ? 'border-destructive' : ''}`}
+                      disabled={isLoading}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-0 top-0 h-full px-3"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4 text-muted-foreground" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-muted-foreground" />
+                      )}
+                    </Button>
+                  </div>
+                  {errors.password && (
+                    <p className="text-sm text-destructive flex items-center mt-1">
+                      <AlertCircle className="h-4 w-4 mr-1" />
+                      {errors.password}
+                    </p>
+                  )}
+                  <p className="text-xs text-muted-foreground">
+                    Use "password123" for demo login
+                  </p>
+                </div>
+                
+                <div className="flex items-center space-x-2 pt-2">
+                  <Checkbox 
+                    id="remember-me" 
+                    checked={formData.rememberMe} 
+                    onCheckedChange={(checked) => handleChange('rememberMe', checked)}
                     disabled={isLoading}
                   />
+                  <Label htmlFor="remember-me" className="text-sm">Remember me for 30 days</Label>
                 </div>
-                {errors.email && (
-                  <p className="text-sm text-destructive flex items-center mt-1">
-                    <AlertCircle className="h-4 w-4 mr-1" />
-                    {errors.email}
-                  </p>
-                )}
-                <p className="text-xs text-muted-foreground">
-                  Try: patient@example.com, researcher@example.com, or admin@example.com
-                </p>
-              </div>
+              </CardContent>
               
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <Label htmlFor="password">Password</Label>
-                  <Link 
-                    to="/password-reset" 
-                    className="text-xs text-primary hover:underline"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={(e) => handleChange('password', e.target.value)}
-                    className={`pl-10 ${errors.password ? 'border-destructive' : ''}`}
-                    disabled={isLoading}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-0 top-0 h-full px-3"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4 text-muted-foreground" />
-                    ) : (
-                      <Eye className="h-4 w-4 text-muted-foreground" />
-                    )}
-                  </Button>
-                </div>
-                {errors.password && (
-                  <p className="text-sm text-destructive flex items-center mt-1">
-                    <AlertCircle className="h-4 w-4 mr-1" />
-                    {errors.password}
-                  </p>
-                )}
-                <p className="text-xs text-muted-foreground">
-                  Use "password123" for demo login
-                </p>
-              </div>
-              
-              <div className="flex items-center space-x-2 pt-2">
-                <Checkbox 
-                  id="remember-me" 
-                  checked={formData.rememberMe} 
-                  onCheckedChange={(checked) => handleChange('rememberMe', checked)}
+              <CardFooter className="flex flex-col space-y-4">
+                <Button 
+                  type="submit" 
+                  className="w-full" 
                   disabled={isLoading}
-                />
-                <Label htmlFor="remember-me" className="text-sm">Remember me for 30 days</Label>
-              </div>
-            </CardContent>
-            
-            <CardFooter className="flex flex-col space-y-4">
-              <Button 
-                type="submit" 
-                className="w-full" 
-                disabled={isLoading}
-              >
-                {isLoading ? 'Signing in...' : 'Sign In'}
-              </Button>
-              
-              <p className="text-center text-sm text-muted-foreground">
-                Don't have an account?{" "}
-                <span className="text-primary hover:underline">
-                  Contact your administrator
-                </span>
-              </p>
-            </CardFooter>
-          </form>
-        </Card>
-        
-        <p className="mt-4 text-center text-xs text-muted-foreground">
-          &copy; 2025 HealthNexus Research Hub. All rights reserved.<br />
-          HIPAA & GDPR Compliant
-        </p>
+                >
+                  {isLoading ? 'Signing in...' : 'Sign In'}
+                </Button>
+                
+                <p className="text-center text-sm text-muted-foreground">
+                  Don't have an account?{" "}
+                  <span className="text-primary hover:underline cursor-pointer">
+                    Contact your administrator
+                  </span>
+                </p>
+              </CardFooter>
+            </form>
+          </Card>
+          
+          <p className="mt-6 text-center text-xs text-muted-foreground">
+            &copy; 2025 HealthNexus Research Hub. All rights reserved.<br />
+            HIPAA & GDPR Compliant
+          </p>
+        </div>
       </div>
     </div>
   );
