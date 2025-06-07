@@ -106,17 +106,25 @@ const AppSidebar = () => {
         navigate('/dashboard/receptionist');
         break;
       case 'researcher':
-      case 'pi':
-      case 'coordinator':
         setAppMode('research');
         localStorage.setItem('appMode', 'research');
         navigate('/dashboard/researcher');
+        break;
+      case 'pi':
+        setAppMode('research');
+        localStorage.setItem('appMode', 'research');
+        navigate('/dashboard/pi');
+        break;
+      case 'coordinator':
+        setAppMode('research');
+        localStorage.setItem('appMode', 'research');
+        navigate('/dashboard/coordinator');
         break;
       case 'patient':
         navigate('/dashboard/patient');
         break;
       case 'participant':
-        navigate('/dashboard/patient');
+        navigate('/dashboard/participant');
         break;
       case 'facility_admin':
         setAppMode('clinical');

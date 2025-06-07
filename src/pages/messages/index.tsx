@@ -183,6 +183,14 @@ const MessagingPage = () => {
     setMessages([...messages, newMsg]);
     setNewMessage('');
     
+    // Update contact's last message
+    const updatedContacts = contacts.map(contact => 
+      contact.id === activeContact.id 
+        ? { ...contact, lastMessage: newMessage, lastMessageTime: new Date() }
+        : contact
+    );
+    setContacts(updatedContacts);
+    
     // Simulate status updates
     setTimeout(() => {
       setMessages(prev => prev.map(msg => 
@@ -199,9 +207,25 @@ const MessagingPage = () => {
 
   const handleAttachment = (type: string) => {
     setShowAttachMenu(false);
+    
+    // Create attachment message based on type
+    const attachmentMsg: Message = {
+      id: Date.now().toString(),
+      content: `${type} shared`,
+      sender: 'You',
+      senderAvatar: 'SP',
+      timestamp: new Date(),
+      isRead: true,
+      isCurrentUser: true,
+      status: 'sent',
+      type: type.toLowerCase() as any
+    };
+    
+    setMessages(prev => [...prev, attachmentMsg]);
+    
     toast({
-      title: "Feature Available",
-      description: `${type} sharing feature is available for secure medical communication.`,
+      title: `${type} Shared`,
+      description: `${type} has been securely shared with ${activeContact.name}.`,
     });
   };
 
@@ -264,13 +288,13 @@ const MessagingPage = () => {
         {/* Contacts List */}
         <div className={`w-full md:w-1/3 border-r bg-white ${showMobileChat ? 'hidden md:block' : 'block'}`}>
           {/* Search Header */}
-          <div className="p-3 border-b bg-gray-50">
+          <div className="p-4 border-b bg-gray-50/50">
             <div className="relative">
               <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
                 type="search"
-                placeholder="Search conversations"
-                className="pl-10 bg-white border-gray-200 rounded-full h-10"
+                placeholder="Search conversations..."
+                className="pl-10 bg-white border-gray-200 rounded-xl h-11 focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
@@ -280,14 +304,14 @@ const MessagingPage = () => {
             {contacts.map(contact => (
               <div
                 key={contact.id}
-                className={`flex items-center gap-3 p-3 cursor-pointer hover:bg-gray-50 transition-colors border-b border-gray-100 ${
-                  activeContact.id === contact.id ? 'bg-blue-50 border-blue-200' : ''
+                className={`flex items-center gap-3 p-4 cursor-pointer hover:bg-gray-50 transition-colors border-b border-gray-50 ${
+                  activeContact.id === contact.id ? 'bg-blue-50 border-blue-100' : ''
                 }`}
                 onClick={() => handleContactClick(contact)}
               >
                 <div className="relative">
                   <Avatar className="h-12 w-12">
-                    <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 text-white font-medium">
+                    <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 text-white font-medium text-sm">
                       {contact.avatar}
                     </div>
                   </Avatar>
@@ -298,13 +322,13 @@ const MessagingPage = () => {
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-start mb-1">
                     <h4 className="font-semibold text-sm truncate text-gray-900">{contact.name}</h4>
-                    <span className="text-xs text-gray-500 ml-2">{formatDate(contact.lastMessageTime)}</span>
+                    <span className="text-xs text-gray-500 ml-2 flex-shrink-0">{formatDate(contact.lastMessageTime)}</span>
                   </div>
                   <p className="text-xs text-blue-600 mb-1 font-medium">{contact.role}</p>
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-gray-600 truncate flex-1">{contact.lastMessage}</p>
                     {contact.unreadCount > 0 && (
-                      <Badge className="h-5 w-5 flex items-center justify-center p-0 bg-green-500 text-white rounded-full text-xs ml-2">
+                      <Badge className="h-5 w-5 flex items-center justify-center p-0 bg-green-500 text-white rounded-full text-xs ml-2 flex-shrink-0">
                         {contact.unreadCount}
                       </Badge>
                     )}
@@ -340,13 +364,13 @@ const MessagingPage = () => {
               </div>
             </div>
             <div className="flex items-center gap-1">
-              <Button variant="ghost" size="icon" className="text-gray-500 hover:bg-gray-100">
+              <Button variant="ghost" size="icon" className="text-gray-500 hover:bg-gray-100 rounded-full">
                 <Phone className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="icon" className="text-gray-500 hover:bg-gray-100">
+              <Button variant="ghost" size="icon" className="text-gray-500 hover:bg-gray-100 rounded-full">
                 <Video className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="icon" className="text-gray-500 hover:bg-gray-100">
+              <Button variant="ghost" size="icon" className="text-gray-500 hover:bg-gray-100 rounded-full">
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </div>
@@ -362,8 +386,8 @@ const MessagingPage = () => {
                 return (
                   <React.Fragment key={message.id}>
                     {showDateHeader && (
-                      <div className="flex justify-center my-4">
-                        <Badge variant="secondary" className="bg-white shadow-sm text-xs px-3 py-1 border">
+                      <div className="flex justify-center my-6">
+                        <Badge variant="secondary" className="bg-white shadow-sm text-xs px-3 py-1.5 border font-normal">
                           {new Date(message.timestamp).toLocaleDateString(undefined, { 
                             weekday: 'long', 
                             month: 'short', 
@@ -403,59 +427,81 @@ const MessagingPage = () => {
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className="text-gray-500 hover:bg-gray-100"
+                  className="text-gray-500 hover:bg-gray-100 rounded-full"
                   onClick={() => setShowAttachMenu(!showAttachMenu)}
                 >
-                  <Paperclip className="h-4 w-4" />
+                  <Paperclip className="h-5 w-5" />
                 </Button>
                 
                 {/* Attachment Menu */}
                 {showAttachMenu && (
-                  <div className="absolute bottom-12 left-0 bg-white border rounded-lg shadow-lg p-2 z-10">
-                    <div className="grid grid-cols-2 gap-2 w-48">
+                  <div className="absolute bottom-14 left-0 bg-white border rounded-xl shadow-lg p-3 z-10 min-w-[280px]">
+                    <div className="grid grid-cols-3 gap-3">
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="flex items-center gap-2 h-12"
+                        className="flex flex-col items-center gap-2 h-20 hover:bg-gray-50"
                         onClick={() => handleAttachment('Document')}
                       >
-                        <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
-                          <Paperclip className="h-4 w-4 text-blue-600" />
+                        <div className="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
+                          <Paperclip className="h-5 w-5 text-blue-600" />
                         </div>
-                        <span className="text-sm">Document</span>
+                        <span className="text-xs">Document</span>
                       </Button>
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="flex items-center gap-2 h-12"
+                        className="flex flex-col items-center gap-2 h-20 hover:bg-gray-50"
                         onClick={() => handleAttachment('Camera')}
                       >
-                        <div className="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
-                          <Camera className="h-4 w-4 text-green-600" />
+                        <div className="h-10 w-10 bg-green-100 rounded-full flex items-center justify-center">
+                          <Camera className="h-5 w-5 text-green-600" />
                         </div>
-                        <span className="text-sm">Camera</span>
+                        <span className="text-xs">Camera</span>
                       </Button>
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="flex items-center gap-2 h-12"
+                        className="flex flex-col items-center gap-2 h-20 hover:bg-gray-50"
                         onClick={() => handleAttachment('Gallery')}
                       >
-                        <div className="h-8 w-8 bg-purple-100 rounded-full flex items-center justify-center">
-                          <Image className="h-4 w-4 text-purple-600" />
+                        <div className="h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center">
+                          <Image className="h-5 w-5 text-purple-600" />
                         </div>
-                        <span className="text-sm">Gallery</span>
+                        <span className="text-xs">Gallery</span>
                       </Button>
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="flex items-center gap-2 h-12"
+                        className="flex flex-col items-center gap-2 h-20 hover:bg-gray-50"
                         onClick={() => handleAttachment('Voice Note')}
                       >
-                        <div className="h-8 w-8 bg-red-100 rounded-full flex items-center justify-center">
-                          <Mic className="h-4 w-4 text-red-600" />
+                        <div className="h-10 w-10 bg-red-100 rounded-full flex items-center justify-center">
+                          <Mic className="h-5 w-5 text-red-600" />
                         </div>
-                        <span className="text-sm">Voice</span>
+                        <span className="text-xs">Voice</span>
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="flex flex-col items-center gap-2 h-20 hover:bg-gray-50"
+                        onClick={() => handleAttachment('Video')}
+                      >
+                        <div className="h-10 w-10 bg-orange-100 rounded-full flex items-center justify-center">
+                          <Video className="h-5 w-5 text-orange-600" />
+                        </div>
+                        <span className="text-xs">Video</span>
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="flex flex-col items-center gap-2 h-20 hover:bg-gray-50"
+                        onClick={() => handleAttachment('Location')}
+                      >
+                        <div className="h-10 w-10 bg-yellow-100 rounded-full flex items-center justify-center">
+                          <span className="text-lg">📍</span>
+                        </div>
+                        <span className="text-xs">Location</span>
                       </Button>
                     </div>
                   </div>
@@ -465,7 +511,7 @@ const MessagingPage = () => {
               <div className="flex-1 relative">
                 <Input 
                   placeholder="Type a message..." 
-                  className="pr-20 rounded-full border-gray-200 bg-gray-50 focus:bg-white h-12"
+                  className="pr-12 rounded-full border-gray-200 bg-gray-50 focus:bg-white h-12 focus:ring-2 focus:ring-blue-500"
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   onKeyDown={(e) => {
@@ -478,9 +524,9 @@ const MessagingPage = () => {
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 text-gray-400 hover:bg-gray-100"
+                  className="absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 text-gray-400 hover:bg-gray-100 rounded-full"
                 >
-                  <Smile className="h-4 w-4" />
+                  <Smile className="h-5 w-5" />
                 </Button>
               </div>
               
@@ -488,9 +534,9 @@ const MessagingPage = () => {
                 onClick={handleSendMessage} 
                 disabled={!newMessage.trim()}
                 size="icon"
-                className="rounded-full h-12 w-12 bg-blue-500 hover:bg-blue-600"
+                className="rounded-full h-12 w-12 bg-blue-500 hover:bg-blue-600 disabled:opacity-50"
               >
-                <Send className="h-4 w-4" />
+                <Send className="h-5 w-5" />
               </Button>
             </div>
           </div>
@@ -506,7 +552,7 @@ const MessagingPage = () => {
           <div className="space-y-4">
             <div>
               <label className="text-sm font-medium">Search medical staff</label>
-              <div className="relative mt-1">
+              <div className="relative mt-2">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input placeholder="Search by name or role..." className="pl-10" />
               </div>
@@ -515,14 +561,14 @@ const MessagingPage = () => {
               {contacts.map(contact => (
                 <div 
                   key={contact.id} 
-                  className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer"
+                  className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors"
                   onClick={() => {
                     setActiveContact(contact);
                     setShowNewMessageDialog(false);
                     setShowMobileChat(true);
                   }}
                 >
-                  <Avatar className="h-8 w-8">
+                  <Avatar className="h-10 w-10">
                     <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 text-white text-sm">
                       {contact.avatar}
                     </div>
