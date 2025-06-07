@@ -62,22 +62,44 @@ const AppSidebar = () => {
     const newMode = value as AppMode;
     setAppMode(newMode);
     localStorage.setItem('appMode', newMode);
+    
+    // Navigate to appropriate dashboard based on mode
+    switch (newMode) {
+      case 'clinical':
+        navigate('/dashboard/clinical');
+        break;
+      case 'research':
+        navigate('/dashboard/researcher');
+        break;
+      case 'admin':
+        navigate('/dashboard/admin');
+        break;
+    }
+    
     console.log('App mode changed to:', newMode);
   };
 
   const handleRoleChange = (newRole: UserRole) => {
     setUserRole(newRole);
     localStorage.setItem('userRole', newRole);
+    
+    // Auto-switch mode and navigate to appropriate dashboard based on role
     if (newRole === 'admin') {
       setAppMode('admin');
       localStorage.setItem('appMode', 'admin');
+      navigate('/dashboard/admin');
     } else if (['researcher', 'pi', 'coordinator'].includes(newRole)) {
       setAppMode('research');
       localStorage.setItem('appMode', 'research');
+      navigate('/dashboard/researcher');
+    } else if (newRole === 'patient') {
+      navigate('/dashboard/patient');
     } else {
       setAppMode('clinical');
       localStorage.setItem('appMode', 'clinical');
+      navigate('/dashboard/clinical');
     }
+    
     console.log('User role changed to:', newRole);
   };
 
@@ -89,21 +111,21 @@ const AppSidebar = () => {
       // Role-specific filtering
       switch (role) {
         case 'patient':
-          return ['Appointments', 'Messages'].includes(item.title);
+          return ['Patients', 'Appointments', 'Messages', 'Medical Records'].includes(item.title);
         case 'participant':
-          return ['Appointments', 'Messages'].includes(item.title);
+          return ['Patients', 'Appointments', 'Messages', 'Research Studies'].includes(item.title);
         case 'receptionist':
-          return ['Patients', 'Appointments', 'Messages', 'Patient Check-In'].includes(item.title);
+          return ['Patients', 'Appointments', 'Messages', 'Clinical Workflows'].includes(item.title);
         case 'nurse':
-          return !['Research Studies', 'Analytics', 'User Management', 'HR Management'].includes(item.title);
+          return !['Research Studies', 'Research Data', 'Analytics', 'User Management', 'HR Management'].includes(item.title);
         case 'lab_tech':
-          return ['Patients', 'Diagnostics & Results', 'Laboratory', 'Messages'].includes(item.title);
+          return ['Patients', 'Diagnostics & Results', 'Laboratory', 'Messages', 'Clinical Data & Lab'].includes(item.title);
         case 'researcher':
         case 'pi':
         case 'coordinator':
-          return !['Clinical Workflows', 'Facility Management', 'Staff Management', 'HR Management'].includes(item.title);
+          return !['Clinical Workflows', 'Facility Management', 'Staff Management'].includes(item.title);
         case 'facility_admin':
-          return true; // Facility admin sees most things
+          return !['Research Studies', 'Research Data'].includes(item.title);
         default:
           return true;
       }
@@ -115,25 +137,32 @@ const AppSidebar = () => {
     
     if (userRole === 'admin') {
       return [
-        { title: 'Main Navigation', items: baseItems },
+        { title: 'Core Functions', items: baseItems },
         { title: 'Clinical Operations', items: getFilteredMenuItems(clinicalPracticeItems, userRole) },
         { title: 'Research Operations', items: getFilteredMenuItems(researchStudyItems, userRole) },
-        { title: 'Administration', items: adminMenuItems }
+        { title: 'System Administration', items: adminMenuItems }
       ];
     }
     
-    if (userRole === 'patient' || userRole === 'participant') {
+    if (userRole === 'patient') {
       return [
-        { title: 'Main Navigation', items: baseItems }
+        { title: 'Patient Portal', items: baseItems }
+      ];
+    }
+    
+    if (userRole === 'participant') {
+      return [
+        { title: 'Study Portal', items: baseItems }
       ];
     }
     
     if (appMode === 'clinical') {
       const clinicalItems = getFilteredMenuItems(clinicalPracticeItems, userRole);
-      const adminItems = ['admin', 'facility_admin'].includes(userRole) ? adminMenuItems : [];
+      const adminItems = ['admin', 'facility_admin'].includes(userRole) ? 
+        adminMenuItems.filter(item => !item.title.includes('Research')) : [];
       
       return [
-        { title: 'Main Navigation', items: baseItems },
+        { title: 'Core Functions', items: baseItems },
         ...(clinicalItems.length > 0 ? [{ title: 'Clinical Operations', items: clinicalItems }] : []),
         ...(adminItems.length > 0 ? [{ title: 'Administration', items: adminItems }] : [])
       ];
@@ -144,14 +173,14 @@ const AppSidebar = () => {
       const adminItems = ['admin', 'facility_admin'].includes(userRole) ? adminMenuItems : [];
       
       return [
-        { title: 'Main Navigation', items: baseItems },
+        { title: 'Core Functions', items: baseItems },
         ...(researchItems.length > 0 ? [{ title: 'Research Operations', items: researchItems }] : []),
         ...(adminItems.length > 0 ? [{ title: 'Administration', items: adminItems }] : [])
       ];
     }
     
     return [
-      { title: 'Main Navigation', items: baseItems }
+      { title: 'Core Functions', items: baseItems }
     ];
   };
 
@@ -192,7 +221,7 @@ const AppSidebar = () => {
   };
 
   const canSwitchModes = () => {
-    return !['admin', 'patient', 'participant', 'receptionist', 'lab_tech'].includes(userRole);
+    return !['patient', 'participant', 'receptionist', 'lab_tech'].includes(userRole);
   };
 
   const menuGroups = getMenuItems();
@@ -229,7 +258,7 @@ const AppSidebar = () => {
           </div>
         )}
         
-        {state !== "collapsed" && canSwitchModes() && (
+        {state !== "collapsed" && canSwitchModes() && userRole !== 'admin' && (
           <Tabs 
             value={appMode}
             className="w-full" 
@@ -265,7 +294,7 @@ const AppSidebar = () => {
 
         {state !== "collapsed" && userRole === 'patient' && (
           <div className="w-full">
-            <Badge variant="outline" className="w-full justify-center py-2 bg-blue-10 text-blue-600 border-blue-200">
+            <Badge variant="outline" className="w-full justify-center py-2 bg-blue-50 text-blue-600 border-blue-200">
               <User className="h-3 w-3 mr-1" />
               Patient Portal
             </Badge>
@@ -274,7 +303,7 @@ const AppSidebar = () => {
 
         {state !== "collapsed" && userRole === 'participant' && (
           <div className="w-full">
-            <Badge variant="outline" className="w-full justify-center py-2 bg-green-10 text-green-600 border-green-200">
+            <Badge variant="outline" className="w-full justify-center py-2 bg-green-50 text-green-600 border-green-200">
               <FlaskRound className="h-3 w-3 mr-1" />
               Study Portal
             </Badge>
@@ -299,7 +328,7 @@ const AppSidebar = () => {
       <SidebarFooter className="border-t p-4">
         <div className="flex items-center space-x-3">
           <Avatar className="h-8 w-8">
-            <div className="flex h-full w-full items-center justify-center bg-health-primary rounded-full text-white text-xs font-medium">
+            <div className="flex h-full w-full items-center justify-center bg-primary rounded-full text-primary-foreground text-xs font-medium">
               {userInfo.initials}
             </div>
           </Avatar>

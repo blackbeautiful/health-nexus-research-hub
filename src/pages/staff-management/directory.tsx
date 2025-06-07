@@ -5,303 +5,353 @@ import PageHeader from '@/components/common/PageHeader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Avatar } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Search, Users, Plus, Phone, Mail, User } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { 
+  Search, 
+  Phone, 
+  Mail, 
+  MapPin, 
+  Calendar,
+  User,
+  Stethoscope,
+  TestTube,
+  Settings,
+  Shield,
+  UserCog,
+  PlusCircle
+} from 'lucide-react';
+
+interface StaffMember {
+  id: string;
+  name: string;
+  role: string;
+  department: string;
+  email: string;
+  phone: string;
+  location: string;
+  status: 'active' | 'on-leave' | 'inactive';
+  shift: string;
+  startDate: string;
+  certifications: string[];
+  avatar: string;
+}
 
 const StaffDirectoryPage = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterDepartment, setFilterDepartment] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedDepartment, setSelectedDepartment] = useState('all');
 
-  const staff = [
-    { 
-      id: 'S-001', 
-      name: 'Dr. Sarah Johnson', 
-      role: 'Oncologist', 
-      department: 'Oncology', 
-      email: 'sarah.johnson@hospital.com', 
-      phone: '+1-555-0101',
+  const staffMembers: StaffMember[] = [
+    {
+      id: '1',
+      name: 'Dr. Rebecca Martinez',
+      role: 'Chief Oncologist',
+      department: 'Oncology',
+      email: 'r.martinez@healthnexus.com',
+      phone: '(555) 123-4567',
+      location: 'Building A, Floor 3',
       status: 'active',
-      shift: 'Day',
-      experience: '10 years'
+      shift: 'Day Shift',
+      startDate: '2020-03-15',
+      certifications: ['Board Certified Oncologist', 'ACLS', 'BLS'],
+      avatar: 'RM'
     },
-    { 
-      id: 'S-002', 
-      name: 'Nurse Mike Wilson', 
-      role: 'Registered Nurse', 
-      department: 'ICU', 
-      email: 'mike.wilson@hospital.com', 
-      phone: '+1-555-0102',
+    {
+      id: '2',
+      name: 'Nurse Jessica Lee',
+      role: 'Senior Oncology Nurse',
+      department: 'Oncology',
+      email: 'j.lee@healthnexus.com',
+      phone: '(555) 234-5678',
+      location: 'Building A, Floor 3',
       status: 'active',
-      shift: 'Night',
-      experience: '5 years'
+      shift: 'Day Shift',
+      startDate: '2019-06-20',
+      certifications: ['RN', 'ONS Certified', 'BLS'],
+      avatar: 'JL'
     },
-    { 
-      id: 'S-003', 
-      name: 'Dr. Emily Chen', 
-      role: 'Cardiologist', 
-      department: 'Cardiology', 
-      email: 'emily.chen@hospital.com', 
-      phone: '+1-555-0103',
+    {
+      id: '3',
+      name: 'Dr. James Wilson',
+      role: 'Surgical Oncologist',
+      department: 'Surgery',
+      email: 'j.wilson@healthnexus.com',
+      phone: '(555) 345-6789',
+      location: 'Building B, Floor 2',
       status: 'active',
-      shift: 'Day',
-      experience: '8 years'
+      shift: 'Flexible',
+      startDate: '2018-01-10',
+      certifications: ['Board Certified Surgeon', 'ATLS', 'ACLS'],
+      avatar: 'JW'
     },
-    { 
-      id: 'S-004', 
-      name: 'Tech Lisa Brown', 
-      role: 'Lab Technician', 
-      department: 'Laboratory', 
-      email: 'lisa.brown@hospital.com', 
-      phone: '+1-555-0104',
+    {
+      id: '4',
+      name: 'Dr. Anna Lopez',
+      role: 'Radiation Oncologist',
+      department: 'Radiation Oncology',
+      email: 'a.lopez@healthnexus.com',
+      phone: '(555) 456-7890',
+      location: 'Building C, Floor 1',
+      status: 'active',
+      shift: 'Day Shift',
+      startDate: '2021-08-05',
+      certifications: ['Board Certified Radiation Oncologist', 'ACLS'],
+      avatar: 'AL'
+    },
+    {
+      id: '5',
+      name: 'Mike Chen',
+      role: 'Lead Lab Technician',
+      department: 'Laboratory',
+      email: 'm.chen@healthnexus.com',
+      phone: '(555) 567-8901',
+      location: 'Building A, Floor 1',
+      status: 'active',
+      shift: 'Day Shift',
+      startDate: '2019-11-12',
+      certifications: ['MLT', 'ASCP Certified', 'BLS'],
+      avatar: 'MC'
+    },
+    {
+      id: '6',
+      name: 'Sarah Kim',
+      role: 'Research Coordinator',
+      department: 'Clinical Research',
+      email: 's.kim@healthnexus.com',
+      phone: '(555) 678-9012',
+      location: 'Building B, Floor 4',
+      status: 'active',
+      shift: 'Day Shift',
+      startDate: '2022-02-14',
+      certifications: ['CCRC', 'ACRP Certified'],
+      avatar: 'SK'
+    },
+    {
+      id: '7',
+      name: 'Robert Taylor',
+      role: 'Facilities Manager',
+      department: 'Operations',
+      email: 'r.taylor@healthnexus.com',
+      phone: '(555) 789-0123',
+      location: 'Building A, Floor 1',
+      status: 'active',
+      shift: 'Day Shift',
+      startDate: '2017-05-22',
+      certifications: ['FMP', 'HVAC Certified'],
+      avatar: 'RT'
+    },
+    {
+      id: '8',
+      name: 'Lisa Brown',
+      role: 'HR Manager',
+      department: 'Human Resources',
+      email: 'l.brown@healthnexus.com',
+      phone: '(555) 890-1234',
+      location: 'Building A, Floor 2',
       status: 'on-leave',
-      shift: 'Day',
-      experience: '3 years'
-    },
-    { 
-      id: 'S-005', 
-      name: 'Admin John Davis', 
-      role: 'Administrator', 
-      department: 'Administration', 
-      email: 'john.davis@hospital.com', 
-      phone: '+1-555-0105',
-      status: 'active',
-      shift: 'Day',
-      experience: '12 years'
+      shift: 'Day Shift',
+      startDate: '2019-09-30',
+      certifications: ['PHR', 'SHRM-CP'],
+      avatar: 'LB'
     }
   ];
 
+  const departments = ['all', ...new Set(staffMembers.map(member => member.department))];
+
+  const filteredStaff = staffMembers.filter(member => {
+    const matchesSearch = member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         member.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         member.department.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesDepartment = selectedDepartment === 'all' || member.department === selectedDepartment;
+    
+    return matchesSearch && matchesDepartment;
+  });
+
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'secondary';
-      case 'on-leave': return 'default';
-      case 'inactive': return 'outline';
+      case 'active': return 'default';
+      case 'on-leave': return 'secondary';
+      case 'inactive': return 'destructive';
       default: return 'outline';
     }
   };
 
-  const filteredStaff = staff.filter(member => {
-    const matchesSearch = member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         member.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         member.email.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesDepartment = filterDepartment === 'all' || member.department === filterDepartment;
-    return matchesSearch && matchesDepartment;
-  });
-
-  const departments = [...new Set(staff.map(s => s.department))];
+  const getRoleIcon = (role: string) => {
+    if (role.toLowerCase().includes('doctor') || role.toLowerCase().includes('oncologist') || role.toLowerCase().includes('surgeon')) {
+      return <Stethoscope className="h-4 w-4" />;
+    }
+    if (role.toLowerCase().includes('nurse')) {
+      return <User className="h-4 w-4" />;
+    }
+    if (role.toLowerCase().includes('lab') || role.toLowerCase().includes('technician')) {
+      return <TestTube className="h-4 w-4" />;
+    }
+    if (role.toLowerCase().includes('manager') || role.toLowerCase().includes('admin')) {
+      return <Settings className="h-4 w-4" />;
+    }
+    if (role.toLowerCase().includes('research')) {
+      return <TestTube className="h-4 w-4" />;
+    }
+    return <User className="h-4 w-4" />;
+  };
 
   return (
     <MainLayout>
       <PageHeader
         title="Staff Directory"
-        description="Comprehensive directory of all hospital staff members"
+        description="Employee directory and contact information"
         action={{
           label: 'Add Staff Member',
-          icon: Plus,
+          icon: PlusCircle,
           onClick: () => console.log('Add staff member')
         }}
       />
 
       <div className="space-y-6">
-        {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
-            <CardContent className="flex items-center justify-between p-4">
-              <div>
-                <p className="text-sm text-muted-foreground">Total Staff</p>
-                <p className="text-2xl font-bold">{staff.length}</p>
+        {/* Search and Filter Controls */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Search & Filter</CardTitle>
+            <CardDescription>Find staff members by name, role, or department</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search staff members..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-8"
+                />
               </div>
-              <Users className="h-8 w-8 text-primary" />
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="flex items-center justify-between p-4">
-              <div>
-                <p className="text-sm text-muted-foreground">Active</p>
-                <p className="text-2xl font-bold text-green-600">{staff.filter(s => s.status === 'active').length}</p>
-              </div>
-              <User className="h-8 w-8 text-green-600" />
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="flex items-center justify-between p-4">
-              <div>
-                <p className="text-sm text-muted-foreground">On Leave</p>
-                <p className="text-2xl font-bold text-yellow-600">{staff.filter(s => s.status === 'on-leave').length}</p>
-              </div>
-              <User className="h-8 w-8 text-yellow-600" />
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="flex items-center justify-between p-4">
-              <div>
-                <p className="text-sm text-muted-foreground">Departments</p>
-                <p className="text-2xl font-bold text-blue-600">{departments.length}</p>
-              </div>
-              <Users className="h-8 w-8 text-blue-600" />
-            </CardContent>
-          </Card>
+              <Tabs value={selectedDepartment} onValueChange={setSelectedDepartment} className="w-full md:w-auto">
+                <TabsList>
+                  <TabsTrigger value="all">All Departments</TabsTrigger>
+                  <TabsTrigger value="Oncology">Oncology</TabsTrigger>
+                  <TabsTrigger value="Surgery">Surgery</TabsTrigger>
+                  <TabsTrigger value="Laboratory">Laboratory</TabsTrigger>
+                  <TabsTrigger value="Clinical Research">Research</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Staff Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredStaff.map((member) => (
+            <Card key={member.id} className="hover:shadow-md transition-shadow">
+              <CardHeader className="pb-3">
+                <div className="flex items-start gap-3">
+                  <Avatar className="h-12 w-12">
+                    <div className="flex h-full w-full items-center justify-center bg-primary text-primary-foreground">
+                      {member.avatar}
+                    </div>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <CardTitle className="text-lg truncate">{member.name}</CardTitle>
+                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                      {getRoleIcon(member.role)}
+                      <span className="truncate">{member.role}</span>
+                    </div>
+                    <Badge variant={getStatusColor(member.status)} className="mt-1 text-xs">
+                      {member.status.replace('-', ' ')}
+                    </Badge>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm">
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                    <span className="truncate">{member.email}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <Phone className="h-4 w-4 text-muted-foreground" />
+                    <span>{member.phone}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <MapPin className="h-4 w-4 text-muted-foreground" />
+                    <span className="truncate">{member.location}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <Calendar className="h-4 w-4 text-muted-foreground" />
+                    <span>Started {new Date(member.startDate).toLocaleDateString()}</span>
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="text-sm font-medium mb-1">Department</h4>
+                  <Badge variant="outline">{member.department}</Badge>
+                </div>
+                
+                <div>
+                  <h4 className="text-sm font-medium mb-1">Shift</h4>
+                  <span className="text-sm text-muted-foreground">{member.shift}</span>
+                </div>
+                
+                {member.certifications.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-medium mb-2">Certifications</h4>
+                    <div className="flex flex-wrap gap-1">
+                      {member.certifications.map((cert, index) => (
+                        <Badge key={index} variant="secondary" className="text-xs">
+                          {cert}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                <div className="flex gap-2 pt-2">
+                  <Button variant="outline" size="sm" className="flex-1">
+                    <Mail className="h-4 w-4 mr-1" />
+                    Email
+                  </Button>
+                  <Button variant="outline" size="sm" className="flex-1">
+                    <Phone className="h-4 w-4 mr-1" />
+                    Call
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
-        <Tabs defaultValue="directory" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="directory">Directory</TabsTrigger>
-            <TabsTrigger value="departments">Departments</TabsTrigger>
-            <TabsTrigger value="contacts">Emergency Contacts</TabsTrigger>
-            <TabsTrigger value="org-chart">Org Chart</TabsTrigger>
-          </TabsList>
+        {filteredStaff.length === 0 && (
+          <Card>
+            <CardContent className="text-center py-8">
+              <User className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+              <p className="text-muted-foreground">No staff members found matching your criteria.</p>
+            </CardContent>
+          </Card>
+        )}
 
-          <TabsContent value="directory" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                  <div>
-                    <CardTitle>Staff Directory</CardTitle>
-                    <CardDescription>Complete list of all hospital staff members</CardDescription>
+        {/* Department Summary */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Department Summary</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {departments.filter(d => d !== 'all').map(department => {
+                const count = staffMembers.filter(m => m.department === department).length;
+                const activeCount = staffMembers.filter(m => m.department === department && m.status === 'active').length;
+                
+                return (
+                  <div key={department} className="text-center">
+                    <div className="text-2xl font-bold text-primary">{count}</div>
+                    <div className="text-sm text-muted-foreground">{department}</div>
+                    <div className="text-xs text-green-600">{activeCount} active</div>
                   </div>
-                  <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                    <div className="relative">
-                      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        placeholder="Search staff..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-8 w-full sm:w-[300px]"
-                      />
-                    </div>
-                    <Select value={filterDepartment} onValueChange={setFilterDepartment}>
-                      <SelectTrigger className="w-full sm:w-[180px]">
-                        <SelectValue placeholder="Filter by department" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Departments</SelectItem>
-                        {departments.map(dept => (
-                          <SelectItem key={dept} value={dept}>{dept}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Staff Member</TableHead>
-                        <TableHead>Role</TableHead>
-                        <TableHead>Department</TableHead>
-                        <TableHead>Contact</TableHead>
-                        <TableHead>Shift</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Experience</TableHead>
-                        <TableHead>Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {filteredStaff.map((member) => (
-                        <TableRow key={member.id}>
-                          <TableCell>
-                            <div className="flex items-center gap-3">
-                              <Avatar className="h-8 w-8">
-                                <div className="flex h-full w-full items-center justify-center bg-primary rounded-full text-white text-sm">
-                                  {member.name.split(' ').map(n => n[0]).join('')}
-                                </div>
-                              </Avatar>
-                              <div>
-                                <div className="font-medium">{member.name}</div>
-                                <div className="text-sm text-muted-foreground">{member.id}</div>
-                              </div>
-                            </div>
-                          </TableCell>
-                          <TableCell>{member.role}</TableCell>
-                          <TableCell>{member.department}</TableCell>
-                          <TableCell>
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-1 text-sm">
-                                <Mail className="h-3 w-3" />
-                                <span className="truncate max-w-[150px]">{member.email}</span>
-                              </div>
-                              <div className="flex items-center gap-1 text-sm">
-                                <Phone className="h-3 w-3" />
-                                <span>{member.phone}</span>
-                              </div>
-                            </div>
-                          </TableCell>
-                          <TableCell>{member.shift}</TableCell>
-                          <TableCell>
-                            <Badge variant={getStatusColor(member.status)}>
-                              {member.status}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>{member.experience}</TableCell>
-                          <TableCell>
-                            <Button variant="outline" size="sm">
-                              View Profile
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="departments" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Department Overview</CardTitle>
-                <CardDescription>Staff distribution across departments</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {departments.map(dept => {
-                    const deptStaff = staff.filter(s => s.department === dept);
-                    return (
-                      <Card key={dept}>
-                        <CardContent className="p-4">
-                          <h3 className="font-semibold mb-2">{dept}</h3>
-                          <p className="text-2xl font-bold text-primary">{deptStaff.length}</p>
-                          <p className="text-sm text-muted-foreground">staff members</p>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="contacts" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Emergency Contacts</CardTitle>
-                <CardDescription>Key contact information for emergency situations</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">Emergency contact management interface coming soon...</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="org-chart" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Organizational Chart</CardTitle>
-                <CardDescription>Visual representation of hospital hierarchy</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">Organizational chart interface coming soon...</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </MainLayout>
   );

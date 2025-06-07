@@ -54,7 +54,7 @@ interface PageLink {
 }
 
 const AllLinksPage = () => {
-  const allPages = [
+  const allPages: PageLink[] = [
     // Dashboard Pages
     {
       title: 'Clinical Dashboard',
@@ -811,10 +811,7 @@ const AllLinksPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  // Comprehensive list of all pages and their information
-  const allLinks: PageLink[] = allPages;
-
-  const filteredLinks = allLinks.filter(link => {
+  const filteredLinks = allPages.filter(link => {
     const matchesSearch = link.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          (link.description || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
                          link.category.toLowerCase().includes(searchQuery.toLowerCase());
@@ -824,7 +821,7 @@ const AllLinksPage = () => {
     return matchesSearch && matchesCategory;
   });
 
-  const categories = [...new Set(allLinks.map(link => link.category))];
+  const categories = [...new Set(allPages.map(link => link.category))];
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -840,10 +837,6 @@ const AllLinksPage = () => {
       <PageHeader
         title="All Application Links"
         description="Complete directory of all pages and features in the HealthNexus platform"
-        breadcrumbs={[
-          { label: 'Home', link: '/' },
-          { label: 'All Links' }
-        ]}
       />
 
       <div className="space-y-6">
@@ -943,18 +936,18 @@ const AllLinksPage = () => {
           <CardContent className="overflow-x-auto">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 min-w-fit">
               <div className="text-center">
-                <div className="text-2xl font-bold text-primary">{allLinks.length}</div>
+                <div className="text-2xl font-bold text-primary">{allPages.length}</div>
                 <div className="text-sm text-muted-foreground">Total Pages</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-600">
-                  {allLinks.filter(link => link.status === 'active').length}
+                  {allPages.filter(link => link.status === 'active').length}
                 </div>
                 <div className="text-sm text-muted-foreground">Active Pages</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-amber-600">
-                  {allLinks.filter(link => link.status === 'placeholder').length}
+                  {allPages.filter(link => link.status === 'placeholder').length}
                 </div>
                 <div className="text-sm text-muted-foreground">Coming Soon</div>
               </div>

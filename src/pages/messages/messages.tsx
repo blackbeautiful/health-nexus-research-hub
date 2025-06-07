@@ -12,10 +12,6 @@ const MessagesPage = () => {
       <PageHeader
         title="Messages"
         description="Communication center for patients and staff"
-        breadcrumbs={[
-          { label: 'Home', link: '/' },
-          { label: 'Messages' }
-        ]}
         action={{
           label: 'New Message',
           icon: Send,
