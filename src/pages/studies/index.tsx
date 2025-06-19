@@ -1,262 +1,253 @@
 
-import React from 'react';
-import Layout from '@/components/layout/Layout';
+import React, { useState } from 'react';
+import MainLayout from '@/components/layout/MainLayout';
 import PageHeader from '@/components/common/PageHeader';
-import { Plus, Search, FileSearch, Filter } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Link } from 'react-router-dom';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Search, Plus, Users, Calendar, FileText, TrendingUp } from 'lucide-react';
 
 const StudiesPage = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const studies = [
+    {
+      id: 'STUDY-2024-001',
+      title: 'Phase III Trial of Adjuvant Osimertinib in EGFR+ NSCLC',
+      sponsor: 'National Cancer Institute',
+      phase: 'Phase III',
+      status: 'recruiting',
+      participants: { enrolled: 245, target: 400 },
+      startDate: '2024-01-15',
+      primaryEndpoint: 'Disease-free survival',
+      pi: 'Dr. Sarah Martinez'
+    },
+    {
+      id: 'STUDY-2024-002',
+      title: 'Neoadjuvant Immunotherapy in Triple-Negative Breast Cancer',
+      sponsor: 'Genentech',
+      phase: 'Phase II',
+      status: 'active',
+      participants: { enrolled: 89, target: 120 },
+      startDate: '2023-09-20',
+      primaryEndpoint: 'Pathologic complete response rate',
+      pi: 'Dr. Michael Chen'
+    },
+    {
+      id: 'STUDY-2024-003',
+      title: 'CAR-T Cell Therapy for Relapsed/Refractory B-cell Lymphoma',
+      sponsor: 'Novartis',
+      phase: 'Phase I/II',
+      status: 'screening',
+      participants: { enrolled: 12, target: 50 },
+      startDate: '2024-03-01',
+      primaryEndpoint: 'Safety and tolerability',
+      pi: 'Dr. Elena Rodriguez'
+    }
+  ];
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'recruiting': return 'bg-green-100 text-green-800';
+      case 'active': return 'bg-blue-100 text-blue-800';
+      case 'screening': return 'bg-yellow-100 text-yellow-800';
+      case 'completed': return 'bg-gray-100 text-gray-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const filteredStudies = studies.filter(study =>
+    study.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    study.id.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <Layout title="Research Studies">
-      <PageHeader 
-        title="Research Studies" 
-        description="Manage and track all clinical research studies"
-        breadcrumbs={[
-          { label: 'Studies' }
-        ]}
+    <MainLayout>
+      <PageHeader
+        title="Clinical Studies"
+        description="Manage and monitor clinical research studies"
         action={{
           label: 'New Study',
           icon: Plus,
-          href: '/studies/protocol-setup'
+          onClick: () => console.log('Create new study')
         }}
       />
-      
-      <div className="mb-6">
-        <Tabs defaultValue="active" className="w-full">
-          <TabsList className="w-full md:w-auto">
-            <TabsTrigger value="active" className="flex-1 md:flex-initial">Active (8)</TabsTrigger>
-            <TabsTrigger value="completed" className="flex-1 md:flex-initial">Completed (12)</TabsTrigger>
-            <TabsTrigger value="draft" className="flex-1 md:flex-initial">Draft (3)</TabsTrigger>
-            <TabsTrigger value="all" className="flex-1 md:flex-initial">All Studies</TabsTrigger>
-          </TabsList>
-        </Tabs>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              Active Studies
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-blue-600">8</div>
+            <p className="text-xs text-muted-foreground">Currently recruiting</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              Total Participants
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">346</div>
+            <p className="text-xs text-muted-foreground">Across all studies</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              This Month
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-purple-600">23</div>
+            <p className="text-xs text-muted-foreground">New enrollments</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <TrendingUp className="h-4 w-4" />
+              Enrollment Rate
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-orange-600">87%</div>
+            <p className="text-xs text-muted-foreground">Target achievement</p>
+          </CardContent>
+        </Card>
       </div>
-      
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
-        <div className="relative flex-grow">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search studies by name, ID, or principal investigator..."
-            className="pl-8"
-          />
-        </div>
-        <div className="flex flex-col sm:flex-row gap-2">
-          <Select defaultValue="all-phases">
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <SelectValue placeholder="Study Phase" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all-phases">All Phases</SelectItem>
-              <SelectItem value="phase-1">Phase I</SelectItem>
-              <SelectItem value="phase-2">Phase II</SelectItem>
-              <SelectItem value="phase-3">Phase III</SelectItem>
-              <SelectItem value="phase-4">Phase IV</SelectItem>
-            </SelectContent>
-          </Select>
-          
-          <Button variant="outline" className="flex gap-2">
-            <Filter className="h-4 w-4" />
-            More Filters
-          </Button>
-        </div>
-      </div>
-      
-      <div className="grid gap-4">
-        {mockStudies.map((study) => (
-          <Link to={`/studies/${study.id}`} key={study.id} className="block">
-            <Card className="hover:shadow-md transition-shadow">
-              <CardContent className="p-0">
-                <div className="p-4 md:p-6">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-3">
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-medium text-lg">{study.name}</h3>
-                        <Badge variant={getStudyStatusBadgeVariant(study.status)}>{study.status}</Badge>
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        ID: {study.id} • {study.phase} • {study.type}
-                      </div>
-                    </div>
-                    
-                    <div className="flex flex-wrap gap-2">
-                      {study.tags.map((tag) => (
-                        <Badge key={tag} variant="outline">{tag}</Badge>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                      <p className="text-xs text-gray-500">Principal Investigator</p>
-                      <p className="font-medium">{study.principalInvestigator}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500">Sites</p>
-                      <p className="font-medium">{study.siteCount} active sites</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500">Enrollment</p>
-                      <p className="font-medium">{study.enrollment.current} / {study.enrollment.target} participants</p>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-4">
-                    <div className="flex justify-between items-center mb-1">
-                      <p className="text-xs text-gray-500">Study Timeline</p>
-                      <p className="text-xs font-medium">{getTimelineProgress(study.timeline.start, study.timeline.end)}% Complete</p>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div 
-                        className="bg-health-primary h-2 rounded-full"
-                        style={{ width: `${getTimelineProgress(study.timeline.start, study.timeline.end)}%` }}
-                      ></div>
-                    </div>
-                    <div className="flex justify-between mt-1 text-xs text-gray-500">
-                      <span>{formatDate(study.timeline.start)}</span>
-                      <span>{formatDate(study.timeline.end)}</span>
-                    </div>
-                  </div>
+
+      <Tabs defaultValue="all" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="all">All Studies</TabsTrigger>
+          <TabsTrigger value="recruiting">Recruiting</TabsTrigger>
+          <TabsTrigger value="active">Active</TabsTrigger>
+          <TabsTrigger value="completed">Completed</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="all">
+          <Card>
+            <CardHeader>
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <CardTitle>Clinical Studies Overview</CardTitle>
+                <div className="relative w-full sm:w-auto">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search studies..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 w-full sm:w-64"
+                  />
                 </div>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
-      </div>
-    </Layout>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {filteredStudies.map((study) => (
+                  <Card key={study.id} className="hover:shadow-md transition-shadow">
+                    <CardContent className="p-6">
+                      <div className="flex flex-col lg:flex-row justify-between gap-4">
+                        <div className="space-y-3 flex-1">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                            <h3 className="font-semibold text-lg">{study.title}</h3>
+                            <div className="flex gap-2">
+                              <Badge className={getStatusColor(study.status)}>
+                                {study.status}
+                              </Badge>
+                              <Badge variant="outline">{study.phase}</Badge>
+                            </div>
+                          </div>
+                          
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                            <div><strong>Study ID:</strong> {study.id}</div>
+                            <div><strong>Sponsor:</strong> {study.sponsor}</div>
+                            <div><strong>PI:</strong> {study.pi}</div>
+                            <div><strong>Start Date:</strong> {study.startDate}</div>
+                          </div>
+
+                          <div className="text-sm">
+                            <strong>Primary Endpoint:</strong> {study.primaryEndpoint}
+                          </div>
+
+                          <div className="flex items-center gap-4 text-sm">
+                            <div>
+                              <strong>Enrollment:</strong> {study.participants.enrolled}/{study.participants.target}
+                            </div>
+                            <div className="flex-1 bg-gray-200 rounded-full h-2">
+                              <div 
+                                className="bg-blue-600 h-2 rounded-full" 
+                                style={{ width: `${(study.participants.enrolled / study.participants.target) * 100}%` }}
+                              ></div>
+                            </div>
+                            <div className="text-blue-600 font-medium">
+                              {Math.round((study.participants.enrolled / study.participants.target) * 100)}%
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-row lg:flex-col gap-2 lg:w-32">
+                          <Button variant="outline" size="sm" className="flex-1">
+                            View Details
+                          </Button>
+                          <Button variant="outline" size="sm" className="flex-1">
+                            Manage
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="recruiting">
+          <Card>
+            <CardHeader>
+              <CardTitle>Recruiting Studies</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">Studies currently recruiting participants.</p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="active">
+          <Card>
+            <CardHeader>
+              <CardTitle>Active Studies</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">Studies with active enrollment and follow-up.</p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="completed">
+          <Card>
+            <CardHeader>
+              <CardTitle>Completed Studies</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">Studies that have completed enrollment and follow-up.</p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </MainLayout>
   );
 };
-
-// Helper functions
-const getStudyStatusBadgeVariant = (status: string) => {
-  switch(status) {
-    case 'Active': return 'default';
-    case 'Completed': return 'secondary';
-    case 'Draft': return 'outline';
-    case 'On Hold': return 'destructive';
-    default: return 'outline';
-  }
-};
-
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', { 
-    month: 'short', 
-    year: 'numeric'
-  });
-};
-
-const getTimelineProgress = (start: string, end: string) => {
-  const startDate = new Date(start).getTime();
-  const endDate = new Date(end).getTime();
-  const currentDate = new Date().getTime();
-  
-  if (currentDate <= startDate) return 0;
-  if (currentDate >= endDate) return 100;
-  
-  const totalDuration = endDate - startDate;
-  const elapsedDuration = currentDate - startDate;
-  
-  return Math.round((elapsedDuration / totalDuration) * 100);
-};
-
-// Mock data
-const mockStudies = [
-  {
-    id: "ONCO-2025-001",
-    name: "Neoadjuvant Immunotherapy in Resectable NSCLC",
-    status: "Active",
-    phase: "Phase II",
-    type: "Interventional",
-    principalInvestigator: "Dr. Rebecca Martinez",
-    siteCount: 5,
-    enrollment: {
-      current: 32,
-      target: 50
-    },
-    timeline: {
-      start: "2025-01-15",
-      end: "2026-06-30"
-    },
-    tags: ["Lung Cancer", "Immunotherapy", "Neoadjuvant"]
-  },
-  {
-    id: "ONCO-2025-002",
-    name: "CDK4/6 Inhibition in HR+ Metastatic Breast Cancer",
-    status: "Active",
-    phase: "Phase III",
-    type: "Interventional",
-    principalInvestigator: "Dr. James Wilson",
-    siteCount: 8,
-    enrollment: {
-      current: 124,
-      target: 220
-    },
-    timeline: {
-      start: "2024-11-10",
-      end: "2026-12-31"
-    },
-    tags: ["Breast Cancer", "Metastatic", "HR+"]
-  },
-  {
-    id: "ONCO-2025-003",
-    name: "Novel ctDNA Collection Protocol for Early Cancer Detection",
-    status: "Draft",
-    phase: "Phase I",
-    type: "Observational",
-    principalInvestigator: "Dr. Sarah Jackson",
-    siteCount: 3,
-    enrollment: {
-      current: 0,
-      target: 75
-    },
-    timeline: {
-      start: "2025-06-01",
-      end: "2026-03-31"
-    },
-    tags: ["ctDNA", "Early Detection", "Multiple Cancer Types"]
-  },
-  {
-    id: "ONCO-2024-005",
-    name: "PARP Inhibition in BRCA-mutated Ovarian Cancer",
-    status: "Active",
-    phase: "Phase III",
-    type: "Interventional",
-    principalInvestigator: "Dr. Michael Brown",
-    siteCount: 12,
-    enrollment: {
-      current: 183,
-      target: 300
-    },
-    timeline: {
-      start: "2024-08-15",
-      end: "2027-02-28"
-    },
-    tags: ["Ovarian Cancer", "BRCA", "PARP Inhibitor"]
-  },
-  {
-    id: "ONCO-2024-001",
-    name: "CAR-T Cell Therapy in R/R Multiple Myeloma",
-    status: "On Hold",
-    phase: "Phase II",
-    type: "Interventional",
-    principalInvestigator: "Dr. Jennifer Adams",
-    siteCount: 4,
-    enrollment: {
-      current: 18,
-      target: 60
-    },
-    timeline: {
-      start: "2024-05-20",
-      end: "2026-05-31"
-    },
-    tags: ["Multiple Myeloma", "CAR-T", "Refractory"]
-  }
-];
 
 export default StudiesPage;
