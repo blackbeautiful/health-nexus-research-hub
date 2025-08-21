@@ -10,38 +10,28 @@ import {
 } from "@/components/ui/sidebar";
 import { 
   LogOut,
-  Briefcase,
-  FlaskRound,
-  Settings,
   User
 } from 'lucide-react';
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
 import Logo from '@/components/common/Logo';
 import SidebarMenuGroup from './sidebar/SidebarMenuGroup';
-import { 
-  sharedMenuItems, 
-  clinicalPracticeItems, 
-  researchStudyItems, 
-  adminMenuItems 
-} from './sidebar/SidebarData';
-
-type AppMode = 'clinical' | 'research' | 'admin';
-type UserRole = 'admin' | 'clinician' | 'researcher' | 'facility_admin' | 'nurse' | 'lab_tech' | 'receptionist' | 'pi' | 'coordinator' | 'patient' | 'participant';
+import ModuleSwitcher, { AppModule, UserRole } from './ModuleSwitcher';
+import { sharedMenuItems, adminMenuItems } from '@/modules/shared/data/menuItems';
+import { clinicalMenuItems } from '@/modules/clinical/data/menuItems';
+import { researchMenuItems } from '@/modules/research/data/menuItems';
 
 const AppSidebar = () => {
   const navigate = useNavigate();
   const { state } = useSidebar();
   const [openGroups, setOpenGroups] = useState<string[]>([]);
-  const [appMode, setAppMode] = useState<AppMode>('clinical');
+  const [appModule, setAppModule] = useState<AppModule>('clinical');
   const [userRole, setUserRole] = useState<UserRole>('clinician');
   
   useEffect(() => {
-    const savedMode = localStorage.getItem('appMode') as AppMode;
-    if (savedMode) {
-      setAppMode(savedMode);
+    const savedModule = localStorage.getItem('appModule') as AppModule;
+    if (savedModule) {
+      setAppModule(savedModule);
     }
     
     const userRoleFromServer = localStorage.getItem('userRole') as UserRole;
@@ -58,83 +48,68 @@ const AppSidebar = () => {
     );
   };
 
-  const handleModeChange = (value: string) => {
-    const newMode = value as AppMode;
-    setAppMode(newMode);
-    localStorage.setItem('appMode', newMode);
-    
-    // Navigate to appropriate dashboard based on mode
-    switch (newMode) {
-      case 'clinical':
-        navigate('/dashboard/clinical');
-        break;
-      case 'research':
-        navigate('/dashboard/researcher');
-        break;
-      case 'admin':
-        navigate('/dashboard/admin');
-        break;
-    }
-    
-    console.log('App mode changed to:', newMode);
+  const handleModuleChange = (newModule: AppModule) => {
+    setAppModule(newModule);
+    localStorage.setItem('appModule', newModule);
+    console.log('App module changed to:', newModule);
   };
 
   const handleRoleChange = (newRole: UserRole) => {
     setUserRole(newRole);
     localStorage.setItem('userRole', newRole);
     
-    // Auto-switch mode and navigate to appropriate dashboard based on role
+    // Auto-switch module and navigate to appropriate dashboard based on role
     switch (newRole) {
       case 'admin':
-        setAppMode('admin');
-        localStorage.setItem('appMode', 'admin');
-        navigate('/dashboard/admin');
+        setAppModule('admin');
+        localStorage.setItem('appModule', 'admin');
+        navigate('/admin/dashboard');
         break;
       case 'nurse':
-        setAppMode('clinical');
-        localStorage.setItem('appMode', 'clinical');
-        navigate('/dashboard/nurse');
+        setAppModule('clinical');
+        localStorage.setItem('appModule', 'clinical');
+        navigate('/clinical/dashboard');
         break;
       case 'lab_tech':
-        setAppMode('clinical');
-        localStorage.setItem('appMode', 'clinical');
-        navigate('/dashboard/lab-tech');
+        setAppModule('clinical');
+        localStorage.setItem('appModule', 'clinical');
+        navigate('/clinical/dashboard');
         break;
       case 'receptionist':
-        setAppMode('clinical');
-        localStorage.setItem('appMode', 'clinical');
-        navigate('/dashboard/receptionist');
+        setAppModule('clinical');
+        localStorage.setItem('appModule', 'clinical');
+        navigate('/clinical/dashboard');
         break;
       case 'researcher':
-        setAppMode('research');
-        localStorage.setItem('appMode', 'research');
-        navigate('/dashboard/researcher');
+        setAppModule('research');
+        localStorage.setItem('appModule', 'research');
+        navigate('/research/dashboard');
         break;
       case 'pi':
-        setAppMode('research');
-        localStorage.setItem('appMode', 'research');
-        navigate('/dashboard/pi');
+        setAppModule('research');
+        localStorage.setItem('appModule', 'research');
+        navigate('/research/dashboard');
         break;
       case 'coordinator':
-        setAppMode('research');
-        localStorage.setItem('appMode', 'research');
-        navigate('/dashboard/coordinator');
+        setAppModule('research');
+        localStorage.setItem('appModule', 'research');
+        navigate('/research/dashboard');
         break;
       case 'patient':
-        navigate('/dashboard/patient');
+        navigate('/patient/dashboard');
         break;
       case 'participant':
-        navigate('/dashboard/participant');
+        navigate('/participant/dashboard');
         break;
       case 'facility_admin':
-        setAppMode('clinical');
-        localStorage.setItem('appMode', 'clinical');
-        navigate('/dashboard/clinical');
+        setAppModule('clinical');
+        localStorage.setItem('appModule', 'clinical');
+        navigate('/clinical/dashboard');
         break;
       default:
-        setAppMode('clinical');
-        localStorage.setItem('appMode', 'clinical');
-        navigate('/dashboard/clinical');
+        setAppModule('clinical');
+        localStorage.setItem('appModule', 'clinical');
+        navigate('/clinical/dashboard');
         break;
     }
     
@@ -176,8 +151,8 @@ const AppSidebar = () => {
     if (userRole === 'admin') {
       return [
         { title: 'Core Functions', items: baseItems },
-        { title: 'Clinical Operations', items: getFilteredMenuItems(clinicalPracticeItems, userRole) },
-        { title: 'Research Operations', items: getFilteredMenuItems(researchStudyItems, userRole) },
+        { title: 'Clinical Operations', items: getFilteredMenuItems(clinicalMenuItems, userRole) },
+        { title: 'Research Operations', items: getFilteredMenuItems(researchMenuItems, userRole) },
         { title: 'System Administration', items: adminMenuItems }
       ];
     }
@@ -194,8 +169,8 @@ const AppSidebar = () => {
       ];
     }
     
-    if (appMode === 'clinical') {
-      const clinicalItems = getFilteredMenuItems(clinicalPracticeItems, userRole);
+    if (appModule === 'clinical') {
+      const clinicalItems = getFilteredMenuItems(clinicalMenuItems, userRole);
       const adminItems = ['admin', 'facility_admin'].includes(userRole) ? 
         adminMenuItems.filter(item => !item.title.includes('Research')) : [];
       
@@ -206,8 +181,8 @@ const AppSidebar = () => {
       ];
     }
     
-    if (appMode === 'research') {
-      const researchItems = getFilteredMenuItems(researchStudyItems, userRole);
+    if (appModule === 'research') {
+      const researchItems = getFilteredMenuItems(researchMenuItems, userRole);
       const adminItems = ['admin', 'facility_admin'].includes(userRole) ? adminMenuItems : [];
       
       return [
@@ -258,9 +233,6 @@ const AppSidebar = () => {
     };
   };
 
-  const canSwitchModes = () => {
-    return !['patient', 'participant', 'receptionist', 'lab_tech'].includes(userRole);
-  };
 
   const menuGroups = getMenuItems();
   const userInfo = getUserDisplayInfo();
@@ -296,57 +268,12 @@ const AppSidebar = () => {
           </div>
         )}
         
-        {state !== "collapsed" && canSwitchModes() && userRole !== 'admin' && (
-          <Tabs 
-            value={appMode}
-            className="w-full" 
-            onValueChange={handleModeChange}
-          >
-            <TabsList className="grid w-full grid-cols-2 h-10 p-1 bg-muted/50 rounded-lg border">
-              <TabsTrigger 
-                value="clinical" 
-                className="h-8 px-3 text-xs font-medium transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:border data-[state=active]:border-border"
-              >
-                <Briefcase className="h-3 w-3 mr-1" />
-                <span>Clinical</span>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="research" 
-                className="h-8 px-3 text-xs font-medium transition-all duration-200 data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:border data-[state=active]:border-border"
-              >
-                <FlaskRound className="h-3 w-3 mr-1" />
-                <span>Research</span>
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        )}
-        
-        {state !== "collapsed" && userRole === 'admin' && (
-          <div className="w-full">
-            <Badge variant="outline" className="w-full justify-center py-2 bg-primary/10 text-primary border-primary/20">
-              <Settings className="h-3 w-3 mr-1" />
-              Admin Panel
-            </Badge>
-          </div>
-        )}
-
-        {state !== "collapsed" && userRole === 'patient' && (
-          <div className="w-full">
-            <Badge variant="outline" className="w-full justify-center py-2 bg-blue-50 text-blue-600 border-blue-200">
-              <User className="h-3 w-3 mr-1" />
-              Patient Portal
-            </Badge>
-          </div>
-        )}
-
-        {state !== "collapsed" && userRole === 'participant' && (
-          <div className="w-full">
-            <Badge variant="outline" className="w-full justify-center py-2 bg-green-50 text-green-600 border-green-200">
-              <FlaskRound className="h-3 w-3 mr-1" />
-              Study Portal
-            </Badge>
-          </div>
-        )}
+        <ModuleSwitcher 
+          currentModule={appModule}
+          userRole={userRole}
+          onModuleChange={handleModuleChange}
+          collapsed={state === "collapsed"}
+        />
       </SidebarHeader>
       
       <SidebarContent>
